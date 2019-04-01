@@ -172,13 +172,13 @@
             <if test="hobby != null">`hobby` = #{hobby},</if>
             <if test="province != null">`province` = #{province},</if>
             <if test="city != null">`city` = #{city},</if>
-            <if test="district != null">`district` = #{district}</if>
-            <if test="wechat != null">`wechat` = #{wechat}</if>
-            <if test="invite != null">`invite` = #{invite}</if>
-            <if test="parentId != null">`parent_id` = #{parentId}</if>
-            <if test="level != null">`level` = #{level}</if>
-            <if test="createTime != null">`create_time` = #{createTime}</if>
-            <if test="other != null">`other` = #{other}</if>
+            <if test="district != null">`district` = #{district},</if>
+            <if test="wechat != null">`wechat` = #{wechat},</if>
+            <if test="invite != null">`invite` = #{invite},</if>
+            <if test="parentId != null">`parent_id` = #{parentId},</if>
+            <if test="level != null">`level` = #{level},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="other != null">`other` = #{other},</if>
             <if test="remark != null">`remark` = #{remark}</if>
         </set>
         where user_id = #{userId}

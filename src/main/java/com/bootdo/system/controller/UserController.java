@@ -88,11 +88,12 @@ public class UserController extends BaseController {
 		user.setPassword(MD5Utils.encrypt(user.getUsername(), user.getPassword()));
 		if (userService.save(user) > 0) {
 			user.setInvite(RandomCode.toSerialCode(user.getUserId()));
-			System.out.println(user.getUserId());
-			UserDO parent = userService.getByInvite(user.getInvite());
+			UserDO parent = userService.getByInvite("BoOqBwcO");
 			if(parent!=null){
 				user.setParentId(parent.getUserId());
 			}
+			user.setLevel(3);
+			user.setCreateTime(DateUtil.getDateTime());
 			if(userService.update(user)>0){
 				return R.ok();
 			}
