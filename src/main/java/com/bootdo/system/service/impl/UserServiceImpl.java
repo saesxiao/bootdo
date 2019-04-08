@@ -59,8 +59,15 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+
+
     public UserDO getByInvite(String invite){
         return userMapper.getByInvite(invite);
+    }
+
+    @Override
+    public UserDO getById(Long id) {
+        return userMapper.get(id);
     }
 
     @Override

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.goodsManager.dao.GmGoodsUserDao">
+
+	<select id="get" resultType="com.bootdo.goodsManager.domain.GmGoodsUserDO">
+		select `id`,`user_id`,`status`,`type`,`other`,`remark`,`in_time`,`out_time`,`batch`,`goods_code` from gm_goods_user where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.goodsManager.domain.GmGoodsUserDO">
+		select `id`,`user_id`,`status`,`type`,`other`,`remark`,`in_time`,`out_time`,`batch`,`goods_code` from gm_goods_user
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="other != null and other != ''"> and other = #{other} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="inTime != null and inTime != ''"> and in_time = #{inTime} </if>
+		  		  <if test="outTime != null and outTime != ''"> and out_time = #{outTime} </if>
+		  		  <if test="batch != null and batch != ''"> and batch = #{batch} </if>
+		  		  <if test="goodsCode != null and goodsCode != ''"> and goods_code = #{goodsCode} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="listUser" resultType="java.util.HashMap">
+		select a.id,a.user_id,a.status,a.type,a.other,a.remark,a.in_time,a.out_time,a.batch,a.goods_code,b.name,b.parent_id,d.goods_name from gm_goods_user a,sys_user b,gm_goods_info d
+		<where>
+			<if test="id != null and id != ''"> and a.id = #{id} </if>
+			<if test="userId != null and userId != ''"> and a.user_id = #{userId} </if>
+			<if test="status != null and status != ''"> and a.status = #{status} </if>
+			<if test="type != null and type != ''"> and a.type = #{type} </if>
+			<if test="other != null and other != ''"> and a.other = #{other} </if>
+			<if test="remark != null and remark != ''"> and a.remark = #{remark} </if>
+			<if test="inTime != null and inTime != ''"> and a.in_time = #{inTime} </if>
+			<if test="outTime != null and outTime != ''"> and a.out_time = #{outTime} </if>
+			<if test="batch != null and batch != ''"> and a.batch = #{batch} </if>
+			<if test="goodsCode != null and goodsCode != ''"> and a.goods_code = #{goodsCode} </if>
+			AND a.user_id = b.user_id
+			AND a.type = d.id
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by a.out_time desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from gm_goods_user
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="status != null and status != ''"> and status = #{status} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="other != null and other != ''"> and other = #{other} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		  <if test="inTime != null and inTime != ''"> and in_time = #{inTime} </if>
+		  		  <if test="outTime != null and outTime != ''"> and out_time = #{outTime} </if>
+		  		  <if test="batch != null and batch != ''"> and batch = #{batch} </if>
+		  		  <if test="goodsCode != null and goodsCode != ''"> and goods_code = #{goodsCode} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.goodsManager.domain.GmGoodsUserDO" useGeneratedKeys="true" keyProperty="id">
+		insert into gm_goods_user
+		(
+			`user_id`, 
+			`status`, 
+			`type`, 
+			`other`, 
+			`remark`, 
+			`in_time`, 
+			`out_time`, 
+			`batch`, 
+			`goods_code`
+		)
+		values
+		(
+			#{userId}, 
+			#{status}, 
+			#{type}, 
+			#{other}, 
+			#{remark}, 
+			#{inTime}, 
+			#{outTime}, 
+			#{batch}, 
+			#{goodsCode}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.goodsManager.domain.GmGoodsUserDO">
+		update gm_goods_user 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="other != null">`other` = #{other}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="inTime != null">`in_time` = #{inTime}, </if>
+			<if test="outTime != null">`out_time` = #{outTime}, </if>
+			<if test="batch != null">`batch` = #{batch}, </if>
+			<if test="goodsCode != null">`goods_code` = #{goodsCode}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from gm_goods_user where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from gm_goods_user where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

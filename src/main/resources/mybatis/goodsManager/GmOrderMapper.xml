@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.goodsManager.dao.GmOrderDao">
+
+	<select id="get" resultType="com.bootdo.goodsManager.domain.GmOrderDO">
+		select `id`,`user_id`,`parent_id`,`goods_id`,`goods_num`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark` from gm_order where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.bootdo.goodsManager.domain.GmOrderDO">
+		select `id`,`user_id`,`parent_id`,`goods_id`,`goods_num`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark` from gm_order
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="parentId != null and parentId != ''"> and parent_id = #{parentId} </if>
+		  		  <if test="goodsId != null and goodsId != ''"> and goods_id = #{goodsId} </if>
+		  		  <if test="goodsNum != null and goodsNum != ''"> and goods_num = #{goodsNum} </if>
+		  		  <if test="orderStatus != null and orderStatus != ''"> and order_status = #{orderStatus} </if>
+		  		  <if test="orderTime != null and orderTime != ''"> and order_time = #{orderTime} </if>
+		  		  <if test="endTime != null and endTime != ''"> and end_time = #{endTime} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="other != null and other != ''"> and other = #{other} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from gm_order
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="parentId != null and parentId != ''"> and parent_id = #{parentId} </if>
+		  		  <if test="goodsId != null and goodsId != ''"> and goods_id = #{goodsId} </if>
+		  		  <if test="goodsNum != null and goodsNum != ''"> and goods_num = #{goodsNum} </if>
+		  		  <if test="orderStatus != null and orderStatus != ''"> and order_status = #{orderStatus} </if>
+		  		  <if test="orderTime != null and orderTime != ''"> and order_time = #{orderTime} </if>
+		  		  <if test="endTime != null and endTime != ''"> and end_time = #{endTime} </if>
+		  		  <if test="type != null and type != ''"> and type = #{type} </if>
+		  		  <if test="other != null and other != ''"> and other = #{other} </if>
+		  		  <if test="remark != null and remark != ''"> and remark = #{remark} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.bootdo.goodsManager.domain.GmOrderDO" useGeneratedKeys="true" keyProperty="id">
+		insert into gm_order
+		(
+			`user_id`, 
+			`parent_id`, 
+			`goods_id`, 
+			`goods_num`, 
+			`order_status`, 
+			`order_time`, 
+			`end_time`, 
+			`type`, 
+			`other`, 
+			`remark`
+		)
+		values
+		(
+			#{userId}, 
+			#{parentId}, 
+			#{goodsId}, 
+			#{goodsNum}, 
+			#{orderStatus}, 
+			#{orderTime}, 
+			#{endTime}, 
+			#{type}, 
+			#{other}, 
+			#{remark}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.bootdo.goodsManager.domain.GmOrderDO">
+		update gm_order 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="parentId != null">`parent_id` = #{parentId}, </if>
+			<if test="goodsId != null">`goods_id` = #{goodsId}, </if>
+			<if test="goodsNum != null">`goods_num` = #{goodsNum}, </if>
+			<if test="orderStatus != null">`order_status` = #{orderStatus}, </if>
+			<if test="orderTime != null">`order_time` = #{orderTime}, </if>
+			<if test="endTime != null">`end_time` = #{endTime}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="other != null">`other` = #{other}, </if>
+			<if test="remark != null">`remark` = #{remark}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from gm_order where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from gm_order where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -64,6 +64,11 @@ public class UserDO implements Serializable {
     private String other;
     // 备用
     private String remark;
+    // 商品信息 总量 不映射数据库
+    private int goodsTotal;
+    // 商品信息 已售 不映射数据库
+    private int goodsSail;
+
 
     public Long getUserId() {
         return userId;
@@ -287,6 +292,22 @@ public class UserDO implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public int getGoodsTotal() {
+        return goodsTotal;
+    }
+
+    public void setGoodsTotal(int goodsTotal) {
+        this.goodsTotal = goodsTotal;
+    }
+
+    public int getGoodsSail() {
+        return goodsSail;
+    }
+
+    public void setGoodsSail(int goodsSail) {
+        this.goodsSail = goodsSail;
     }
 
     @Override

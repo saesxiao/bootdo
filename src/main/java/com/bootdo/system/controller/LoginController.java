@@ -102,6 +102,21 @@ public class LoginController extends BaseController {
         }
     }
 
+    @PostMapping("/loginOutVerify")
+    @ResponseBody
+    R ajaxLoginOutVerify(String username, String password,HttpServletRequest request) {
+
+        password = MD5Utils.encrypt(username, password);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            subject.login(token);
+            return R.ok();
+        } catch (AuthenticationException e) {
+            return R.error("用户或密码错误");
+        }
+    }
+
     @GetMapping("/logout")
     String logout() {
         ShiroUtils.logout();
