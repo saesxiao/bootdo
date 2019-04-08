@@ -122,9 +122,9 @@ public class GmOrderController {
 			ShiroUtils.logout();
 		}
 		Map<String,List<GmOrderDO>> res = new LinkedHashMap<>();
-		Long parentId = user.getUserId();
+		Long userId = user.getUserId();
 		Map<String,Object> query = new HashMap<>();
-		query.put("parentId",parentId);
+		query.put("userId",userId);
 		List<GmOrderDO> orderList = gmOrderService.list(query);
 		for (GmOrderDO order:orderList) {
 			GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
@@ -145,17 +145,18 @@ public class GmOrderController {
 
 	@ResponseBody
 	@RequestMapping("/sendOrder")
-	public R sendOrder(Long orderCode){
+	public R sendOrder(String orderCode){
 		UserDO user = ShiroUtils.getUser();
 		if(user==null){
 			ShiroUtils.logout();
 		}
 		Map<String,Object> query = new HashMap<>();
+		query.put("userId",user.getUserId());
 		query.put("type",orderCode);
 		List<GmOrderDO> orderList = gmOrderService.list(query);
 		try {
 			for (GmOrderDO order:orderList) {
-				if(order.getParentId()==user.getUserId()){
+				if(order.getUserId()==user.getUserId()){
 					order.setOrderStatus(2);
 					gmOrderService.update(order);
 				}
