@@ -142,4 +142,19 @@ public class GmGoodsInfoDO implements Serializable {
 	public String getRemark() {
 		return remark;
 	}
+
+	@Override
+	public String toString() {
+		return "GmGoodsInfoDO{" +
+				"id=" + id +
+				", goodsName='" + goodsName + '\'' +
+				", goodsPrice=" + goodsPrice +
+				", barCode='" + barCode + '\'' +
+				", statu=" + statu +
+				", describe='" + describe + '\'' +
+				", createTime='" + createTime + '\'' +
+				", other='" + other + '\'' +
+				", remark='" + remark + '\'' +
+				'}';
+	}
 }

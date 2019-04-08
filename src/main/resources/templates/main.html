@@ -42,4 +42,26 @@
 </body>
 <script src="js/jquery.min.js"></script>
 <script src="js/openTab.js"></script>
+<script>
+
+    $(function () {
+        var jsonStr = {
+            "address": "lanzhou",
+            "imgUrl": "/img",
+            "goods":
+                {
+                    "3": 2,
+                    "2":1
+                }
+        };
+//        $.post("/goodsManager/gmOrder/saveOrder", {"jsonStr": JSON.stringify(jsonStr)}, function (res) {
+//            console.log(res);
+//        })
+        $.post("/goodsManager/gmOrder/getOrder", function (res) {
+            console.log(res);
+        })
+
+    })
+
+</script>
 </html>

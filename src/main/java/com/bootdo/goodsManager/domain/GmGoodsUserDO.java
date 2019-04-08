@@ -156,4 +156,20 @@ public class GmGoodsUserDO implements Serializable {
 	public String getGoodsCode() {
 		return goodsCode;
 	}
+
+	@Override
+	public String toString() {
+		return "GmGoodsUserDO{" +
+				"id=" + id +
+				", userId=" + userId +
+				", status='" + status + '\'' +
+				", type='" + type + '\'' +
+				", other='" + other + '\'' +
+				", remark='" + remark + '\'' +
+				", inTime='" + inTime + '\'' +
+				", outTime='" + outTime + '\'' +
+				", batch=" + batch +
+				", goodsCode='" + goodsCode + '\'' +
+				'}';
+	}
 }

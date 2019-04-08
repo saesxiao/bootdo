@@ -38,6 +38,9 @@ public class GmOrderDO implements Serializable {
 	//收货地址
 	private String remark;
 
+	//商品名称
+	private String goodsName;
+
 	/**
 	 * 设置：订单表id
 	 */
@@ -169,5 +172,13 @@ public class GmOrderDO implements Serializable {
 	 */
 	public String getRemark() {
 		return remark;
+	}
+
+	public String getGoodsName() {
+		return goodsName;
+	}
+
+	public void setGoodsName(String goodsName) {
+		this.goodsName = goodsName;
 	}
 }

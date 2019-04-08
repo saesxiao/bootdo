@@ -1,7 +1,9 @@
 package com.bootdo.testDemo;
 
 import com.alibaba.fastjson.JSONObject;
+import com.bootdo.common.utils.HttpUtil;
 import com.bootdo.goodsManager.dao.GmGoodsUserDao;
+import com.bootdo.goodsManager.domain.GmGoodsUserDO;
 import com.bootdo.goodsManager.service.GmGoodsUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,5 +53,30 @@ public class TestDemo {
         json.entrySet().stream().forEach(temp->{
             System.out.println(temp.getKey()+"    ;   "+temp.getValue());
         });
+    }
+    @Test
+    public void test3() {
+        JSONObject goodsInfo = new JSONObject();
+        goodsInfo.put("1",5);
+        goodsInfo.put("3",7);
+        JSONObject param = new JSONObject();
+        param.put("goods",goodsInfo);
+        param.put("address","兰州");
+        param.put("imgUrl","/img");
+        Map<String, String> query = new HashMap<>();
+        query.put("jsonStr",param.toJSONString());
+        String response  = HttpUtil.post("http://127.0.0.1:8099/goodsManager/gmOrder/saveOrder",query);
+        System.out.println(response);
+    }
+    @Test
+    public void test4(){
+        Map<String,Object> query = new HashMap<>();
+        query.put("userId",2);
+        query.put("status",0);
+        query.put("type",2);
+        List<GmGoodsUserDO> list =goodsUserService.list(query);
+        for (GmGoodsUserDO gmGoodsUserDao:list) {
+            System.out.println(gmGoodsUserDao);
+        }
     }
 }

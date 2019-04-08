@@ -12,6 +12,7 @@ import com.bootdo.goodsManager.service.GmGoodsInfoService;
 import com.bootdo.goodsManager.service.GmGoodsUserService;
 import com.bootdo.system.domain.UserDO;
 import com.bootdo.system.service.UserService;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -50,7 +51,7 @@ public class GmOrderController {
 
 	@ResponseBody
 	@RequestMapping("/saveOrder")
-	public R order(@RequestParam String jsonStr){
+	public R order(@Param("jsonStr") String jsonStr){
 		UserDO user = ShiroUtils.getUser();
 		if(user==null){
 			ShiroUtils.logout();
@@ -61,24 +62,25 @@ public class GmOrderController {
 		}
 		try {
 			Long userId = user.getUserId();
-			Long parentId = user.getUserId();
+			Long parentId = user.getParentId();
 			JSONObject param = JSON.parseObject(jsonStr);
 			JSONObject goodsInfo = param.getJSONObject("goods");
+			Map<String,Object> map = JSONObject.parseObject(goodsInfo.toJSONString(),Map.class);
 			String address= param.getString("address");
 			String imgUrl = param.getString("imgUrl");
 			String time = DateUtil.getDateTime();
 			String orderCode = "XD"+OrderTool.getOrderNo(5);
-			goodsInfo.entrySet().stream().forEach(temp->{
-				Integer goodsId = Integer.parseInt(temp.getKey());
+			for (String key : map.keySet()) {
+				Integer goodsId = Integer.parseInt(key);
 				GmGoodsInfoDO goods = goodsInfoService.get(goodsId);
-				Integer goodsNum  = (Integer) (temp.getValue());
+				Integer goodsNum  = (Integer) (map.get(key));
 				if(goods!=null&&goodsNum>0){
 					Map<String,Object> query = new HashMap<>();
 					query.put("userId",parentId);
 					query.put("status",0);
 					query.put("type",goods.getId());
 					List<GmGoodsUserDO> list =goodsUserService.list(query);
-					if(list.size()>goodsNum){
+					if(list.size()>=goodsNum){
 						GmOrderDO orderDO = new GmOrderDO();
 						orderDO.setUserId(userId);
 						orderDO.setParentId(parentId);
@@ -90,10 +92,21 @@ public class GmOrderController {
 						orderDO.setOther(imgUrl);
 						orderDO.setType(orderCode);
 						gmOrderService.save(orderDO);
+						for (int i = 0; i < goodsNum ; i++) {
+							GmGoodsUserDO goodsUser = list.get(i);
+							goodsUser.setStatus("1");
+							goodsUserService.update(goodsUser);
+						}
+					}else{
+						return R.error("上级库存不足");
 					}
 				}
+			}
+
+			goodsInfo.entrySet().stream().forEach(temp->{
+				System.out.println(temp.getKey()+"  :  "+temp.getValue());
 			});
-			return R.ok();
+			return R.ok("下单成功");
 
 		}catch (Exception e){
 			e.printStackTrace();
@@ -114,6 +127,8 @@ public class GmOrderController {
 		query.put("parentId",parentId);
 		List<GmOrderDO> orderList = gmOrderService.list(query);
 		for (GmOrderDO order:orderList) {
+			GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
+			order.setGoodsName(goodsInfo.getGoodsName());
 			String orderCode = order.getType();
 			if(res.containsKey(orderCode)){
 				List<GmOrderDO> tempList = res.get(orderCode);
@@ -126,5 +141,29 @@ public class GmOrderController {
 			}
 		}
 		return res;
+	}
+
+	@ResponseBody
+	@RequestMapping("/sendOrder")
+	public R sendOrder(Long orderCode){
+		UserDO user = ShiroUtils.getUser();
+		if(user==null){
+			ShiroUtils.logout();
+		}
+		Map<String,Object> query = new HashMap<>();
+		query.put("type",orderCode);
+		List<GmOrderDO> orderList = gmOrderService.list(query);
+		try {
+			for (GmOrderDO order:orderList) {
+				if(order.getParentId()==user.getUserId()){
+					order.setOrderStatus(2);
+					gmOrderService.update(order);
+				}
+			}
+			return R.ok();
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return R.error();
 	}
 }
