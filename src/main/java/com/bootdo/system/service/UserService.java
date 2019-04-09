@@ -22,6 +22,8 @@ public interface UserService {
 
 	List<UserDO> list(Map<String, Object> map);
 
+	List<UserDO> getList(Map<String, Object> map);
+
 	int count(Map<String, Object> map);
 
 	int save(UserDO user);

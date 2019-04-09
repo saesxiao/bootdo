@@ -18,6 +18,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface GmGoodsUserDao {
 
 	GmGoodsUserDO get(Integer id);
+
+	GmGoodsUserDO getByCode(String goodsCode,Long userId);
 	
 	List<GmGoodsUserDO> list(Map<String, Object> map);
 

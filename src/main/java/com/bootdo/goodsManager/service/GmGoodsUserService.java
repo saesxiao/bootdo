@@ -16,7 +16,9 @@ import java.util.Map;
 public interface GmGoodsUserService {
 	
 	GmGoodsUserDO get(Integer id);
-	
+
+	GmGoodsUserDO getByCode(String goodsCode,Long userId);
+
 	List<GmGoodsUserDO> list(Map<String, Object> map);
 
 	List<HashMap<String,Object>> listUser(Map<String, Object> map);

@@ -5,6 +5,8 @@ import com.bootdo.common.utils.HttpUtil;
 import com.bootdo.goodsManager.dao.GmGoodsUserDao;
 import com.bootdo.goodsManager.domain.GmGoodsUserDO;
 import com.bootdo.goodsManager.service.GmGoodsUserService;
+import com.bootdo.system.domain.UserDO;
+import com.bootdo.system.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class TestDemo {
 
     @Autowired
     GmGoodsUserService goodsUserService;
+
+    @Autowired
+    UserService userService;
 
 
     @Test
@@ -78,5 +83,13 @@ public class TestDemo {
         for (GmGoodsUserDO gmGoodsUserDao:list) {
             System.out.println(gmGoodsUserDao);
         }
+    }
+
+    @Test
+    public void test5(){
+        Map<String,Object> query = new HashMap<>();
+        query.put("parentId",1);
+        List<UserDO> userList = userService.list(query);
+        System.out.println(userList.size());
     }
 }

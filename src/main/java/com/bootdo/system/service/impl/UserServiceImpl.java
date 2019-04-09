@@ -84,6 +84,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDO> getList(Map<String, Object> map) {
+        return userMapper.list(map);
+    }
+
+    @Override
     public int count(Map<String, Object> map) {
         return userMapper.count(map);
     }

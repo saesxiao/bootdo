@@ -3,10 +3,11 @@ package com.bootdo.system.controller;
 import com.bootdo.common.annotation.Log;
 import com.bootdo.common.config.Constant;
 import com.bootdo.common.controller.BaseController;
-import com.bootdo.common.domain.FileDO;
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.service.DictService;
 import com.bootdo.common.utils.*;
+import com.bootdo.goodsManager.domain.GmProfitDO;
+import com.bootdo.goodsManager.service.GmProfitService;
 import com.bootdo.system.domain.DeptDO;
 import com.bootdo.system.domain.RoleDO;
 import com.bootdo.system.domain.UserDO;
@@ -17,7 +18,6 @@ import com.bootdo.system.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,10 +25,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +41,8 @@ public class UserController extends BaseController {
     DictService dictService;
     @Autowired
     DeptService deptService;
+    @Autowired
+    GmProfitService profitService;
 
     @RequiresPermissions("sys:user:user")
     @GetMapping("")
@@ -142,18 +140,28 @@ public class UserController extends BaseController {
         Map<String, Object> query = new HashMap<>();
         query.put("parentId", dept.getDeptId());
         List<DeptDO> childrenList = deptService.list(query);
-        if (childrenList != null && childrenList.size() > 0) {
+        if (childrenList != null && childrenList.size() > 0) { // 如果有下级 注册时候为下级
             DeptDO children = childrenList.get(0);
             user.setDeptId(children.getDeptId());
             user.setDeptName(children.getName());
-        } else {
+            GmProfitDO profit = new GmProfitDO();
+            profit.setUserId(user.getUserId());
+            profit.setParentId(parent.getUserId());
+            profit.setLevel(children.getDeptId()+"");
+            profitService.save(profit);
+        } else { //如果没有下级 注册为经销商
             user.setDeptId(dept.getDeptId());
             user.setDeptName(dept.getName());
+            GmProfitDO profit = new GmProfitDO();
+            profit.setUserId(user.getUserId());
+            profit.setParentId(parent.getUserId());
+            profit.setLevel(dept.getDeptId()+"");
+            profitService.save(profit);
         }
-
         user.setParentId(parent.getUserId());
         user.setCreateTime(DateUtil.getDateTime());
         user.setInvite(RandomCode.toSerialCode(user.getUserId()));
+
         if (userService.save(user) > 0) {
             return R.ok();
         }

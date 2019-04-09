@@ -22,7 +22,12 @@ public class GmGoodsUserServiceImpl implements GmGoodsUserService {
 	public GmGoodsUserDO get(Integer id){
 		return gmGoodsUserDao.get(id);
 	}
-	
+
+	@Override
+	public GmGoodsUserDO getByCode(String goodsCode,Long userId) {
+		return gmGoodsUserDao.getByCode(goodsCode,userId);
+	}
+
 	@Override
 	public List<GmGoodsUserDO> list(Map<String, Object> map){
 		return gmGoodsUserDao.list(map);
