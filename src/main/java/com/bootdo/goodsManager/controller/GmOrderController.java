@@ -12,6 +12,7 @@ import com.bootdo.goodsManager.service.GmGoodsInfoService;
 import com.bootdo.goodsManager.service.GmGoodsUserService;
 import com.bootdo.system.domain.UserDO;
 import com.bootdo.system.service.UserService;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,11 +93,11 @@ public class GmOrderController {
 						orderDO.setOther(imgUrl);
 						orderDO.setType(orderCode);
 						gmOrderService.save(orderDO);
-						for (int i = 0; i < goodsNum ; i++) {
-							GmGoodsUserDO goodsUser = list.get(i);
-							goodsUser.setStatus("1");
-							goodsUserService.update(goodsUser);
-						}
+//						for (int i = 0; i < goodsNum ; i++) {
+//							GmGoodsUserDO goodsUser = list.get(i);
+//							goodsUser.setStatus("1");
+//							goodsUserService.update(goodsUser);
+//						}
 					}else{
 						return R.error("上级库存不足");
 					}
@@ -145,26 +146,74 @@ public class GmOrderController {
 
 	@ResponseBody
 	@RequestMapping("/sendOrder")
-	public R sendOrder(String orderCode){
+	public R sendOrder(String orderCode,String ids){
+
 		UserDO user = ShiroUtils.getUser();
 		if(user==null){
 			ShiroUtils.logout();
 		}
-		Map<String,Object> query = new HashMap<>();
-		query.put("userId",user.getUserId());
-		query.put("type",orderCode);
-		List<GmOrderDO> orderList = gmOrderService.list(query);
 		try {
-			for (GmOrderDO order:orderList) {
-				if(order.getUserId()==user.getUserId()){
-					order.setOrderStatus(2);
-					gmOrderService.update(order);
+			Map<String,Object> query = new HashMap<>();
+			query.put("userId",user.getUserId());
+			query.put("type",orderCode);
+			GmOrderDO order = gmOrderService.list(query).get(0);
+
+			query = new HashMap<>();
+			query.put("userId",user.getParentId());
+			query.put("status",0);
+			query.put("type",order.getGoodsId());
+			List<GmGoodsUserDO> goodsUserList =goodsUserService.list(query);
+
+			String[]goodsCodes = ids.split(",");
+			Integer size = goodsCodes.length;
+			if(size>goodsUserList.size()){
+				return R.error();
+			}
+			for (int i = 0; i < size; i++) {
+				String code = goodsCodes[i];
+				GmGoodsUserDO goodsUser = goodsUserList.get(i);
+				if(StringUtils.isBlank(goodsUser.getGoodsCode())){
+					goodsUser.setStatus("1");
+					goodsUser.setGoodsCode(code);
+					goodsUserService.update(goodsUser);
+					goodsUser.setUserId(user.getUserId());
+					goodsUser.setId(null);
+					goodsUser.setStatus("0");
+					goodsUserService.save(goodsUser);
+				}else {
+					String oldCode = goodsUser.getGoodsCode();
+					if(!isValidCode(oldCode,goodsCodes)){
+						return R.error("无此订单");
+					}
+					for (String codes:goodsCodes) {
+						if(codes.equals(oldCode)){
+							goodsUser.setStatus("1");
+							goodsUser.setGoodsCode(oldCode);
+							goodsUserService.update(goodsUser);
+							goodsUser.setUserId(user.getUserId());
+							goodsUser.setId(null);
+							goodsUser.setStatus("0");
+							goodsUserService.save(goodsUser);
+						}
+					}
 				}
 			}
+			order.setOrderStatus(2);
+			gmOrderService.update(order);
 			return R.ok();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
 		return R.error();
+	}
+
+	private Boolean isValidCode(String code,String[]codes){
+		Boolean flag = false;
+		for (String temp:codes) {
+			if(temp.equals(code)){
+				flag = true;
+			}
+		}
+		return flag;
 	}
 }

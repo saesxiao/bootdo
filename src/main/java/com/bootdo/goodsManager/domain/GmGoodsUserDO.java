@@ -18,7 +18,7 @@ public class GmGoodsUserDO implements Serializable {
 	//商品表id
 	private Integer id;
 	//对应用户表id
-	private Integer userId;
+	private Long userId;
 	//商品状态(0-库存 1-已售)
 	private String status;
 	//商品id
@@ -51,13 +51,13 @@ public class GmGoodsUserDO implements Serializable {
 	/**
 	 * 设置：对应用户表id
 	 */
-	public void setUserId(Integer userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 	/**
 	 * 获取：对应用户表id
 	 */
-	public Integer getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 	/**

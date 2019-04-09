@@ -56,12 +56,15 @@
 //        $.post("/goodsManager/gmOrder/saveOrder", {"jsonStr": JSON.stringify(jsonStr)}, function (res) {
 //            console.log(res);
 //        })
-        $.post("/goodsManager/gmOrder/getOrder", function (res) {
-            console.log(res);
-        })
-//        $.post("/goodsManager/gmOrder/sendOrder",{"orderCode":"XD155471801578970083"},function (res) {
+//        $.post("/goodsManager/gmOrder/getOrder", function (res) {
 //            console.log(res);
 //        })
+
+
+
+        $.post("/goodsManager/gmOrder/sendOrder",{"orderCode":"XD155472217411986392","ids":"111110,222220"},function (res) {
+            console.log(res);
+        })
 
     })
 
