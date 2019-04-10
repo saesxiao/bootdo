@@ -168,7 +168,7 @@ public class GmRetailController {
     }
 
     /**
-     * 获取 下级列表
+     * 获取 当前用户数据列表
      *
      */
     @ResponseBody
@@ -216,6 +216,17 @@ public class GmRetailController {
 
         return res;
 
+    }
+
+    @RequestMapping("/wechat")
+    @ResponseBody
+    public Object getUserWechat(){
+        // 获取当前用户
+        UserDO user = ShiroUtils.getUser();
+        if(user==null){
+            ShiroUtils.logout();
+        }
+        return R.ok(user.getWechat());
     }
 
 
