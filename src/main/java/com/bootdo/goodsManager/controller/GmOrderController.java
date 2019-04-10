@@ -122,7 +122,9 @@ public class GmOrderController {
 		Map<String,Object> query = new HashMap<>();
 		query.put("parentId",userId);
 		List<GmOrderDO> orderList = gmOrderService.list(query);
-		System.out.println(orderList.size());
+		query = new HashMap<>();
+		query.put("userId",userId);
+		orderList.addAll(gmOrderService.list(query));
 		for (GmOrderDO order:orderList) {
 			GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
 			order.setGoodsName(goodsInfo.getGoodsName());
@@ -258,6 +260,7 @@ public class GmOrderController {
 						// 谁奖励的 这里平台奖励的 也就是admin
 						profitDetail.setParentId(parent.getUserId());
 						profitDetail.setProfitId(userProfit.getId());
+						profitDetail.setRemark(order.getType());
 						profitDetailService.save(profitDetail);
 						//  推荐人奖励 50
 						profitDetail.setAmount(REWARD_B);
@@ -271,6 +274,7 @@ public class GmOrderController {
 						profitDetail.setStatus(2);
 						profitDetail.setParentId(parent.getUserId());
 						profitDetail.setProfitId(userProfit.getId());
+						profitDetail.setRemark(order.getType());
 						profitDetailService.save(profitDetail);
 					}
 				}
