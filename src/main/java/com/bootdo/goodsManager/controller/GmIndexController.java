@@ -26,6 +26,7 @@ public class GmIndexController {
     public String toLogin(){
         return "wjfh/login";
     }
+    //
 
 
 }
