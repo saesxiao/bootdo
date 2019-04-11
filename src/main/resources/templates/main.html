@@ -56,19 +56,19 @@
         /**
          * 以下是注册的示例
          */
-//        $.ajax({
-//            cache: true,
-//            type: "POST",
-//            url: "/sys/user/register",
-//            data: $('#signupForm').serialize(),// 你的formid
-//            error : function(request) {
-//                parent.layer.alert("Connection error");
-//            },
-//            success : function(data) {
-//                console.log(data);
-//
-//            }
-//        });
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: "/sys/user/register",
+            data: $('#signupForm').serialize(),// 你的formid
+            error : function(request) {
+                parent.layer.alert("Connection error");
+            },
+            success : function(data) {
+                console.log(data);
+
+            }
+        });
 
 //        var jsonStr = {
 //            "address": "lanzhou",

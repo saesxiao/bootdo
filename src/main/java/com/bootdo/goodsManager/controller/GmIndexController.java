@@ -26,7 +26,10 @@ public class GmIndexController {
     public String toLogin(){
         return "wjfh/login";
     }
-    //
+    @RequestMapping("/jinhuo")
+    public String toJinhuo(){
+        return "wjfh/jinhuo";
+    }
 
 
 }
