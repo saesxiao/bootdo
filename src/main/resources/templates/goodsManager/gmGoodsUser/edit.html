@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="id" name="id" th:value="${gmGoodsUser.id}"  type="hidden">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">对应用户表id：</label>
+								<div class="col-sm-8">
+									<input id="userId" name="userId" th:value="${gmGoodsUser.userId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">商品状态(0-库存 1-已售)：</label>
+								<div class="col-sm-8">
+									<input id="status" name="status" th:value="${gmGoodsUser.status}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">预留：</label>
+								<div class="col-sm-8">
+									<input id="type" name="type" th:value="${gmGoodsUser.type}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">预留：</label>
+								<div class="col-sm-8">
+									<input id="other" name="other" th:value="${gmGoodsUser.other}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">预留：</label>
+								<div class="col-sm-8">
+									<input id="remark" name="remark" th:value="${gmGoodsUser.remark}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">进货日期：</label>
+								<div class="col-sm-8">
+									<input id="inTime" name="inTime" th:value="${gmGoodsUser.inTime}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">出货日期：</label>
+								<div class="col-sm-8">
+									<input id="outTime" name="outTime" th:value="${gmGoodsUser.outTime}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">批次：</label>
+								<div class="col-sm-8">
+									<input id="batch" name="batch" th:value="${gmGoodsUser.batch}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">商品识别码：</label>
+								<div class="col-sm-8">
+									<input id="goodsCode" name="goodsCode" th:value="${gmGoodsUser.goodsCode}" class="form-control" type="text">
+								</div>
+							</div>
+																					<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/goodsManager/gmGoodsUser/edit.js">
+	</script>
+</body>
+</html>

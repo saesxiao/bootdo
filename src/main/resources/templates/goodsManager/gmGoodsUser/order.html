@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<meta charset="utf-8">
+<head th:include="include :: header">
+
+</head>
+<style>
+    ul {
+        margin-bottom: 0px;
+        height: 70px;
+    }
+    ul li {
+        list-style: none;
+    }
+    .track-rcol {
+        width: 100%;
+        border: 1px solid #eee;
+        margin-top: 50px;
+    }
+
+    .track-list {
+        margin: 20px;
+        padding-left: 5px;
+        position: relative;
+    }
+
+    .track-list li {
+        position: relative;
+        padding: 9px 0 0 25px;
+        line-height: 30px;
+        border-left: 1px solid #d9d9d9;
+        color: #999;
+    }
+
+    .track-list li.first {
+        color: red;
+        padding-top: 0;
+        border-left-color: #fff;
+    }
+
+    .track-list li .node-icon {
+        position: absolute;
+        left: -6px;
+        top: 50%;
+        width: 32px;
+        height: 32px;
+        background: url("../../img/poit.png") -10px -9px no-repeat;
+    }
+
+    .track-list li.first .node-icon {
+        position: absolute;
+        left: -6px;
+        top: 50%;
+        width: 32px;
+        height: 32px;
+        background: url("../../img/poit.png") -10px -9px no-repeat;
+
+    }
+
+    .track-list li .time {
+        margin-right: 20px;
+        position: relative;
+        top: 4px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .track-list li .txt {
+        position: relative;
+        top: 4px;
+        display: inline-block;
+        vertical-align: middle;
+        min-width: 198px;
+    }
+
+    .track-list li.first .time {
+        margin-right: 20px;
+    }
+
+    .track-list li.first .txt {
+        max-width: 600px;
+    }
+</style>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="col-sm-12">
+        <div class="ibox">
+            <div class="ibox-body">
+                <h2 style="margin-left: 50px" th:text="'商品名称: '+${orderList.goodsName}+'&nbsp;&nbsp;&nbsp;商品二维码: '+${orderList.goodsCode}"></h2>
+                <!--<table id="exampleTable" data-mobile-responsive="true" class="orderTable">-->
+                    <!--<thead>-->
+                        <!--<tr><td>所属名称</td><td>进货日期</td><td>出货日期</td><td>上级名称</td></tr>-->
+                    <!--</thead>-->
+                    <!--<tbody >-->
+                        <!--<tr th:each="item,info:${orderList.info}">-->
+                            <!--<td th:text="${item.name}"></td>-->
+                            <!--<td th:text="${item.inTime}"></td>-->
+                            <!--<td th:text="${item.outTime}"></td>-->
+                            <!--<td th:text="${item.parentName}"></td>-->
+                        <!--</tr>-->
+                    <!--</tbody>class="first"-->
+                <!--</table>-->
+
+                <div class="track-rcol">
+                    <div class="track-list">
+                        <ul th:each="item,info:${orderList.info}">
+                            <li>
+                                <i class="node-icon"></i>
+                                <span class="time" th:text="'进货日期:  '+${item.inTime}" style="color: #990000"></span>
+                                <span class="time" th:text="'出货日期:  '+${item.outTime}" style="color: #990000"></span><br/>
+                                <span class="txt" th:text="'所属名称:  '+${item.name}"></span>
+                                <span class="txt" th:text="'上级名称:  '+${item.parentName}"></span>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--shiro控制bootstraptable行内按钮看见性 来自bootdo的创新方案 -->
+<div>
+    <script type="text/javascript">
+        var s_edit_h = 'hidden';
+        var s_remove_h = 'hidden';
+        var s_resetPwd_h = 'hidden';
+    </script>
+</div>
+<div shiro:hasPermission="goodsManager:gmGoodsUser:edit">
+    <script type="text/javascript">
+        s_edit_h = '';
+    </script>
+</div>
+<div shiro:hasPermission="goodsManager:gmGoodsUser:remove">
+    <script type="text/javascript">
+        var s_remove_h = '';
+    </script>
+</div>
+<div shiro:hasPermission="goodsManager:gmGoodsUser:resetPwd">
+    <script type="text/javascript">
+        var s_resetPwd_h = '';
+    </script>
+</div>
+</div>
+<div th:include="include :: footer"></div>
+<script type="text/javascript" src="/js/appjs/goodsManager/gmGoodsUser/order.js"></script>
+</body>
+</html>

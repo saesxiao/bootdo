@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <form class="form-horizontal m-t" id="signupForm">
+                        <input id="id" name="id" th:value="${gmGoodsInfo.id}" type="hidden">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品名称：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsName" name="goodsName" th:value="${gmGoodsInfo.goodsName}"
+                                       class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品单价：</label>
+                            <div class="col-sm-8">
+                                <input id="goodsPrice" name="goodsPrice" th:value="${gmGoodsInfo.goodsPrice}"
+                                       class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品条码：</label>
+                            <div class="col-sm-8">
+                                <input id="barCode" name="barCode" th:value="${gmGoodsInfo.barCode}"
+                                       class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">状态：</label>
+                            <div class="col-sm-8">
+                                <select id="statu" name="statu" class="form-control">
+                                    <option th:selected="${gmGoodsInfo.statu == 0}" th:value="0" th:text="停售"></option>
+                                    <option th:selected="${gmGoodsInfo.statu == 1}" th:value="1" th:text="可售"></option>
+                                    <option th:selected="${gmGoodsInfo.statu == 2}" th:value="2" th:text="售罄"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品描述：</label>
+                            <div class="col-sm-8">
+                                <input id="describe" name="describe" th:value="${gmGoodsInfo.describe}"
+                                       class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">添加时间：</label>
+                            <div class="col-sm-8">
+                                <input id="createTime" name="createTime" th:value="${gmGoodsInfo.createTime}"
+                                       class="form-control" type="text">
+                            </div>
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<label class="col-sm-3 control-label">预留：</label>-->
+                            <!--<div class="col-sm-8">-->
+                                <!--<input id="other" name="other" th:value="${gmGoodsInfo.other}" class="form-control"-->
+                                       <!--type="text">-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">奖励政策(元/件)：</label>
+                            <div class="col-sm-8">
+                                <input id="remark" name="remark" th:value="${gmGoodsInfo.remark}" class="form-control"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-8 col-sm-offset-3">
+                                <button type="submit" class="btn btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript" src="/js/appjs/goodsManager/gmGoodsInfo/edit.js">
+</script>
+</body>
+</html>

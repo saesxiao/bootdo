@@ -42,7 +42,8 @@ public class LoginController extends BaseController {
     @GetMapping({"/", ""})
     String welcome(Model model) {
 
-        return "redirect:/blog";
+//        return "redirect:/blog";
+        return "login";
     }
 
     @Log("请求访问主页")
@@ -91,6 +92,21 @@ public class LoginController extends BaseController {
             logger.error("验证码校验失败", e);
             return R.error("验证码校验失败");
         }
+        password = MD5Utils.encrypt(username, password);
+        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            subject.login(token);
+            return R.ok();
+        } catch (AuthenticationException e) {
+            return R.error("用户或密码错误");
+        }
+    }
+
+    @PostMapping("/loginOutVerify")
+    @ResponseBody
+    R ajaxLoginOutVerify(String username, String password,HttpServletRequest request) {
+
         password = MD5Utils.encrypt(username, password);
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         Subject subject = SecurityUtils.getSubject();

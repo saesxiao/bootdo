@@ -59,8 +59,15 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+
+
     public UserDO getByInvite(String invite){
         return userMapper.getByInvite(invite);
+    }
+
+    @Override
+    public UserDO getById(Long id) {
+        return userMapper.get(id);
     }
 
     @Override
@@ -73,6 +80,11 @@ public class UserServiceImpl implements UserService {
             map.put("deptId", null);
             map.put("deptIds",childIds);
         }
+        return userMapper.list(map);
+    }
+
+    @Override
+    public List<UserDO> getList(Map<String, Object> map) {
         return userMapper.list(map);
     }
 
