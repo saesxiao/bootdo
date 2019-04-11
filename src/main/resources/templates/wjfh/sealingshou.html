@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>订单查询</title>
+	<link rel="shortcut icon" href="https://gtms04.alicdn.com/tps/i4/TB1_oz6GVXXXXaFXpXXJDFnIXXX-64-64.ico" type="image/x-icon"/>
+	<link rel="stylesheet" href="https://g.alicdn.com/thx/cube/1.3.2/cube.min.css">
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="css/common.css"/>
+	<link rel="stylesheet" type="text/css" href="layui/css/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="css/style.css"/>
+	<script src="js/flexible.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div class="resgcontain">
+		<h1 class="site-h1">订单管理</h1>
+		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			<ul class="layui-tab-title">
+				<li class="layui-this">零售订单查询</li>
+				<li><a href="">代理订单查询</a></li>
+			</ul>
+			<div class="item"></div>
+			
+		</div>      
+	</div>
+	<div class="resgcontain">
+		<div class="saomaiptbox">
+			<input type="text" class="publicIptSty widthman" id="" value="" placeholder="订单编号" readonly="readonly"/>
+			<span class="icon iconfont">&#xe602;</span>
+		</div>
+	</div>
+	<div class="resgcontain  layui-form">
+		<div class="item">
+			<div class="dingdantop layui-row">
+				<div class="layui-col-xs6">订单编号:785456787</div>
+				<div class="layui-col-xs6">发货时间:2018-10-15 10:20</div>
+			</div>
+		</div>
+		<div class="item dingdancot mb">
+			<div class="dingdantop layui-row item">
+				<div class="layui-col-xs6">产品AAA</div>
+				<div class="layui-col-xs6"><span class="num">×5</span></div>
+			</div>
+			<div class="dingdantop layui-row item">
+				<div class="layui-col-xs6">产品BBB</div>
+				<div class="layui-col-xs6"><span class="num">×2</span></div>
+			</div>
+			<div class="dingdantop layui-row item mb">
+				<div class="layui-col-xs12">单号：<span class="color1">5754548557854</span><button type="button" class="layui-btn layui-btn-xs xsBtn">复制</button></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="resgcontain  layui-form">
+		<div class="item">
+			<div class="dingdantop layui-row">
+				<div class="layui-col-xs6">订单编号:78545655787</div>
+				<div class="layui-col-xs6">发货时间:2018-10-15 10:20</div>
+			</div>
+		</div>
+		<div class="item dingdancot mb">
+			<div class="dingdantop layui-row item">
+				<div class="layui-col-xs6">产品AAA</div>
+				<div class="layui-col-xs6"><span class="num">×5</span></div>
+			</div>
+			<div class="dingdantop layui-row item">
+				<div class="layui-col-xs6">产品BBB</div>
+				<div class="layui-col-xs6"><span class="num">×2</span></div>
+			</div>
+			<div class="dingdantop layui-row item mb">
+				<div class="layui-col-xs12">单号：无</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="resgcontain  layui-form">
+		<div class="item">
+			<div class="dingdantop layui-row">
+				<div class="layui-col-xs6">订单编号:785456787</div>
+				<div class="layui-col-xs6">发货时间:2018-10-15 10:20</div>
+			</div>
+		</div>
+		<div class="item dingdancot mb">
+			<div class="dingdantop layui-row item">
+				<div class="layui-col-xs6">产品AAA</div>
+				<div class="layui-col-xs6"><span class="num">×5</span></div>
+			</div>
+			<div class="dingdantop layui-row item">
+				<div class="layui-col-xs6">产品BBB</div>
+				<div class="layui-col-xs6"><span class="num">×2</span></div>
+			</div>
+			<div class="dingdantop layui-row item mb">
+				<div class="layui-col-xs12">单号：无</div>
+			</div>
+		</div>
+	</div>
+
+	
+	<script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		layui.use(['form', 'layedit', 'laydate','upload'], function(){
+		  var form = layui.form
+		  ,layer = layui.layer
+		  ,layedit = layui.layedit
+		  ,upload = layui.upload
+		  ,laydate = layui.laydate;
+		    //设定文件大小限制
+			  upload.render({
+				elem: '#test7'
+				,url: '/upload/'
+				,size: 60 //限制文件大小，单位 KB
+				,done: function(res){
+				  console.log(res)
+				}
+			  });
+		 });
+	</script>
+</html>
