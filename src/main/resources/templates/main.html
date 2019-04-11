@@ -38,6 +38,13 @@
 
         <!--<button class="btn" onclick="openPage('http://bootdo.com','bootdo.com')">访问bootdo官网(新打开tab页事例)</button>-->
     <!--</div>-->
+    <form id="signupForm">
+        <input name="username" value="test">
+        <input name="password" value="test">
+        <input name="invite" value="ComuTmhB">
+        <input name="roleIds" value="60">
+
+    </form>
 </div>
 </body>
 <script src="js/jquery.min.js"></script>
@@ -45,23 +52,41 @@
 <script>
 
     $(function () {
-        var jsonStr = {
-            "address": "lanzhou",
-            "imgUrl": "/img",
-            "goods":
-                {
-                    "3": 2
-                }
-        };
+
+        /**
+         * 以下是注册的示例
+         */
+//        $.ajax({
+//            cache: true,
+//            type: "POST",
+//            url: "/sys/user/register",
+//            data: $('#signupForm').serialize(),// 你的formid
+//            error : function(request) {
+//                parent.layer.alert("Connection error");
+//            },
+//            success : function(data) {
+//                console.log(data);
+//
+//            }
+//        });
+
+//        var jsonStr = {
+//            "address": "lanzhou",
+//            "imgUrl": "/img",
+//            "goods":
+//                {
+//                    "3": 2
+//                }
+//        };
         // 下单
 //        $.post("/goodsManager/gmOrder/saveOrder", {"jsonStr": JSON.stringify(jsonStr)}, function (res) {
 //            console.log(res);
 //        })
 
         // 查看订单
-        $.post("/goodsManager/gmOrder/getOrder", function (res) {
-            console.log(res);
-        })
+//        $.post("/goodsManager/gmOrder/getOrder", function (res) {
+//            console.log(res);
+//        })
 
         // 下发订单
 //        $.post("/goodsManager/gmOrder/sendOrder",{"orderCode":"XD155480476629098504","ids":"111110,222220"},function (res) {
@@ -82,6 +107,8 @@
 //        $.post("/goodsManager/retail/mine",function (res) {
 //            console.log(res);
 //        })
+
+
 
 
     })
