@@ -1,0 +1,69 @@
+ @charset "utf-8";
+ html, body {
+	position: relative;
+	height: 100%;
+}
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    
+}
+input[type="text"] {
+-webkit-appearance: none;
+}
+textarea{
+-webkit-appearance: none;
+}
+/* CSS Document */
+body{font-size:14px;font-family:"PingFangSC-Regular", "微软雅黑";margin:0;padding:0;font-style:normal!important;font-variant:normal!important;color:#333333;position: relative;}
+dt,dl,dd{margin:0;padding:0;}
+a,a:hover,a:link,a:visited,a:active{color:inherit;text-decoration:none;}
+
+.clear:after{display:block;clear:both;content: ' ';}
+.clear{zoom:1;}
+* html .clearfix{zoom: 1;}
+*:first-child+html .clearfix{zoom: 1;}
+*{margin:0;padding:0;}
+.cell, .cell2, .cell3{border-collapse:collapse;border-spacing:0;}
+.fl{float:left;}
+.fr{float:right;}
+.st{font-family:SimSun;}
+.yh{font-family:"Microsoft Yahei";}
+img{border:0px; }
+p{margin:0px;padding:0px;line-height:20px;}
+i{margin:0px;padding:0px;font-style:normal;}
+ul{margin:0px;padding:0px;list-style:none;}
+ul li{margin:0px;padding:0px;list-style:none;}
+dl,dl dt,dl dd{margin:0px;padding:0px;}
+br{margin:0px;padding:0px;}
+.clearheight{width:100%;height:1px;overflow:hidden;}
+input,button,textarea,select{ outline:none;font-family:"PingFangSC-Regular","Microsoft Yahei";}
+img{max-width: 100%;}
+.border_right1{border-right:1px solid #b8dbc4;}
+input::-webkit-input-placeholder{
+            color:#9EA6B7;
+        }
+        input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+            color:#9EA6B7;
+        }
+        input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+            color:#9EA6B7;
+        }
+        input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+            color:#9EA6B7;
+        }
+.border_right0{border-right:0px;}
+.mt19{margin-top:19px;}
+.mt18{margin-top:18px;}
+.mt15{margin-top:15px;}
+.mt10{margin-top:10px;}
+.mt22{margin-top:22px;}
+.mt20{margin-top:20px;}
+.ml6{margin-left:6px;}
+.mt6{margin-top:6px;}
+.w-1000{ width:1000px; margin:0 auto; position:relative;}
+.w-1150{ width:1150px; margin:0 auto; position:relative;}
+.w-1200{ width:1200px; margin:0 auto; position:relative;}
+.w-1055{ width:1055px; margin:0 auto; position:relative;}
+.w-925{ width:925px; margin:0 auto; position:relative;}

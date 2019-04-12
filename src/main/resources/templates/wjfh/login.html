@@ -1,32 +1,119 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>登录</title>
-	<link rel="stylesheet" type="text/css" href="css/common.css"/>
-	<link rel="stylesheet" type="text/css" href="layui/css/layui.css"/>
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
-	<script src="js/flexible.js" type="text/javascript" charset="utf-8"></script>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>BootDo</title>
+    <meta name="keywords" content="管理系统">
+    <meta name="description" content="管理系统">
+    <link rel="stylesheet" type="text/css" href="/wjfh/css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="/wjfh/layui/css/layui.css"/>
+    <link rel="stylesheet" type="text/css" href="/wjfh/css/style.css"/>
+    <script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location;
+        }
+    </script>
+
 </head>
+
 <body>
-	
-	<div class="resgcontain">
-		<h1 class="site-h1">欢迎登录 — </h1>
-		<!-- <div class="logobox"><img src="img/logo.png" ></div> -->
-		<div class="item">
-			<input type="text" class="publicIptSty widthman" id="" value="" placeholder="手机号" />
-		</div>
-		<div class="item">
-			<input type="text" class="publicIptSty widthman" id="" value="" placeholder="密码" />
-		</div>
-	</div>
-	<div class="shangpd">
-		<button class="layui-btn layui-btn-fluid resgSubmit">登录</button>
-	</div>
-	<div class="Noresg">没有账号？<a href="">立即注册</a></div>
-	<script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
-	
+
+<form class="layui-form" method="post" id="signupForm">
+    <div class="resgcontain" >
+        <h1 class="site-h1">欢迎登录 — </h1>
+        <!-- <div class="logobox"><img src="img/logo.png" ></div> -->
+        <div class="item">
+            <input type="text" name="username"  class="publicIptSty widthman" value="" id="username" placeholder="手机号" required lay-verify="required" v-model="username"/>
+        </div>
+        <div class="item">
+            <input type="password" name="password"  class="publicIptSty widthman" value="" id="password" placeholder="密码" required lay-verify="required" v-model="password"/>
+        </div>
+    </div>
+    <div class="shangpd">
+        <button class="layui-btn layui-btn-fluid resgSubmit"  lay-submit lay-filter="lgSubmit">登录</button>
+    </div>
+</form>
+<div class="Noresg">没有账号？<a href="">立即注册</a></div>
+
+<script th:inline="javascript"> var ctx = [[@{/}]] ; </script>
+<!-- 全局js -->
+<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+<script src="/js/bootstrap.min.js?v=3.3.6" th:src="@{/js/bootstrap.min.js?v=3.3.6}"></script>
+
+<!-- 自定义js -->
+<script src="/js/content.js?v=1.0.0" th:src="@{/js/content.js?v=1.0.0}"></script>
+
+<!-- jQuery Validation plugin javascript-->
+<script src="/js/ajax-util.js"></script>
+<script src="/js/plugins/validate/jquery.validate.min.js"
+        th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+<script src="/js/plugins/validate/messages_zh.min.js" th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+<script src="/js/plugins/layer/layer.min.js" th:src="@{/js/plugins/layer/layer.min.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#login").on('click', function () {
+            $("#signupForm").submit();
+        });
+        validateRule();
+
+        $("#imgVerify").click()
+    });
+
+    $.validator.setDefaults({
+        submitHandler: function () {
+            login();
+        }
+    });
+
+    function login() {
+        $.ajax({
+            type: "POST",
+            url: ctx + "loginOutVerify",
+            data: $('#signupForm').serialize(),
+            success: function (r) {
+                if (r.code == 0) {
+                    var index = layer.load(1, {
+                        shade: [0.1, '#fff'] //0.1透明度的白色背景
+                    });
+                    parent.location.href = '/goodsManager/page/index';
+                } else {
+                    layer.msg(r.msg);
+                }
+            },
+        });
+    }
+
+
+
+    function validateRule() {
+        var icon = "<i class='fa fa-times-circle'></i> ";
+        $("#signupForm").validate({
+            rules: {
+                username: {
+                    required: true
+                },
+                password: {
+                    required: true
+                }
+            },
+            messages: {
+                username: {
+                    required: icon + "请输入您的用户名",
+                },
+                password: {
+                    required: icon + "请输入您的密码",
+                }
+            }
+        })
+    }
+
+</script>
 </body>
 </html>

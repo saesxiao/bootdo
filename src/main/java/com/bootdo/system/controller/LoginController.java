@@ -103,7 +103,7 @@ public class LoginController extends BaseController {
         }
     }
 
-    @PostMapping("/loginOutVerify")
+    @RequestMapping("/loginOutVerify")
     @ResponseBody
     R ajaxLoginOutVerify(String username, String password,HttpServletRequest request) {
 

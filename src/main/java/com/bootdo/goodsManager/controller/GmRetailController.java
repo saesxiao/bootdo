@@ -178,6 +178,7 @@ public class GmRetailController {
         UserDO user = ShiroUtils.getUser();
         if(user==null){
             ShiroUtils.logout();
+            return R.error("请登录");
         }
         Long userId = user.getUserId();
         // 返回结果集

@@ -24,25 +24,25 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label">昵称:</label>
 			<div class="layui-input-block">
-				<input type="text" name='name' class="layui-input" value="" required  lay-verify="required" autocomplete="off" placeholder="请输入昵称" v-model="name" />
+				<input type="text" name='name' class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入昵称" v-model="name" />
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">手机号:</label>
 			<div class="layui-input-block">
-				<input type="text" name="mobile" class="layui-input" value="18201328712" required  lay-verify="required|phone" autocomplete="off" placeholder="请输入手机号" v-model="mobile" />
+				<input type="text" name="mobile" class="layui-input" value="18201328712" required lay-verify="required|phone" autocomplete="off" placeholder="请输入手机号" v-model="mobile" />
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">密码:</label>
 			<div class="layui-input-block">
-				<input type="password" name='password' class="layui-input" value="" required  lay-verify="required" autocomplete="off" placeholder="请输入密码" v-model="pass" />
+				<input type="password" name='password' class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入密码" v-model="pass" />
 			</div>
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">邀请码:</label>
 			<div class="layui-input-block">
-				<input type="text" name="code" class="layui-input" value="" required  lay-verify="pass" autocomplete="off" placeholder="请输入邀请码" v-model="code" />
+				<input type="text" name="invite" class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入邀请码" v-model="code" />
 				<p class="nimpp fs12"><span class="icon iconfont">&#xe60f;</span>请联系您的上级获取邀请码</p>
 			</div>
 
@@ -107,7 +107,7 @@
     var vm = new Vue({
         el:'#regbox',
         data:{
-            wxchat:'1',name:'1',mobile:'18152144919',pass:'1',code:'1',sheng:'',shi:'',qu:'',address:''
+            wxchat:'1',name:'1',mobile:'18152144919',pass:'1',code:'ComuTmhB',sheng:'',shi:'',qu:'',address:''
         },
         methods:{
             regFun:function(){
@@ -127,32 +127,59 @@
                     $form = $('form');
                 //监听提交
                 form.on('submit(resgSubmit)', function(data){
-                    axios.get('http://127.0.0.1:8099/sys/user/register', {
-                        params:{
-                            wechat:vm.name,
-                            name:vm.name,
-                            username:vm.mobile,
-                            mobile:vm.mobile,
-                            password:vm.pass,
-                            invite:vm.code,
-                            province:vm.sheng,
-                            city:vm.shi,
-                            district:vm.qu,
-                            liveAddress:vm.address,
-                        },
-                        dataType: 'json', //服务器返回json格式数据
-                        type: 'post', //HTTP请求类型
-                    })
-                        .then(function(response) {
-                            console.log(vm.sheng);
-                            console.log(response);
-                            layer.msg('验证码发送成功！', {time: 1200});
+					$.ajax({
+						cache: true,
+						type: "POST",
+						url: "/sys/user/register",
+						data: $('#regbox').serialize(),// 你的formid
+						error : function(request) {
+							layer.alert("Connection error");
+						},
+						success : function(data) {
+							console.log(data);
 
-                        })
-                        .catch(function (error) {
-                            //layer.msg(error)
-                        });
+						}
+					});
+//                    axios.post('/sys/user/register', {
+//                        params:{
+//                            wechat:vm.wxchat,
+//                            name:vm.name,
+//                            username:vm.mobile,
+//                            mobile:vm.mobile,
+//                            password:vm.pass,
+//                            invite:vm.code,
+//                            province:vm.sheng,
+//                            city:vm.shi,
+//                            district:vm.qu,
+//                            liveAddress:vm.address,
+//                        },
+//                        dataType: 'json', //服务器返回json格式数据
+//                        type: 'post', //HTTP请求类型
+//                    })
+//                        .then(function(response) {
+//                            console.log(vm.sheng);
+//                            console.log(response);
+//                            if(response.data.code == 200){
+//                                layer.msg('注册成功！', {time: 1200});
+//							}else{
+//                                layer.msg(response.data.msg, {time: 1200});
+//							}
+//                            //layer.msg('验证码发送成功！', {time: 1200});
+//
+//                        })
+//                        .catch(function (error) {
+//                            //layer.msg(error)
+//                        });
                     return false;
+                });
+                //自定义验证规则
+                form.verify({
+                    validateMoney: function (value) {
+                        var result = validateMoney(value);
+                        if (result != "Y") {
+                            return result;
+                        }
+                    }
                 });
                 loadProvince();
 
@@ -221,7 +248,7 @@
                 $form.find('select[name=area]').html(areaHtml).parent().show();
                 form.render();
                 form.on('select(area)', function(data) {
-                    vm.qu = value;
+                    vm.qu = data.value;
                 });
             }
         }

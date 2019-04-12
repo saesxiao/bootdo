@@ -4,19 +4,19 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>首页</title>
+	<title>五季芳禾</title>
 	
-	<link rel="stylesheet" href="css/iconfont.css">
-	<link rel="stylesheet" type="text/css" href="css/common.css"/>
-	<link rel="stylesheet" type="text/css" href="layui/css/layui.css"/>
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
-	<script src="js/flexible.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="/wjfh/css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="/wjfh/css/common.css"/>
+	<link rel="stylesheet" type="text/css" href="/wjfh/layui/css/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="/wjfh/css/style.css"/>
+	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 	
 	<div class="resgcontain">
 		<div class="banner">
-			<img src="img/banner.jpg" >
+			<img src="/wjfh/img/banner.jpg" >
 			<span class="shareIcon icon iconfont">&#xe69e;</span>
 		</div>
 		<div class="welcomeYu">欢迎您！代理商A <span class="layui-badge layui-bg-orange">经销商</span>
@@ -27,14 +27,18 @@
 		<div class="layui-row">
 			<div class="layui-col-xs3 mbnum">
 				<div class="index_navIcon">
-					<span class="icon iconfont indexnavicon bgcolor1">&#xe651;</span>
-					<div class="name">我要发货</div>
+					<a href="">
+						<span class="icon iconfont indexnavicon bgcolor1">&#xe651;</span>
+						<div class="name">我要发货</div>
+					</a>
 				</div>
 			</div>
 			<div class="layui-col-xs3 mbnum">
 				<div class="index_navIcon">
-					<span class="icon iconfont indexnavicon bgcolor2">&#xe600;</span>
-					<div class="name">我要进货</div>
+					<a href="/goodsManager/page/jinhuo">
+						<span class="icon iconfont indexnavicon bgcolor2">&#xe600;</span>
+						<div class="name">我要进货</div>
+					</a>
 				</div>
 			</div>
 			<div class="layui-col-xs3 mbnum">
@@ -96,5 +100,44 @@
 			</div>
 		</div>
 	</div>
+	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+        var login = new  Vue({
+            el:"#loginBox",
+            data:{
+                username:'',
+                password:''
+            },
+            methods:{
+                LoginFun:function () {
+
+                }
+            },
+            mounted:function () {
+
+                layui.use(['jquery', 'form','layer'], function() {
+                    $ = layui.jquery,
+                        form = layui.form,
+                        layer = layui.layer;
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        url: "/goodsManager/retail/mine",
+
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+							console.log(data);
+
+                        }
+                    });
+
+                })
+            }
+        })
+	</script>
 </body>
 </html>
