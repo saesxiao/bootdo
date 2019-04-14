@@ -7,72 +7,130 @@
 	<title>我要进货</title>
 	<link rel="shortcut icon" href="https://gtms04.alicdn.com/tps/i4/TB1_oz6GVXXXXaFXpXXJDFnIXXX-64-64.ico" type="image/x-icon"/>
 	<link rel="stylesheet" href="https://g.alicdn.com/thx/cube/1.3.2/cube.min.css">
-	<link rel="stylesheet" href="css/iconfont.css">
-	<link rel="stylesheet" type="text/css" href="css/common.css"/>
-	<link rel="stylesheet" type="text/css" href="layui/css/layui.css"/>
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
-	<script src="js/flexible.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="/wjfh/css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="/wjfh/css/common.css"/>
+	<link rel="stylesheet" type="text/css" href="/wjfh/layui/css/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="/wjfh/css/style.css"/>
+	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
+<div class="" id="fahuo">
 	<div class="resgcontain layui-form">
-		<h1 class="site-h1">我要发货-零售出货</h1>
+		<h1 class="site-h1">我要发货-代理发货</h1>
 		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-			<ul class="layui-tab-title">
-				<li class="layui-this">零售出货</li>
-				<li><a href="">代理订单</a></li>
-			</ul>
-			<div class="item"></div>
-			<div class="item">
-				<select name="city" lay-verify="">
-					<option>请选择产品</option>
-					<option value="0" >产品AAA(剩余10)</option>
-					<option value="1" disabled>产品BBB(剩余0)</option>
-				</select>    
-			</div>
-			<div class="item">
+
+			<div v-for="(goodsdatas,key) in goodsdata.data">
+				<div class="item"></div>
+				<div class="item">
 					<div class="saomaiptbox">
-						<input type="text" class="publicIptSty widthman" id="" value="" placeholder="商品条形码" readonly="readonly"/>
-						<span class="icon iconfont">&#xe68c;</span>
+						<input type="text" name="" class="layui-input layui-input-disabled" :value="goodsdatas.goodsName" autocomplete="off" placeholder="" disabled/>
+						<span class="icon iconfont" style="font-size: 16px;">{{goodsdatas.goodsNum}}件</span>
 					</div>
+				</div>
+
 			</div>
 			<div class="item">
-				<textarea class="publicIptSty widthman" placeholder="条形码" readonly="readonly">95654451545,95654451545,95654451545,95654451545</textarea>
+				<div class="saomaiptbox">
+					<input type="text" class="publicIptSty widthman"  value="" placeholder="商品二维码" readonly="readonly"/>
+					<span class="icon iconfont">&#xe68c;</span>
+				</div>
 			</div>
 			<div class="item">
-				 <div class="chanpinnum">
-					 <ul>
-					 	 <li>已选择产品AAA:<span>5</span>件</li>
-						 <li>已选择产品BBB:<span>2</span>件</li>
-					 </ul>
-				 </div>
+				<textarea class="publicIptSty widthman layui-input-disabled" placeholder="二维码" v-model="tiaoxingma"></textarea>
 			</div>
+
 			<div class="item">
-					<input type="text" class="publicIptSty widthman" id="" value="" placeholder="运单编号,没有请填无" readonly="readonly"/>
+				<input type="text" class="publicIptSty widthman" value="" placeholder="运单编号"  v-model="postCode"/>
 			</div>
-		</div>      
+		</div>
 	</div>
-
-
 	<div class="shangpd">
-		<button class="layui-btn layui-btn-fluid resgSubmit">确认出货</button>
+		<button class="layui-btn layui-btn-fluid resgSubmit" @click="fahuofun();">确认出货</button>
 	</div>
-	<script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript">
-		layui.use(['form', 'layedit', 'laydate','upload'], function(){
-		  var form = layui.form
-		  ,layer = layui.layer
-		  ,layedit = layui.layedit
-		  ,upload = layui.upload
-		  ,laydate = layui.laydate;
-		    //设定文件大小限制
-			  upload.render({
-				elem: '#test7'
-				,url: '/upload/'
-				,size: 60 //限制文件大小，单位 KB
-				,done: function(res){
-				  console.log(res)
-				}
-			  });
-		 });
+</div>
+
+	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+	<script>
+        var idata = new  Vue({
+            el:"#fahuo",
+            data:{
+                goodsdata:{},
+				tiaoxingma:'',
+                postCode:'',
+                orderCode:''
+            },
+            methods:{
+                fahuofun:function () {
+                    var len = 0;
+                    var ddaa = idata.goodsdata.data;
+					for (var idx in ddaa){
+                        len += ddaa[idx].goodsNum;
+					}
+					console.log(idata.tiaoxingma.split(",").length);
+					if(idata.tiaoxingma.split(",").length  != len){
+                        layer.alert("订单总数为"+len+"件！");
+					}else{
+					    console.log(idata.tiaoxingma);
+                        $.ajax({
+                            cache: true,
+                            type: "POST",
+                            data:{
+                                orderCode:idata.orderCode,
+                                ids:idata.tiaoxingma,
+                                postCode:idata.postCode
+							},
+                            url: "/goodsManager/gmOrder/sendOrder",
+                            error : function(request) {
+                                layer.alert("Connection error");
+                            },
+                            success : function(data) {
+								if(data.code != 500){
+                                    layer.msg('出货成功!', {icon: 6,time: 1200},function () {
+                                        parent.location.href = '/goodsManager/page/ddgl';
+                                    });
+								}else{
+                                    layer.msg(data.msg, {icon:5,time: 1200},function () {
+                                        parent.location.href = '/goodsManager/page/ddgl';
+                                    });
+								}
+                                console.log(data);
+
+                            }
+                        });
+					}
+                }
+            },
+            mounted:function () {
+
+                layui.use(['jquery', 'form','layer'], function() {
+                    $ = layui.jquery,
+                        form = layui.form,
+                        layer = layui.layer;
+                    var local = window.location.href,goodscode='';
+                    goodscode = local.split('=')[1];
+                    console.log(goodscode);
+                    idata.orderCode = goodscode;
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+						data:{goodsCode:goodscode},
+                        url: "/goodsManager/gmOrder/getOrderOne",
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+                            idata.goodsdata = data;
+                            console.log(idata.goodsdata);
+
+                        }
+                    });
+
+                })
+            }
+        })
 	</script>
+</body>
 </html>

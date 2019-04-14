@@ -1,4 +1,5 @@
-body{background-color: #f1f1f1}
+body{background-color: #f1f1f1;position: relative}
+v-cloak{display: none}
 *{font-size: 0.35rem;color: #666;}
 .resgcontain{margin: 0.25rem;background-color: #fff;border-radius: 3px;padding: 0.2rem 0.25rem;}
 .resgcontain .item{margin-bottom: 0.25rem;}
@@ -79,4 +80,9 @@ textarea.publicIptSty{resize: none;height: 80px;padding-top: 0.15rem;padding-lef
 .mbnum{margin-bottom: 0.2rem;}
 .layui-form-label{padding: 9px 0px;color: #666;width: 50px;}
 .layui-input-block{margin-left: 60px;}
+.iptdisabled{border-color: #d2d2d2;color: #999}
+.layui-input-disabled{
+    border: 1px solid #e6e6e6;
+    background-color: #FBFBFB;
+}
 

@@ -14,96 +14,167 @@
 	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-	<div class="resgcontain layui-form">
-		<h1 class="site-h1">我要进货</h1>
-		<!-- <div class="logobox"><img src="img/logo.png" ></div> -->
-		<div class="item">
-			
-			<div class="layui-form-item">
-				<input type="checkbox" name="A" lay-skin="primary" title="产品名称AAAAA">
-				<div class="layui-input-block">
-				  <input type="number" name="title" placeholder="请输入数量" maxlength="6" class="layui-input">
+<div id="jinhuo" class="layui-form" v-cloak>
+	<form id="jinhuoForm" action="">
+		<div class="resgcontain">
+			<h1 class="site-h1">我要进货</h1>
+			<!-- <div class="logobox"><img src="img/logo.png" ></div> -->
+			<div class="item" v-for="goodsdata in goodsdatas">
+				<div class="layui-form-item goodss">
+					<div class="layui-form-mid layui-word-aux">{{goodsdata.goodsName}}</div>
+					<div class="layui-input-block">
+						<input type="number" name="title" :id="goodsdata.id" placeholder="请输入数量" value="0" maxlength="6" class="layui-input goodss">
+					</div>
 				</div>
 			</div>
-			
 		</div>
-		<div class="item">
-			<div class="layui-form-item">
-				<input type="checkbox" name="B" lay-skin="primary" title="产品名称BBBBBB">
-				<div class="layui-input-block">
-				<input type="number" name="title" placeholder="请输入数量" class="layui-input">
+		<div class="cotpad">
+			<fieldset class="layui-elem-field layui-field-title site-title">
+				<legend><a name="compatibility">地址</a></legend>
+			</fieldset>
+		</div>
+		<div class="resgcontain">
+			<div class="item">
+				<textarea class="publicIptSty widthman" placeholder="">{{sheng}}&nbsp;{{shi}}&nbsp;{{qu}}&nbsp;{{address}}</textarea>
+			</div>
+			<div class="item">
+				<button type="button" class="layui-btn layui-btn-danger" id="test7"><i class="layui-icon"></i>上传图片</button>
+				<div class="layui-inline layui-word-aux">
+					这里上传您转账截图或聊天记录
 				</div>
 			</div>
-			
 		</div>
-	</div>
-	<div class="cotpad">
-		<fieldset class="layui-elem-field layui-field-title site-title">
-		<legend><a name="compatibility">地址</a></legend>
-		</fieldset>
-	</div>
-	<div class="resgcontain layui-form">
-		<div class="item mb">
-			<form class="">
-				<div class="layui-form-item layui-row mb">
-					<div class="layui-col-xs12">
-						<div class="posire">
-							<select id="province" name="province" lay-filter="province">
-								<option value="">浙江省</option>
-							</select>
-						</div>
-					</div>
-					<div class="layui-col-xs12">
-						<div class="posire">
-							<select id="city" name="city" lay-filter="city">
-								<option value="">杭州市</option>
-							</select>
-						</div>
-					</div>
-					<div class="layui-col-xs12">
-						<div class="posire">
-							<select id="area" name="area" lay-filter="area">
-								<option value="">西湖区</option>
-							</select>
-						</div>
-					</div>
-					
-					<!-- <input type="button" class="layui-btn" value="提交"
-						onclick="getSelectValue()"> -->
-				</div>
-			</form>
+
+		<div class="shangpd">
+			<button class="layui-btn layui-btn-fluid resgSubmit" type="button" @click="shopFun();">确认购买</button>
 		</div>
-		<div class="item">
-			<textarea class="publicIptSty widthman" placeholder="">和平大道52号241室</textarea>
-		</div>
-		<div class="item">
-			<button type="button" class="layui-btn layui-btn-danger" id="test7"><i class="layui-icon"></i>上传图片</button>
-			<div class="layui-inline layui-word-aux">
-			  这里上传您转账截图或聊天记录
-			</div>
-		</div>
-	</div>
-	
-	<div class="shangpd">
-		<button class="layui-btn layui-btn-fluid resgSubmit">确认购买</button>
-	</div>
+	</form>
+</div>
+
 	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
 	<script type="text/javascript">
-		layui.use(['form', 'layedit', 'laydate','upload'], function(){
-		  var form = layui.form
-		  ,layer = layui.layer
-		  ,layedit = layui.layedit
-		  ,upload = layui.upload
-		  ,laydate = layui.laydate;
-		    //设定文件大小限制
-			  upload.render({
-				elem: '#test7'
-				,url: '/upload/'
-				,size: 60 //限制文件大小，单位 KB
-				,done: function(res){
-				  console.log(res)
+        var idata = new  Vue({
+            el:"#jinhuo",
+            data:{
+                goodsdatas:'',
+				img:'',
+				sheng:'',
+				shi:'',
+				qu:'',
+				address:''
+            },
+            methods:{
+				shopFun:function(){
+                    var goodss ={};
+                    for(goodsdata in idata.goodsdatas){
+                        var ids = idata.goodsdatas[goodsdata].id;
+                        var vals = document.getElementById(idata.goodsdatas[goodsdata].id).value;
+                        var key = [ids];
+                        goodss[key] = vals;
+                        //goodss.ids = vals;
+                    }
+
+				    var jsonStr = {
+						"address": idata.address,
+						"imgUrl": idata.img,
+						"goods":goodss
+					};
+					var param = {"jsonStr":JSON.stringify(jsonStr)}
+                    console.log(jsonStr);
+                    $.ajax({
+                        cache: true,
+                        data: param,
+                        type: "POST",
+                        url: "/goodsManager/gmOrder/saveOrder",
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+                            console.log(data);
+                            layer.alert(data.msg);
+                        }
+                    });
 				}
-			  });
-		 });
+            },
+            mounted:function () {
+
+                layui.use(['jquery', 'form','layer','upload'], function() {
+                    $ = layui.jquery,
+                        form = layui.form,
+                        upload = layui.upload,
+                        layer = layui.layer;
+                    var uploadInst = upload.render({
+                        elem: '#test7' //绑定元素
+                        ,url: '/common/sysFile/upload' //上传接口
+                        ,done: function(res){
+                            //上传完毕回调
+							console.log(res);
+                            idata.img = res.fileName;
+                        }
+                        ,error: function(){
+                            //请求异常回调
+                        }
+                    });
+                    $.ajax({
+                        cache: true,
+                        type: "GET",
+                        url: "/goodsManager/gmGoodsInfo/getList",
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+                            //console.log(data);
+                            if(data.code == 500){
+                                parent.location.href = '/goodsManager/page/login';
+                            }else{
+								idata.goodsdatas = data;
+                                layui.use(['form','element'], function() {
+                                    var form = layui.form,element = layui.element;
+                                    element.init();
+                                    form.render();
+                                });
+                            }
+                        }
+                    });
+                    $.ajax({
+                        cache: true,
+                        type: "GET",
+                        url: "/goodsManager/retail/address",
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+                            console.log(data);
+                            if(data.code == 500){
+                                parent.location.href = '/goodsManager/page/login';
+                            }else{
+                                idata.sheng = data.province;
+                                idata.shi = data.city;
+                                idata.qu = data.district;
+                                idata.address = data.liveAddress;
+                                layui.use(['form','element'], function() {
+                                    var form = layui.form,element = layui.element;
+                                    element.init();
+                                    form.render();
+                                });
+                            }
+                        }
+                    });
+//                    form.on('checkbox(lay-goods)', function (data) {
+//                        console.log(data.elem);
+//                        if (data.elem.checked) {
+//                            $(data.elem.id).next('.layui-input-block').find('input').removeAttr('disabled').removeClass('iptdisabled');
+//                        } else {
+//                            $(data.elem.id).next('.layui-input-block').find('input').attr('disabled').addClass('iptdisabled');
+//                        }
+//                    })
+
+                })
+            }
+        })
 	</script>
+</body>
 </html>

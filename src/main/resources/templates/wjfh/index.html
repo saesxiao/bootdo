@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="zh">
 <head>
 	<meta charset="UTF-8">
@@ -13,107 +13,111 @@
 	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-	
-	<div class="resgcontain">
-		<div class="banner">
-			<img src="/wjfh/img/banner.jpg" >
-			<span class="shareIcon icon iconfont">&#xe69e;</span>
+	<div  id="idata" v-cloak>
+		<div class="resgcontain">
+			<div class="banner">
+				<img src="/wjfh/img/banner.jpg" >
+				<span class="shareIcon icon iconfont">&#xe69e;</span>
+			</div>
+			<div class="welcomeYu">欢迎您！{{name}} <span class="layui-badge layui-bg-orange">{{level}}</span>
+				<p><!-- <span class="icon iconfont">&#xe61f;</span> -->这里是公告，这里是公告，这里是公告，这里是公告，这里是公告，这里是公告，</p>
+			</div>
 		</div>
-		<div class="welcomeYu">欢迎您！代理商A <span class="layui-badge layui-bg-orange">经销商</span>
-			<p><!-- <span class="icon iconfont">&#xe61f;</span> -->这里是公告，这里是公告，这里是公告，这里是公告，这里是公告，这里是公告，</p>
+		<div class="resgcontain">
+			<div class="layui-row">
+				<div class="layui-col-xs3 mbnum">
+					<div class="index_navIcon">
+						<a href="/goodsManager/page/ddgl">
+							<span class="icon iconfont indexnavicon bgcolor1">&#xe651;</span>
+							<div class="name">我要发货</div>
+						</a>
+					</div>
+				</div>
+				<div class="layui-col-xs3 mbnum">
+					<div class="index_navIcon">
+						<a href="/goodsManager/page/jinhuo">
+							<span class="icon iconfont indexnavicon bgcolor2">&#xe600;</span>
+							<div class="name">我要进货</div>
+						</a>
+					</div>
+				</div>
+				<div class="layui-col-xs3 mbnum">
+					<div class="index_navIcon">
+						<span class="icon iconfont indexnavicon bgcolor3">&#xe601;</span>
+						<div class="name">订单管理</div>
+					</div>
+				</div>
+				<div class="layui-col-xs3 mbnum">
+					<div class="index_navIcon">
+						<span class="icon iconfont indexnavicon bgcolor4">&#xe63d;</span>
+						<div class="name">查看库存</div>
+					</div>
+				</div>
+				<div class="layui-col-xs3">
+					<div class="index_navIcon">
+						<span class="icon iconfont indexnavicon bgcolor5">&#xe623;</span>
+						<div class="name">我的业绩</div>
+					</div>
+				</div>
+				<div class="layui-col-xs3">
+					<div class="index_navIcon">
+						<span class="icon iconfont indexnavicon bgcolor6">&#xe608;</span>
+						<div class="name">我的奖励</div>
+					</div>
+				</div>
+				<div class="layui-col-xs3">
+					<div class="index_navIcon">
+						<span class="icon iconfont indexnavicon bgcolor7">&#xe66d;</span>
+						<div class="name">邀请好友</div>
+					</div>
+				</div>
+				<div class="layui-col-xs3">
+					<div class="index_navIcon">
+						<span class="icon iconfont indexnavicon bgcolor8">&#xe66b;</span>
+						<div class="name">我要升级</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="resgcontain">
+			<div class="icontit"><span class="icon iconfont">&#xe653;</span>运营数据</div>
+			<div class="layui-row">
+				<div class="layui-col-xs4 yunyingdata">
+					<div class="data">{{order}}</div>
+					<div class="name">订单总数</div>
+				</div>
+				<div class="layui-col-xs4 yunyingdata">
+					<div class="data">{{profit}}</div>
+					<div class="name">已获得奖励</div>
+				</div>
+				<div class="layui-col-xs4 yunyingdata">
+					<div class="data">{{subordinate}}</div>
+					<div class="name">我的下级</div>
+				</div>
+				<div class="layui-col-xs4 yunyingdata">
+					<div class="data">{{stock}}</div>
+					<div class="name">我的库存</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	<div class="resgcontain">
-		<div class="layui-row">
-			<div class="layui-col-xs3 mbnum">
-				<div class="index_navIcon">
-					<a href="">
-						<span class="icon iconfont indexnavicon bgcolor1">&#xe651;</span>
-						<div class="name">我要发货</div>
-					</a>
-				</div>
-			</div>
-			<div class="layui-col-xs3 mbnum">
-				<div class="index_navIcon">
-					<a href="/goodsManager/page/jinhuo">
-						<span class="icon iconfont indexnavicon bgcolor2">&#xe600;</span>
-						<div class="name">我要进货</div>
-					</a>
-				</div>
-			</div>
-			<div class="layui-col-xs3 mbnum">
-				<div class="index_navIcon">
-					<span class="icon iconfont indexnavicon bgcolor3">&#xe601;</span>
-					<div class="name">订单管理</div>
-				</div>
-			</div>
-			<div class="layui-col-xs3 mbnum">
-				<div class="index_navIcon">
-					<span class="icon iconfont indexnavicon bgcolor4">&#xe63d;</span>
-					<div class="name">查看库存</div>
-				</div>
-			</div>
-			<div class="layui-col-xs3">
-				<div class="index_navIcon">
-					<span class="icon iconfont indexnavicon bgcolor5">&#xe623;</span>
-					<div class="name">我的业绩</div>
-				</div>
-			</div>
-			<div class="layui-col-xs3">
-				<div class="index_navIcon">
-					<span class="icon iconfont indexnavicon bgcolor6">&#xe608;</span>
-					<div class="name">我的奖励</div>
-				</div>
-			</div>
-			<div class="layui-col-xs3">
-				<div class="index_navIcon">
-					<span class="icon iconfont indexnavicon bgcolor7">&#xe66d;</span>
-					<div class="name">邀请好友</div>
-				</div>
-			</div>
-			<div class="layui-col-xs3">
-				<div class="index_navIcon">
-					<span class="icon iconfont indexnavicon bgcolor8">&#xe66b;</span>
-					<div class="name">我要升级</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="resgcontain">
-		<div class="icontit"><span class="icon iconfont">&#xe653;</span>运营数据</div>
-		<div class="layui-row">
-			<div class="layui-col-xs4 yunyingdata">
-				<div class="data">10</div>
-				<div class="name">订单总数</div>
-			</div>
-			<div class="layui-col-xs4 yunyingdata">
-				<div class="data">80</div>
-				<div class="name">已获得奖励</div>
-			</div>
-			<div class="layui-col-xs4 yunyingdata">
-				<div class="data">8</div>
-				<div class="name">我的下级</div>
-			</div>
-			<div class="layui-col-xs4 yunyingdata">
-				<div class="data">52</div>
-				<div class="name">我的库存</div>
-			</div>
-		</div>
-	</div>
+
 	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
 	<script>
-        var login = new  Vue({
-            el:"#loginBox",
+        var idata = new  Vue({
+            el:"#idata",
             data:{
-                username:'',
-                password:''
+                name:'',
+                level:'',
+                order:'',
+                profit:'',
+                stock:'',
+            	subordinate:''
             },
             methods:{
-                LoginFun:function () {
 
-                }
             },
             mounted:function () {
 
@@ -121,6 +125,7 @@
                     $ = layui.jquery,
                         form = layui.form,
                         layer = layui.layer;
+                    layer.load(1);
                     $.ajax({
                         cache: true,
                         type: "POST",
@@ -130,7 +135,19 @@
                             layer.alert("Connection error");
                         },
                         success : function(data) {
-							console.log(data);
+                            console.log(data);
+                            if(data.code == 500){
+                                parent.location.href = '/goodsManager/page/login';
+							}else{
+                                idata.name= data.name;
+								idata.level = data.level;
+								idata.order = data.order;
+								idata.profit = data.profit;
+								idata.stock = data.stock;
+								idata.subordinate = data.subordinate;
+                                layer.closeAll('loading');
+							}
+
 
                         }
                     });
