@@ -40,6 +40,10 @@ public class GmIndexController {
         model.addAttribute("goodsCode",goodsCode);
         return "wjfh/fahuo";
     }
+    @RequestMapping("/retail")
+    public String toRetail(){
+        return "wjfh/retail";
+    }
 
 
 }
