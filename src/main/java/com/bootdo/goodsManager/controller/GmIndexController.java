@@ -30,6 +30,10 @@ public class GmIndexController {
     public String toJinhuo(){
         return "wjfh/jinhuo";
     }
+    @RequestMapping("/ddgl")
+    public String toDdgl(){
+        return "wjfh/dldd";
+    }
 
 
 }
