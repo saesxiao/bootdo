@@ -130,7 +130,7 @@ public class GmOrderController {
 			query = new HashMap<>();
 			query.put("userId",userId);
 			orderList.addAll(gmOrderService.list(query));
-
+			Double money = 0.0;
 			for (GmOrderDO order:orderList) {
 				GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
 				order.setGoodsName(goodsInfo.getGoodsName());
@@ -143,7 +143,7 @@ public class GmOrderController {
 				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus()==2){
 					type = "3";
 				}
-				Double money = goodsInfo.getGoodsPrice()*order.getGoodsNum();
+				money += goodsInfo.getGoodsPrice()*order.getGoodsNum();
 				String orderCode = order.getType(); //+"-"+type+"-"+userDO.getName()+"-"+money
 				if(res.containsKey(orderCode)){
 					Map<String,Object> map= res.get(orderCode);
