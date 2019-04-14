@@ -88,10 +88,7 @@ function load() {
                     },
                     {
                         field: 'remark',
-                        title: '奖励政策',
-                        formatter: function (value) {
-                            return value+" 元/件"
-                        }
+                        title: '库存'
                     },
                     {
                         title: '操作',

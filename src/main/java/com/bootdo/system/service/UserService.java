@@ -20,6 +20,8 @@ public interface UserService {
 
 	UserDO getById(Long id);
 
+	UserDO getOutRole(Long id);
+
 	List<UserDO> list(Map<String, Object> map);
 
 	List<UserDO> getList(Map<String, Object> map);

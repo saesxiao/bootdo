@@ -150,17 +150,21 @@ public class GmOrderController {
 		if(user==null){
 			ShiroUtils.logout();
 		}
+		Boolean isAdmin = false;
 		try {
 
 			//获取分润
 			GmProfitDO userProfit = profitService.getByUserId(user.getUserId());
-			UserDO parent = userService.get(user.getParentId());
+			UserDO parent = userService.getOutRole(user.getParentId());
 			GmProfitDO parentProfit = null;
 			Long type = user.getDeptId();
 			if(type==2){ //联合创始人发货时奖励自己 和上级 总经销商只奖励自己
 				if(parent!=null){
 					parentProfit = profitService.getByUserId(parent.getUserId());
 				}
+			}
+			if(type==1){ // 标记平台发货
+				isAdmin = true;
 			}
 
 
@@ -194,6 +198,7 @@ public class GmOrderController {
 
 			// 根据二维码的数量 遍历库存 给库存添加二维码
 			for (int i = 0; i < size; i++) {
+
 				String goodsCode = goodsCodes[i];
 				Boolean flag = true;
 				//先根据二维码查询
@@ -280,6 +285,9 @@ public class GmOrderController {
 				}
 
 
+			}
+			if(isAdmin){
+//				GmGoodsInfoDO goodsInfoDO =
 			}
 			order.setOrderStatus(2);
 			order.setEndTime(DateUtil.getDateTime());

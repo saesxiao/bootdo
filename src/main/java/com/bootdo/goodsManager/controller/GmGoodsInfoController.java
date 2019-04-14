@@ -1,8 +1,14 @@
 package com.bootdo.goodsManager.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bootdo.common.utils.*;
+import com.bootdo.goodsManager.domain.GmGoodsUserDO;
+import com.bootdo.goodsManager.service.GmGoodsUserService;
+import com.bootdo.system.domain.UserDO;
+import io.swagger.models.auth.In;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -17,9 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.bootdo.goodsManager.domain.GmGoodsInfoDO;
 import com.bootdo.goodsManager.service.GmGoodsInfoService;
-import com.bootdo.common.utils.PageUtils;
-import com.bootdo.common.utils.Query;
-import com.bootdo.common.utils.R;
 
 /**
  * 商品信息表
@@ -34,6 +37,8 @@ import com.bootdo.common.utils.R;
 public class GmGoodsInfoController {
 	@Autowired
 	private GmGoodsInfoService gmGoodsInfoService;
+	@Autowired
+	private GmGoodsUserService goodsUserService;
 	
 	@GetMapping()
 	@RequiresPermissions("goodsManager:gmGoodsInfo:gmGoodsInfo")
@@ -51,6 +56,15 @@ public class GmGoodsInfoController {
 		int total = gmGoodsInfoService.count(query);
 		PageUtils pageUtils = new PageUtils(gmGoodsInfoList, total);
 		return pageUtils;
+	}
+
+	@ResponseBody
+	@GetMapping("/getList")
+	public Object getList(){
+		//查询列表数据
+		List<GmGoodsInfoDO> gmGoodsInfoList = gmGoodsInfoService.list(new HashMap<>());
+
+		return gmGoodsInfoList;
 	}
 	
 	@GetMapping("/add")
@@ -74,8 +88,27 @@ public class GmGoodsInfoController {
 	@PostMapping("/save")
 	@RequiresPermissions("goodsManager:gmGoodsInfo:add")
 	public R save( GmGoodsInfoDO gmGoodsInfo){
-		if(gmGoodsInfoService.save(gmGoodsInfo)>0){
-			return R.ok();
+		try {
+			UserDO user = ShiroUtils.getUser();
+			if(gmGoodsInfoService.save(gmGoodsInfo)>0){
+				String remark = gmGoodsInfo.getRemark();
+				if(remark.matches("\\d+")){
+					Integer size = Integer.parseInt(remark);
+					for (int i = 0; i < size; i++) {
+						GmGoodsUserDO goodsUser = new GmGoodsUserDO();
+						goodsUser.setUserId(user.getUserId());
+						goodsUser.setStatus("0");
+						goodsUser.setType(gmGoodsInfo.getId()+"");
+						goodsUser.setInTime(DateUtil.getDateTime());
+						goodsUser.setBatch(1);
+						goodsUserService.save(goodsUser);
+					}
+				}
+
+				return R.ok();
+			}
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 		return R.error();
 	}

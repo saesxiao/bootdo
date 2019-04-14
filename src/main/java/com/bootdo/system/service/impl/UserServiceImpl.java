@@ -59,6 +59,11 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    public UserDO getOutRole(Long id) {
+        UserDO user = userMapper.get(id);
+        return user;
+    }
+
 
 
     public UserDO getByInvite(String invite){
