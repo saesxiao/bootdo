@@ -117,52 +117,56 @@ public class GmOrderController {
 	@ResponseBody
 	@RequestMapping("/getOrder")
 	public Object getOrder(){
-		UserDO user = ShiroUtils.getUser();
-		if(user==null){
-			ShiroUtils.logout();
-		}
 		Map<String,Map<String,Object>> res = new LinkedHashMap<>();
-		Long userId = user.getUserId();
-		Map<String,Object> query = new HashMap<>();
-		query.put("parentId",userId);
-		List<GmOrderDO> orderList = gmOrderService.list(query);
-		query = new HashMap<>();
-		query.put("userId",userId);
-		orderList.addAll(gmOrderService.list(query));
+		try{
+			UserDO user = ShiroUtils.getUser();
+			if(user==null){
+				ShiroUtils.logout();
+			}
+			Long userId = user.getUserId();
+			Map<String,Object> query = new HashMap<>();
+			query.put("parentId",userId);
+			List<GmOrderDO> orderList = gmOrderService.list(query);
+			query = new HashMap<>();
+			query.put("userId",userId);
+			orderList.addAll(gmOrderService.list(query));
 
-		for (GmOrderDO order:orderList) {
-			GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
-			order.setGoodsName(goodsInfo.getGoodsName());
-			String type = "";
-			String niceName = userService.getById(order.getUserId()).getName();
-			if(order.getUserId()==userId&&order.getParentId()!=userId){
-				type = "1";
-			}else if(order.getParentId()==userId&&order.getUserId()!=userId){
-				type = "2";
-			}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus().equals("2")){
-				type = "3";
+			for (GmOrderDO order:orderList) {
+				GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
+				order.setGoodsName(goodsInfo.getGoodsName());
+				String type = "";
+				String niceName = userService.getById(order.getUserId()).getName();
+				if(order.getUserId()==userId&&order.getParentId()!=userId){
+					type = "1";
+				}else if(order.getParentId()==userId&&order.getUserId()!=userId){
+					type = "2";
+				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus().equals("2")){
+					type = "3";
+				}
+				Double money = goodsInfo.getGoodsPrice()*order.getGoodsNum();
+				String orderCode = order.getType(); //+"-"+type+"-"+userDO.getName()+"-"+money
+				if(res.containsKey(orderCode)){
+					Map<String,Object> map= res.get(orderCode);
+					List<GmOrderDO> tempList = (List<GmOrderDO>) map.get("data");
+					tempList.add(order);
+					map.replace("data",tempList);
+					map.put("type",type);
+					map.put("name",niceName);
+					map.put("money",money);
+					res.replace(orderCode,map);
+				}else{
+					List<GmOrderDO> tempList = new ArrayList<>();
+					tempList.add(order);
+					Map<String,Object> map= new HashMap<>();
+					map.put("data",tempList);
+					map.put("type",type);
+					map.put("name",niceName);
+					map.put("money",money);
+					res.put(orderCode,map);
+				}
 			}
-			Double money = goodsInfo.getGoodsPrice()*order.getGoodsNum();
-			String orderCode = order.getType(); //+"-"+type+"-"+userDO.getName()+"-"+money
-			if(res.containsKey(orderCode)){
-				Map<String,Object> map= res.get(orderCode);
-				List<GmOrderDO> tempList = (List<GmOrderDO>) map.get("data");
-				tempList.add(order);
-				map.replace("data",tempList);
-				map.put("type",type);
-				map.put("name",niceName);
-				map.put("money",money);
-				res.replace(orderCode,map);
-			}else{
-				List<GmOrderDO> tempList = new ArrayList<>();
-				tempList.add(order);
-				Map<String,Object> map= new HashMap<>();
-				map.put("data",tempList);
-				map.put("type",type);
-				map.put("name",niceName);
-				map.put("money",money);
-				res.put(orderCode,map);
-			}
+		}catch (Exception e){
+			e.printStackTrace();
 		}
 		return res;
 	}

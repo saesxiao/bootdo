@@ -34,6 +34,10 @@ public class GmIndexController {
     public String toDdgl(){
         return "wjfh/dldd";
     }
+    @RequestMapping("/fahuo")
+    public String toFahuo(){
+        return "wjfh/fahuo";
+    }
 
 
 }
