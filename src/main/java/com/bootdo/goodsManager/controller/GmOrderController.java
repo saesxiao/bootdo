@@ -136,11 +136,11 @@ public class GmOrderController {
 				order.setGoodsName(goodsInfo.getGoodsName());
 				String type = "";
 				String niceName = userService.getById(order.getUserId()).getName();
-				if(order.getUserId()==userId&&order.getParentId()!=userId){
+				if(order.getUserId()==userId&&order.getParentId()!=userId&&order.getOrderStatus()==1){
 					type = "1";
-				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&!order.getOrderStatus().equals("2")){
+				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus()!=2){
 					type = "2";
-				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus().equals("2")){
+				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus()==2){
 					type = "3";
 				}
 				Double money = goodsInfo.getGoodsPrice()*order.getGoodsNum();
