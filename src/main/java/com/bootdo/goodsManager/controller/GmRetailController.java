@@ -2,6 +2,7 @@ package com.bootdo.goodsManager.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.bootdo.common.utils.DateUtil;
 import com.bootdo.common.utils.R;
 import com.bootdo.common.utils.ShiroUtils;
 import com.bootdo.goodsManager.domain.*;
@@ -70,6 +71,7 @@ public class GmRetailController {
                 }
                 GmGoodsUserDO goodsUser = goodsUserList.get(0);
                 goodsUser.setStatus("3");
+                goodsUser.setOutTime(DateUtil.getDateTime());
                 goodsUserService.update(goodsUser);
             }
             return R.ok("零售成功");
@@ -231,6 +233,23 @@ public class GmRetailController {
             ShiroUtils.logout();
         }
         return R.ok(user.getWechat());
+    }
+
+    @RequestMapping("/address")
+    @ResponseBody
+    public Object getUserAddress(){
+        // 获取当前用户
+        UserDO user = ShiroUtils.getUser();
+        if(user==null){
+            ShiroUtils.logout();
+        }
+        Map<String,Object> res = new HashMap<>();
+        res.put("userName",user.getName());
+        res.put("province",user.getProvince());
+        res.put("city",user.getCity());
+        res.put("district",user.getDistrict());
+        res.put("liveAddress",user.getLiveAddress());
+        return R.ok(res);
     }
 
 

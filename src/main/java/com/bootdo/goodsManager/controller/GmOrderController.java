@@ -151,6 +151,7 @@ public class GmOrderController {
 			ShiroUtils.logout();
 		}
 		Boolean isAdmin = false;
+		Boolean isHave = true;
 		try {
 
 			//获取分润
@@ -197,7 +198,27 @@ public class GmOrderController {
 			}
 
 			// 根据二维码的数量 遍历库存 给库存添加二维码
-			for (int i = 0; i < size; i++) {
+			broken:for (int i = 0; i < size; i++) {
+
+				// 如果是平台管理者 则跟新平台库存
+				if(isAdmin){
+					GmGoodsInfoDO goodsInfoDO = goodsInfoService.get(order.getGoodsId());
+					if(goodsInfoDO!=null){
+						Integer remark = Integer.parseInt(goodsInfoDO.getRemark());
+						if(remark>0){
+							remark -= 1;
+							goodsInfoDO .setRemark(remark+"");
+							goodsInfoService.update(goodsInfoDO);
+						}else {
+							goodsInfoDO.setStatu(2);
+							goodsInfoService.update(goodsInfoDO);
+							isHave = false;
+							break broken;
+						}
+					}
+
+
+				}
 
 				String goodsCode = goodsCodes[i];
 				Boolean flag = true;
@@ -208,13 +229,12 @@ public class GmOrderController {
 				queryGoodsUser.put("status","0");
 				List<GmGoodsUserDO> goodsUserDOList = goodsUserService.list(queryGoodsUser);
 				GmGoodsUserDO goodsUserDO = null;
-				if(goodsUserDOList==null||goodsUserDOList.size()<1){
-					return R.error("订单信息错误");
-				}
-				goodsUserDO = goodsUserDOList.get(0);
-				if(goodsUserDO!=null){
+
+				if(goodsUserDOList!=null&&goodsUserDOList.size()>0){
+					goodsUserDO = goodsUserDOList.get(0);
 					// 先将该库存 改变状态为已发
 					goodsUserDO.setStatus("1");
+					goodsUserDO.setOutTime(DateUtil.getDateTime());
 					if(goodsUserService.update(goodsUserDO)<0){
 						flag = false;
 					}
@@ -222,13 +242,15 @@ public class GmOrderController {
 					goodsUserDO.setUserId(order.getUserId());
 					goodsUserDO.setId(null);
 					goodsUserDO.setStatus("0");
+					goodsUserDO.setInTime(DateUtil.getDateTime());
+					goodsUserDO.setOutTime(null);
 					if(goodsUserService.save(goodsUserDO)<0){
 						flag = false;
 					}
 				}else { // 如果查不到二维码 则下发新的
 					Boolean isNoCode = false;
 					loop:for (GmGoodsUserDO temp:goodsUserList) {
-						if(temp.getGoodsCode().equals("")||temp.getGoodsCode()==null){
+						if(temp.getGoodsCode()==null||temp.getGoodsCode().equals("")){
 							isNoCode = true;
 							goodsUserDO = temp;
 							break loop;
@@ -240,6 +262,7 @@ public class GmOrderController {
 					// 先将该库存设置一个二维码 并改变状态为已发
 					goodsUserDO.setStatus("1");
 					goodsUserDO.setGoodsCode(goodsCode);
+					goodsUserDO.setOutTime(DateUtil.getDateTime());
 					if(goodsUserService.update(goodsUserDO)<0){
 						flag = false;
 					}
@@ -247,11 +270,12 @@ public class GmOrderController {
 					goodsUserDO.setUserId(order.getUserId());
 					goodsUserDO.setId(null);
 					goodsUserDO.setStatus("0");
+					goodsUserDO.setInTime(DateUtil.getDateTime());
+					goodsUserDO.setOutTime(null);
 					if(goodsUserService.save(goodsUserDO)<0){
 						flag = false;
 					}
 				}
-
 
 
 				// 分润开始 fuck me...
@@ -286,8 +310,9 @@ public class GmOrderController {
 
 
 			}
-			if(isAdmin){
-//				GmGoodsInfoDO goodsInfoDO =
+
+			if(!isHave){
+				return R.error("库存不足,请前往平台上货");
 			}
 			order.setOrderStatus(2);
 			order.setEndTime(DateUtil.getDateTime());

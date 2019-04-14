@@ -69,12 +69,13 @@ function load() {
                         field : 'status',
                         title : '商品状态',
 						formatter: function (value) {
-							if(value==0||value=='0')
-								return "库存";
-							if(value==1||value=='1')
-							    return "已发";
-							else
-								return "已售";
+							if(value=='0'){
+                                return "库存";
+                            }else if(value=='1'){
+                                return "已发";
+                            }else{
+                                return "已售";
+                            }
                         }
                     },
                     {

@@ -69,11 +69,14 @@ function load() {
                     {
                         field : 'status',
                         title : '商品状态',
-						formatter: function (value) {
-							if(value==0||value=='0')
-								return "库存";
-							else
-								return "已售";
+                        formatter: function (value) {
+                            if(value=='0'){
+                                return "库存";
+                            }else if(value=='1'){
+                                return "已发";
+                            }else{
+                                return "已售";
+                            }
                         }
                     },
                     {
@@ -113,11 +116,18 @@ function load() {
                         field : 'goods_code',
                         align : 'center',
                         formatter : function(value, row, index) {
+                            var code = row.goods_code;
+                            if(code!=null&&code!=""){
+                                var f = '<a class="btn btn-success btn-sm" href="#" title="追踪订单"  mce_href="#" onclick="getOrder(\''
+                                    + code
+                                    + '\')"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;&nbsp;追踪订单</a> ';
+                                return f ;
+                            }else {
+                                var f = '<a class="btn btn-success btn-sm" href="#" title="追踪订单"  mce_href="#" disabled readonly ><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;&nbsp;追踪订单</a> ';
+                                return f ;
+                            }
 
-                            var f = '<a class="btn btn-success btn-sm" href="#" title="追踪订单"  mce_href="#" onclick="getOrder(\''
-                                + row.goods_code
-                                + '\')"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;&nbsp;追踪订单</a> ';
-                            return f ;
+
                         }
                     } ]
             });

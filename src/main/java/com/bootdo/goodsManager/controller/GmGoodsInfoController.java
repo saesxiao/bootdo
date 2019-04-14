@@ -62,7 +62,9 @@ public class GmGoodsInfoController {
 	@GetMapping("/getList")
 	public Object getList(){
 		//查询列表数据
-		List<GmGoodsInfoDO> gmGoodsInfoList = gmGoodsInfoService.list(new HashMap<>());
+		Map<String,Object> query = new HashMap<>();
+		query.put("statu",1);
+		List<GmGoodsInfoDO> gmGoodsInfoList = gmGoodsInfoService.list(query);
 
 		return gmGoodsInfoList;
 	}
@@ -119,7 +121,37 @@ public class GmGoodsInfoController {
 	@RequestMapping("/update")
 	@RequiresPermissions("goodsManager:gmGoodsInfo:edit")
 	public R update( GmGoodsInfoDO gmGoodsInfo){
-		gmGoodsInfoService.update(gmGoodsInfo);
+		try {
+			UserDO user = ShiroUtils.getUser();
+			Map<String,Object> query = new HashMap<>();
+			query.put("userId",user.getUserId());
+			query.put("status","0");
+			query.put("type",gmGoodsInfo.getId()+"");
+			List<GmGoodsUserDO> goodsUserList = goodsUserService.list(query);
+			Integer have = goodsUserList.size();
+			String remark = gmGoodsInfo.getRemark();
+			if(remark.matches("\\d+")){
+				Integer size = Integer.parseInt(remark);
+				Integer sub = size-have;
+				if(sub>=0){
+					for (int i = 0; i < sub; i++) {
+						GmGoodsUserDO goodsUser = new GmGoodsUserDO();
+						goodsUser.setUserId(user.getUserId());
+						goodsUser.setStatus("0");
+						goodsUser.setType(gmGoodsInfo.getId()+"");
+						goodsUser.setInTime(DateUtil.getDateTime());
+						goodsUser.setBatch(1);
+						goodsUserService.save(goodsUser);
+					}
+				}else{
+					return R.error("库存不能减小");
+				}
+			}
+
+			gmGoodsInfoService.update(gmGoodsInfo);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 		return R.ok();
 	}
 	

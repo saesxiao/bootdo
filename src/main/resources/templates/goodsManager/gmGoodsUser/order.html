@@ -107,7 +107,9 @@
                             <li>
                                 <i class="node-icon"></i>
                                 <span class="time" th:text="'进货日期:  '+${item.inTime}" style="color: #990000"></span>
-                                <span class="time" th:text="'出货日期:  '+${item.outTime}" style="color: #990000"></span><br/>
+                                <span th:if="${item.status} eq '1'"><span class="time"  th:text="'出货日期:  '+${item.outTime}" style="color: #990000"></span><br/></span>
+                                <span th:if="${item.status} eq '3'"><span class="time"  th:text="'销售日期:  '+${item.outTime}" style="color: #990000"></span><br/></span>
+                                <span th:if="${item.status} eq '0'"><br/></span>
                                 <span class="txt" th:text="'所属名称:  '+${item.name}"></span>
                                 <span class="txt" th:text="'上级名称:  '+${item.parentName}"></span>
                             </li>

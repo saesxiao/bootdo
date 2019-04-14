@@ -100,7 +100,7 @@ public class GmGoodsUserController {
 				info.put("parentName"," - ");
 			}
 			info.put("name",item.get("name"));
-
+			info.put("status",item.get("status"));
 			info.put("inTime",item.get("in_time"));
 			info.put("outTime",item.get("out_time"));
 			infoList.add(info);
