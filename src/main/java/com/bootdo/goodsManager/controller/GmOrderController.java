@@ -128,7 +128,15 @@ public class GmOrderController {
 		for (GmOrderDO order:orderList) {
 			GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
 			order.setGoodsName(goodsInfo.getGoodsName());
-			String orderCode = order.getType();
+			String type = "";
+			if(order.getUserId()==userId&&order.getParentId()!=userId){
+				type = "1";
+			}else if(order.getParentId()==userId&&order.getUserId()!=userId){
+				type = "2";
+			}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus().equals("2")){
+				type = "3";
+			}
+			String orderCode = order.getType()+"-"+type;
 			if(res.containsKey(orderCode)){
 				List<GmOrderDO> tempList = res.get(orderCode);
 				tempList.add(order);
