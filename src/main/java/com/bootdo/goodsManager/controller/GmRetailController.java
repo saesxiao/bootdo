@@ -209,7 +209,8 @@ public class GmRetailController {
             List<GmOrderDO> orderList = orderService.list(query);
             res.put("order",orderList.size());
             res.put("name",user.getName());
-            res.put("level",user.getDeptName());
+            DeptDO dept = deptService.get(user.getDeptId());
+            res.put("level",dept.getName());
 
 
         }catch (Exception e){
