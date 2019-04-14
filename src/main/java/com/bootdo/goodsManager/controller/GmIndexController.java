@@ -1,6 +1,7 @@
 package com.bootdo.goodsManager.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 /**
  * 发货订单表
@@ -35,7 +36,8 @@ public class GmIndexController {
         return "wjfh/dldd";
     }
     @RequestMapping("/fahuo")
-    public String toFahuo(){
+    public String toFahuo(String goodsCode, Model model){
+        model.addAttribute("goodsCode",goodsCode);
         return "wjfh/fahuo";
     }
 
