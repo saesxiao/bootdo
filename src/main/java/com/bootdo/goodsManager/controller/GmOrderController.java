@@ -172,6 +172,42 @@ public class GmOrderController {
 	}
 
 	@ResponseBody
+	@RequestMapping("/getOrderOne")
+	public Object getOrderOne(String goodsCode){
+		List<Map<String,Object>> res = new ArrayList<>();
+		Map<String,Object> result = new HashMap<>();
+		try{
+			UserDO user = ShiroUtils.getUser();
+			if(user==null){
+				ShiroUtils.logout();
+			}
+			Long userId = user.getUserId();
+			Map<String,Object> query = new HashMap<>();
+			query.put("userId",userId);
+			query.put("type",goodsCode);
+			List<GmOrderDO> orderList = gmOrderService.list(query);
+			if(orderList!=null&&orderList.size()>0){
+				for (GmOrderDO order:orderList) {
+					Map<String,Object> data  = new HashMap<>();
+					GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
+					data.put("goodsName",goodsInfo.getGoodsName());
+					data.put("goodsNum",order.getGoodsNum());
+					data.put("goodsId",order.getGoodsId());
+					res.add(data);
+				}
+
+				result.put("orderCode",goodsCode);
+				result.put("data",res);
+			}
+
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	@ResponseBody
 	@RequestMapping("/sendOrder")
 	public R sendOrder(String orderCode,String ids){
 
