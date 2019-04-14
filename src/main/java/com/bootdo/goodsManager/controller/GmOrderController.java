@@ -70,7 +70,11 @@ public class GmOrderController {
 			for (String key : map.keySet()) {
 				Integer goodsId = Integer.parseInt(key);
 				GmGoodsInfoDO goods = goodsInfoService.get(goodsId);
-				Integer goodsNum  = (Integer) (map.get(key));
+				String tempNum = String.valueOf(map.get(key));
+				if(tempNum.equals("")){
+					tempNum = "0";
+				}
+				Integer goodsNum  = Integer.parseInt(tempNum);
 				// 如果此商品有且 需求数量大于零
 				if(goods!=null&&goodsNum>0){
 					Map<String,Object> query = new HashMap<>();
