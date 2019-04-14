@@ -183,7 +183,7 @@ public class GmOrderController {
 			}
 			Long userId = user.getUserId();
 			Map<String,Object> query = new HashMap<>();
-			query.put("userId",userId);
+			query.put("parentId",userId);
 			query.put("type",goodsCode);
 			List<GmOrderDO> orderList = gmOrderService.list(query);
 			if(orderList!=null&&orderList.size()>0){
