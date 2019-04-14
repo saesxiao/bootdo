@@ -138,7 +138,7 @@ public class GmOrderController {
 				String niceName = userService.getById(order.getUserId()).getName();
 				if(order.getUserId()==userId&&order.getParentId()!=userId){
 					type = "1";
-				}else if(order.getParentId()==userId&&order.getUserId()!=userId){
+				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&!order.getOrderStatus().equals("2")){
 					type = "2";
 				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus().equals("2")){
 					type = "3";
@@ -271,7 +271,7 @@ public class GmOrderController {
 				String[]goodsCodes = ids.split(",");
 				Integer size = goodsCodes.length;
 				if(size>goodsUserList.size()){
-					return R.error("上级库存不足");
+					return R.error("库存不足");
 				}
 
 				// 根据二维码的数量 遍历库存 给库存添加二维码
