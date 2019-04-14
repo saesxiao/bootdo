@@ -186,6 +186,7 @@ public class GmOrderController {
 			query.put("parentId",userId);
 			query.put("type",goodsCode);
 			List<GmOrderDO> orderList = gmOrderService.list(query);
+			UserDO child = null;
 			if(orderList!=null&&orderList.size()>0){
 				for (GmOrderDO order:orderList) {
 					Map<String,Object> data  = new HashMap<>();
@@ -194,10 +195,20 @@ public class GmOrderController {
 					data.put("goodsNum",order.getGoodsNum());
 					data.put("goodsId",order.getGoodsId());
 					res.add(data);
+					child = userService.getOutRole(order.getUserId());
 				}
 
 				result.put("orderCode",goodsCode);
 				result.put("data",res);
+				if(child!=null){
+					result.put("receiptName",child.getName());
+					result.put("receiptPhone",child.getMobile());
+					result.put("receiptProvince",child.getProvince());
+					result.put("receiptCity",child.getCity());
+					result.put("receiptDistrict",child.getDistrict());
+					result.put("receiptAddress",child.getLiveAddress());
+
+				}
 			}
 
 
@@ -209,7 +220,7 @@ public class GmOrderController {
 
 	@ResponseBody
 	@RequestMapping("/sendOrder")
-	public R sendOrder(String orderCode,String ids){
+	public R sendOrder(String orderCode,String ids,String postCode){
 
 		UserDO user = ShiroUtils.getUser();
 		if(user==null){
@@ -382,6 +393,7 @@ public class GmOrderController {
 				}
 				order.setOrderStatus(2);
 				order.setEndTime(DateUtil.getDateTime());
+				order.setRemark(postCode);
 				gmOrderService.update(order);
 			}
 			return R.ok();
