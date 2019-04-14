@@ -129,6 +129,7 @@ public class GmOrderController {
 			GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
 			order.setGoodsName(goodsInfo.getGoodsName());
 			String type = "";
+			UserDO userDO = userService.getById(order.getUserId());
 			if(order.getUserId()==userId&&order.getParentId()!=userId){
 				type = "1";
 			}else if(order.getParentId()==userId&&order.getUserId()!=userId){
@@ -136,7 +137,7 @@ public class GmOrderController {
 			}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus().equals("2")){
 				type = "3";
 			}
-			String orderCode = order.getType()+"-"+type;
+			String orderCode = order.getType()+"-"+type+"-"+userDO.getName();
 			if(res.containsKey(orderCode)){
 				List<GmOrderDO> tempList = res.get(orderCode);
 				tempList.add(order);
