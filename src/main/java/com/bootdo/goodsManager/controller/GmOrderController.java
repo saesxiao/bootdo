@@ -44,6 +44,11 @@ public class GmOrderController {
 	 // 上上级奖励金额
 	private static final Double REWARD_B = 50.0;
 
+	/**
+	 * 下单
+	 * @param jsonStr
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/saveOrder")
 	public R order(@Param("jsonStr") String jsonStr){
@@ -114,9 +119,13 @@ public class GmOrderController {
 		}
 	}
 
+	/**
+	 * 获取发货订单列表
+	 * @return
+	 */
 	@ResponseBody
-	@RequestMapping("/getOrder")
-	public Object getOrder(){
+	@RequestMapping("/getSendOrder")
+	public Object getSnedOrder(){
 		Map<String,Map<String,Object>> res = new LinkedHashMap<>();
 		try{
 			UserDO user = ShiroUtils.getUser();
@@ -127,43 +136,40 @@ public class GmOrderController {
 			Map<String,Object> query = new HashMap<>();
 			query.put("parentId",userId);
 			List<GmOrderDO> orderList = gmOrderService.list(query);
-			query = new HashMap<>();
-			query.put("userId",userId);
-			orderList.addAll(gmOrderService.list(query));
-			Double money = 0.0;
+//			query = new HashMap<>();
+//			query.put("userId",userId);
+//			orderList.addAll(gmOrderService.list(query));
 			for (GmOrderDO order:orderList) {
 				GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
 				order.setGoodsName(goodsInfo.getGoodsName());
-				String type = "";
 				String niceName = userService.getById(order.getUserId()).getName();
-				if(order.getUserId()==userId&&order.getParentId()!=userId&&order.getOrderStatus()==1){
-					type = "1";
-				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus()!=2){
-					type = "2";
-				}else if(order.getParentId()==userId&&order.getUserId()!=userId&&order.getOrderStatus()==2){
-					type = "3";
-				}
-				money += goodsInfo.getGoodsPrice()*order.getGoodsNum();
-				String orderCode = order.getType(); //+"-"+type+"-"+userDO.getName()+"-"+money
+				String orderCode = order.getType();
 				if(res.containsKey(orderCode)){
 					Map<String,Object> map= res.get(orderCode);
 					List<GmOrderDO> tempList = (List<GmOrderDO>) map.get("data");
 					tempList.add(order);
 					map.replace("data",tempList);
-					map.put("type",type);
-					map.put("name",niceName);
-					map.put("money",money);
 					res.replace(orderCode,map);
 				}else{
 					List<GmOrderDO> tempList = new ArrayList<>();
 					tempList.add(order);
 					Map<String,Object> map= new HashMap<>();
 					map.put("data",tempList);
-					map.put("type",type);
+					map.put("type",order.getOrderStatus());
 					map.put("name",niceName);
-					map.put("money",money);
 					res.put(orderCode,map);
 				}
+			}
+			for (String orderCode:res.keySet()) {
+				Map<String,Object> child = res.get(orderCode);
+				List<GmOrderDO> list = (List<GmOrderDO>) child.get("data");
+				Double money = 0.0;
+				for (GmOrderDO order:list) {
+					GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
+					money += order.getGoodsNum()*goodsInfo.getGoodsPrice();
+				}
+				child.put("money",money);
+				res.replace(orderCode,child);
 			}
 		}catch (Exception e){
 			e.printStackTrace();
@@ -171,6 +177,66 @@ public class GmOrderController {
 		return res;
 	}
 
+	/**
+	 * 获取我的订单列表
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getMyOrder")
+	public Object getMyOrder(){
+		Map<String,Map<String,Object>> res = new LinkedHashMap<>();
+		try{
+			UserDO user = ShiroUtils.getUser();
+			if(user==null){
+				ShiroUtils.logout();
+			}
+			Long userId = user.getUserId();
+			Map<String,Object> query = new HashMap<>();
+			query.put("userId",userId);
+			List<GmOrderDO> orderList = gmOrderService.list(query);
+			for (GmOrderDO order:orderList) {
+				GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
+				order.setGoodsName(goodsInfo.getGoodsName());
+				String niceName = userService.getById(order.getUserId()).getName();
+				String orderCode = order.getType();
+				if(res.containsKey(orderCode)){
+					Map<String,Object> map= res.get(orderCode);
+					List<GmOrderDO> tempList = (List<GmOrderDO>) map.get("data");
+					tempList.add(order);
+					map.replace("data",tempList);
+					res.replace(orderCode,map);
+				}else{
+					List<GmOrderDO> tempList = new ArrayList<>();
+					tempList.add(order);
+					Map<String,Object> map= new HashMap<>();
+					map.put("data",tempList);
+					map.put("type",order.getOrderStatus());
+					map.put("name",niceName);
+					res.put(orderCode,map);
+				}
+			}
+			for (String orderCode:res.keySet()) {
+				Map<String,Object> child = res.get(orderCode);
+				List<GmOrderDO> list = (List<GmOrderDO>) child.get("data");
+				Double money = 0.0;
+				for (GmOrderDO order:list) {
+					GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
+					money += order.getGoodsNum()*goodsInfo.getGoodsPrice();
+				}
+				child.put("money",money);
+				res.replace(orderCode,child);
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	/**
+	 * 获取单个订单
+	 * @param goodsCode
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/getOrderOne")
 	public Object getOrderOne(String goodsCode){
@@ -187,6 +253,7 @@ public class GmOrderController {
 			query.put("type",goodsCode);
 			List<GmOrderDO> orderList = gmOrderService.list(query);
 			UserDO child = null;
+			String imgUrl = "";
 			if(orderList!=null&&orderList.size()>0){
 				for (GmOrderDO order:orderList) {
 					Map<String,Object> data  = new HashMap<>();
@@ -196,9 +263,11 @@ public class GmOrderController {
 					data.put("goodsId",order.getGoodsId());
 					res.add(data);
 					child = userService.getOutRole(order.getUserId());
+					imgUrl = order.getOther();
 				}
 
 				result.put("orderCode",goodsCode);
+				result.put("img",imgUrl);
 				result.put("data",res);
 				if(child!=null){
 					result.put("receiptName",child.getName());
@@ -218,183 +287,138 @@ public class GmOrderController {
 		return result;
 	}
 
+	/**
+	 * 处理订单
+	 * @param orderCode
+	 * @param ids
+	 * @param postCode
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping("/sendOrder")
-	public R sendOrder(String orderCode,String ids,String postCode){
+	public R sendOrder(String orderCode, String ids, String postCode){
 
 		UserDO user = ShiroUtils.getUser();
 		if(user==null){
 			ShiroUtils.logout();
 		}
+		UserDO child = null;
 		Boolean isAdmin = false;
 		Boolean isHave = true;
+		Boolean flag = true;
 		try {
+			// 分隔二维码
+			String[]goodsCodes = ids.split(",");
 
-			//获取分润
+			// 先判断数量是否相同
+			Integer codeSize  = goodsCodes.length;
+			Integer orderSize = 0;
+
+			// 查找下级用户申请的订单以便发货
+			Map<String,Object> query = new HashMap<>();
+			query.put("parentId",user.getUserId());
+			query.put("type",orderCode);
+			List<GmOrderDO> orderList= gmOrderService.list(query);
+			for (GmOrderDO orderDO:orderList) {
+				orderSize += orderDO.getGoodsNum();
+			}
+			if(codeSize!=orderSize){
+				return R.error("与请求发货数量不相符!");
+			}
+
+
+			// 获取分润信息
 			GmProfitDO userProfit = profitService.getByUserId(user.getUserId());
+			// 查找上级用户
 			UserDO parent = userService.getOutRole(user.getParentId());
+			// 上级分润信息
 			GmProfitDO parentProfit = null;
+			// 当前用户等级
 			Long type = user.getDeptId();
-			if(type==2){ //联合创始人发货时奖励自己 和上级 总经销商只奖励自己
+			//联合创始人发货时奖励自己和上级 总经销商只奖励自己
+			if(type==2){
 				if(parent!=null){
 					parentProfit = profitService.getByUserId(parent.getUserId());
 				}
 			}
-			if(type==1){ // 标记平台发货
+			// 标记是否是平台管理员
+			if(type==1){
 				isAdmin = true;
 			}
 
-
-			Map<String,Object> query = new HashMap<>();
-			// 本账户登录 找到parentId为 本用户id的 订单
-			query.put("parentId",user.getUserId());
-			query.put("type",orderCode);
-			List<GmOrderDO> orderList= gmOrderService.list(query);
 			// 如果无订单
 			if(orderList==null||orderList.size()<1){
 				return R.error("订单无效");
 			}
+			// 循环遍历订单 根据订单 拿到所有订单需要的商品goodsUser
+			List<GmGoodsUserDO> goodsUserList = new ArrayList<>();
 			for (int j = 0; j < orderList.size(); j++) {
 				// 获取订单
 				GmOrderDO order = orderList.get(j);
-				if(order.getOrderStatus()!=1){
+				child = userService.getOutRole(order.getUserId());
+				if (order.getOrderStatus() != 1) {
 					return R.error("已处理或失效订单");
 				}
-				// 通过当前账户id 和 订单的商品id 找到当前用户的库存
+
 				query = new HashMap<>();
-				query.put("userId",user.getUserId());
-				query.put("status","0");
-				query.put("type",order.getGoodsId());
-				List<GmGoodsUserDO> goodsUserList =goodsUserService.list(query);
+				query.put("userId", user.getUserId());
+				query.put("status", "0");
+				query.put("type", order.getGoodsId());
+				goodsUserList.addAll(goodsUserService.list(query));
+			}
+			// 处理完的goodsUserList
+			goodsUserList = hasCode(goodsUserList,orderList,goodsCodes);
 
-				// 解析传来的二维码
-				String[]goodsCodes = ids.split(",");
-				Integer size = goodsCodes.length;
-				if(size>goodsUserList.size()){
-					return R.error("库存不足");
+			for (GmGoodsUserDO goodsUser:goodsUserList) {
+				// 先将这个库存改变状态
+				goodsUser.setStatus("1");
+				goodsUser.setOutTime(DateUtil.getDateTime());
+				if(goodsUserService.update(goodsUser)<0){
+					flag = false;
+				}
+				// 然后给 下级 新建一个库存
+				goodsUser.setUserId(child.getUserId());
+				goodsUser.setId(null);
+				goodsUser.setStatus("0");
+				goodsUser.setInTime(DateUtil.getDateTime());
+				goodsUser.setOutTime(null);
+				if(goodsUserService.save(goodsUser)<0){
+					flag = false;
 				}
 
-				// 根据二维码的数量 遍历库存 给库存添加二维码
-				broken:for (int i = 0; i < size; i++) {
-
-					// 如果是平台管理者 则跟新平台库存
-					if(isAdmin){
-						GmGoodsInfoDO goodsInfoDO = goodsInfoService.get(order.getGoodsId());
-						if(goodsInfoDO!=null){
-							Integer remark = Integer.parseInt(goodsInfoDO.getRemark());
-							if(remark>0){
-								remark -= 1;
-								goodsInfoDO .setRemark(remark+"");
-								goodsInfoService.update(goodsInfoDO);
-							}else {
-								goodsInfoDO.setStatu(2);
-								goodsInfoService.update(goodsInfoDO);
-								isHave = false;
-								break broken;
-							}
-						}
-
-
+				// 分润开始 fuck me...
+				if(flag){
+					if(type==2&&userProfit!=null&&parentProfit!=null){ //联合创始人
+						GmProfitDetailDO profitDetail = new GmProfitDetailDO();
+						// 给下级发货 自身直接奖励80
+						profitDetail.setAmount(REWARD_A);
+						profitDetail.setCreateTime(DateUtil.getDateTime());
+						profitDetail.setStatus(2);
+						// 谁奖励的 这里平台奖励的 也就是admin
+						profitDetail.setParentId(parent.getUserId());
+						profitDetail.setProfitId(userProfit.getId());
+						profitDetail.setRemark(orderCode);
+						profitDetailService.save(profitDetail);
+						//  推荐人奖励 50
+						profitDetail.setAmount(REWARD_B);
+						profitDetail.setProfitId(parent.getUserId());
+						profitDetailService.save(profitDetail);
+					}else if(type==3&&userProfit!=null){ //若果是经销商 发给下级或 直接给自己分润
+						// 给下级发货 自身直接奖励80
+						GmProfitDetailDO profitDetail = new GmProfitDetailDO();
+						profitDetail.setAmount(REWARD_A);
+						profitDetail.setCreateTime(DateUtil.getDateTime());
+						profitDetail.setStatus(2);
+						profitDetail.setParentId(parent.getUserId());
+						profitDetail.setProfitId(userProfit.getId());
+						profitDetail.setRemark(orderCode);
+						profitDetailService.save(profitDetail);
 					}
-
-					String goodsCode = goodsCodes[i];
-					Boolean flag = true;
-					//先根据二维码查询
-					Map<String,Object> queryGoodsUser = new HashMap<>();
-					queryGoodsUser.put("goodsCode",goodsCode);
-					queryGoodsUser.put("userId",user.getUserId());
-					queryGoodsUser.put("status","0");
-					List<GmGoodsUserDO> goodsUserDOList = goodsUserService.list(queryGoodsUser);
-					GmGoodsUserDO goodsUserDO = null;
-
-					if(goodsUserDOList!=null&&goodsUserDOList.size()>0){
-						goodsUserDO = goodsUserDOList.get(0);
-						// 先将该库存 改变状态为已发
-						goodsUserDO.setStatus("1");
-						goodsUserDO.setOutTime(DateUtil.getDateTime());
-						if(goodsUserService.update(goodsUserDO)<0){
-							flag = false;
-						}
-						// 然后给 下级 新建一个库存
-						goodsUserDO.setUserId(order.getUserId());
-						goodsUserDO.setId(null);
-						goodsUserDO.setStatus("0");
-						goodsUserDO.setInTime(DateUtil.getDateTime());
-						goodsUserDO.setOutTime(null);
-						if(goodsUserService.save(goodsUserDO)<0){
-							flag = false;
-						}
-					}else { // 如果查不到二维码 则下发新的
-						Boolean isNoCode = false;
-						loop:for (GmGoodsUserDO temp:goodsUserList) {
-							if(temp.getGoodsCode()==null||temp.getGoodsCode().equals("")){
-								isNoCode = true;
-								goodsUserDO = temp;
-								break loop;
-							}
-						}
-						if(!isNoCode){
-							return R.error("二维码错误");
-						}
-						// 先将该库存设置一个二维码 并改变状态为已发
-						goodsUserDO.setStatus("1");
-						goodsUserDO.setGoodsCode(goodsCode);
-						goodsUserDO.setOutTime(DateUtil.getDateTime());
-						if(goodsUserService.update(goodsUserDO)<0){
-							flag = false;
-						}
-						// 然后给 下级 新建一个库存 并设置二维码
-						goodsUserDO.setUserId(order.getUserId());
-						goodsUserDO.setId(null);
-						goodsUserDO.setStatus("0");
-						goodsUserDO.setInTime(DateUtil.getDateTime());
-						goodsUserDO.setOutTime(null);
-						if(goodsUserService.save(goodsUserDO)<0){
-							flag = false;
-						}
-					}
-
-
-					// 分润开始 fuck me...
-					if(flag){
-						if(type==2&&userProfit!=null&&parentProfit!=null){ //联合创始人
-							GmProfitDetailDO profitDetail = new GmProfitDetailDO();
-							// 给下级发货 自身直接奖励80
-							profitDetail.setAmount(REWARD_A);
-							profitDetail.setCreateTime(DateUtil.getDateTime());
-							profitDetail.setStatus(2);
-							// 谁奖励的 这里平台奖励的 也就是admin
-							profitDetail.setParentId(parent.getUserId());
-							profitDetail.setProfitId(userProfit.getId());
-							profitDetail.setRemark(order.getType());
-							profitDetailService.save(profitDetail);
-							//  推荐人奖励 50
-							profitDetail.setAmount(REWARD_B);
-							profitDetail.setProfitId(parent.getUserId());
-							profitDetailService.save(profitDetail);
-						}else if(type==3&&userProfit!=null){ //若果是经销商 发给下级或 直接给自己分润
-							// 给下级发货 自身直接奖励80
-							GmProfitDetailDO profitDetail = new GmProfitDetailDO();
-							profitDetail.setAmount(REWARD_A);
-							profitDetail.setCreateTime(DateUtil.getDateTime());
-							profitDetail.setStatus(2);
-							profitDetail.setParentId(parent.getUserId());
-							profitDetail.setProfitId(userProfit.getId());
-							profitDetail.setRemark(order.getType());
-							profitDetailService.save(profitDetail);
-						}
-					}
-
-
 				}
-
-				if(!isHave){
-					return R.error("库存不足,请前往平台上货");
+				for (GmOrderDO order:orderList) {
+					order.setOrderStatus(2);
+					gmOrderService.update(order);
 				}
-				order.setOrderStatus(2);
-				order.setEndTime(DateUtil.getDateTime());
-				order.setRemark(postCode);
-				gmOrderService.update(order);
 			}
 			return R.ok();
 		}catch (Exception e){
@@ -402,6 +426,139 @@ public class GmOrderController {
 		}
 		return R.error();
 	}
+
+	/**
+	 * 查找订单 有二维码就添加已有的 没有就添加新的
+	 * @param gmGoodsUserList
+	 * @param orderList
+	 * @param codes
+	 * @return
+	 */
+	private List<GmGoodsUserDO> hasCode(List<GmGoodsUserDO> gmGoodsUserList,List<GmOrderDO> orderList,String[]codes){
+
+		Long start = System.currentTimeMillis();
+		// 返回结果接
+		List<GmGoodsUserDO> res = new ArrayList<>();
+		//  goodsId     goodsNum
+		LinkedHashMap<Integer,LinkedHashMap<Integer,List<GmGoodsUserDO>>> orderMap = new LinkedHashMap<>();
+
+		try {
+			for (GmOrderDO order:orderList) {
+				LinkedHashMap<Integer,List<GmGoodsUserDO>> tempMap = new LinkedHashMap<>();
+				List<GmGoodsUserDO> tempList = new ArrayList<>();
+				tempMap.put(order.getGoodsNum(),tempList);
+				orderMap.put(order.getGoodsId(),tempMap);
+			}
+
+			// 先根据二维码查找
+			for (int i = 0; i < codes.length; i++) {
+				String code = codes[i];
+				for (int j = 0; j < gmGoodsUserList.size(); j++) {
+					GmGoodsUserDO goodsUser = gmGoodsUserList.get(j);
+					String goodsCode = goodsUser.getGoodsCode();
+					if(StringUtils.isNotBlank(goodsCode)){
+						if(goodsCode.equals(code)){
+							Integer goodsId = Integer.parseInt(goodsUser.getType());
+							LinkedHashMap<Integer,List<GmGoodsUserDO>> tempMap = orderMap.get(goodsId);
+							Integer goodsNum = null;
+							List<GmGoodsUserDO> tempList = null;
+							for (Integer key:tempMap.keySet()) {
+								goodsNum = key;
+								tempList = tempMap.get(goodsNum);
+							}
+							tempList.add(goodsUser);
+							tempMap.replace(goodsNum,tempList);
+							orderMap.replace(goodsId,tempMap);
+							gmGoodsUserList.remove(j);
+						}
+					}
+				}
+			}
+			// 再遍历orderMap 如果上面没有添加到二维码 就添加新的goodsUser
+			for (Integer goodsId:orderMap.keySet()) {
+				LinkedHashMap<Integer,List<GmGoodsUserDO>> tempMap = orderMap.get(goodsId);
+				Integer goodsNum = null;
+				List<GmGoodsUserDO> tempList = null;
+				for (Integer key:tempMap.keySet()) {
+					goodsNum = key;
+					tempList = tempMap.get(key);
+				}
+				Integer size = tempList.size();
+				if(goodsNum>size){
+					for (int i = 0; i < goodsNum-size; i++) {
+						loop:for (int j = 0;j<gmGoodsUserList.size();j++) {
+							GmGoodsUserDO goodsUser = gmGoodsUserList.get(j);
+							if(goodsUser.getType().equals(String.valueOf(goodsId))){
+								tempList.add(goodsUser);
+								tempMap.replace(goodsNum,tempList);
+								orderMap.replace(goodsId,tempMap);
+								gmGoodsUserList.remove(j);
+								break loop;
+							}
+						}
+					}
+				}
+			}
+
+			// 再遍历一次 取出list
+			for (Integer goodsId:orderMap.keySet()) {
+				LinkedHashMap<Integer,List<GmGoodsUserDO>> tempMap = orderMap.get(goodsId);
+				for (Integer goodsNum:tempMap.keySet()) {
+					res.addAll(tempMap.get(goodsNum));
+				}
+			}
+//			for (GmGoodsUserDO goodsUserDO:res) {
+//				System.out.println(goodsUserDO);
+//			}
+
+			// 再再遍历一遍 取出已经有二维码的 妈的数据库设计不好 能写死你
+			Map<Integer,String> query = new HashMap<>();
+			for (int i = 0; i < codes.length; i++) {
+				String code = codes[i];
+				for (int j = 0; j < res.size(); j++) {
+					GmGoodsUserDO goodsUser = res.get(j);
+					String goodsCode = goodsUser.getGoodsCode();
+					if(StringUtils.isNotBlank(goodsCode)){
+						if(goodsUser.getGoodsCode().equals(code)){
+							query.put(j,code);
+						}
+					}
+				}
+			}
+
+			for (Integer index:query.keySet()) {
+				String goodsCode = query.get(index);
+				for (int i = 0; i < codes.length; i++) {
+					if(goodsCode.equals(codes[i])){
+						codes[i] = codes[codes.length-1];
+						codes = Arrays.copyOf(codes,codes.length-1);
+					}
+				}
+			}
+//			System.out.println(Arrays.toString(codes));
+			for (int i=0;i<res.size();i++) {
+				GmGoodsUserDO goodsUser = res.get(i);
+				if(StringUtils.isBlank(goodsUser.getGoodsCode())){
+					Integer index = new Random().nextInt(codes.length);
+					goodsUser.setGoodsCode(codes[index]);
+					codes[index] = codes[codes.length-1];
+					codes = Arrays.copyOf(codes,codes.length-1);
+					res.set(i,goodsUser);
+				}
+			}
+//			System.out.println(Arrays.toString(codes));
+//			for (GmGoodsUserDO goodsUserDO:res) {
+//				System.out.println(goodsUserDO);
+//			}
+
+
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return res;
+	}
+
 
 
 

@@ -83,15 +83,18 @@
 //            console.log(res);
 //        })
 
-         //查看订单
+//         //查看订单
 //        $.post("/goodsManager/gmOrder/getOrder", function (res) {
 //            console.log(res);
 //        })
 //
-//        //下发订单
-//        $.post("/goodsManager/gmOrder/sendOrder",{"orderCode":"XD155522555377609649","ids":"10001,10002"},function (res) {
-//            console.log(res);
-//        })
+        //下发订单
+        $.post("/goodsManager/gmOrder/sendOrder",{"orderCode":"XD155530378284646277","ids":"11011,11022,11033,11044,11055"},function (res) {
+            console.log(res);
+        })
+
+
+
 
          //零售/goodsManager/retail/toRetail
 //        $.post("/goodsManager/retail/toRetail",{"ids":"10001"},function (res) {
@@ -111,6 +114,11 @@
 // 登录测试
 //        $.post("/loginOutVerify",{"username":"admin","password":"saes900916"},function (data) {
 //            console.log(data);
+//        })
+
+        // 获取单个订单信息
+//        $.post("/goodsManager/gmOrder/getOrderOne",{"goodsCode":"XD155522555377609649"}, function (res) {
+//            console.log(res);
 //        })
 
 

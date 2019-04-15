@@ -209,7 +209,15 @@ public class GmRetailController {
             query = new HashMap<>();
             query.put("parentId",userId);
             List<GmOrderDO> orderList = orderService.list(query);
-            res.put("order",orderList.size());
+            Integer num = 0;
+            String tempOrderCode = "";
+            for (GmOrderDO orderDO:orderList) {
+                if(!orderDO.getType().equals(tempOrderCode)){
+                    tempOrderCode = orderDO.getType();
+                    num++;
+                }
+            }
+            res.put("order",num);
             res.put("name",user.getName());
             res.put("invite",user.getInvite());
             DeptDO dept = deptService.get(user.getDeptId());
@@ -252,6 +260,8 @@ public class GmRetailController {
         res.put("liveAddress",user.getLiveAddress());
         return R.ok(res);
     }
+
+
 
 
 }

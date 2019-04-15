@@ -1,8 +1,23 @@
 package com.bootdo.goodsManager.controller;
 
+
+import com.bootdo.common.utils.ShiroUtils;
+import com.bootdo.goodsManager.domain.GmGoodsInfoDO;
+import com.bootdo.goodsManager.domain.GmGoodsUserDO;
+import com.bootdo.goodsManager.service.GmGoodsInfoService;
+import com.bootdo.goodsManager.service.GmGoodsUserService;
+import com.bootdo.system.domain.UserDO;
+import com.bootdo.system.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 /**
  * 发货订单表
  *
@@ -14,6 +29,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/goodsManager/page")
 public class GmIndexController {
+
+    @Autowired
+    private GmGoodsUserService goodsUserService;
+    @Autowired
+    private GmGoodsInfoService goodsInfoService;
+    @Autowired
+    private UserService userService;
+
+    // 上级奖励金额
+    private static final Double REWARD_A = 80.0;
+    // 上上级奖励金额
+    private static final Double REWARD_B = 50.0;
 
     @RequestMapping("/index")
     public String toIndex(){
@@ -34,6 +61,42 @@ public class GmIndexController {
     @RequestMapping("/ddgl")
     public String toDdgl(){
         return "wjfh/dldd";
+    }
+    @RequestMapping("/wddd")
+    public String toWddd(){
+        return "wjfh/wddd";
+    }
+    @RequestMapping("/wdkc")
+    public String toWdkc(Model model){
+        // 获取当前用户
+        UserDO user = ShiroUtils.getUser();
+        if(user==null){
+            ShiroUtils.logout();
+        }
+        UserDO parent = userService.getOutRole(user.getParentId());
+        Map<String,Object> query = new HashMap<>();
+        query.put("userId",user.getUserId());
+        List<GmGoodsUserDO> goodsUserList = goodsUserService.list(query);
+        Map<String,Integer> num = new HashMap<>();
+        for (GmGoodsUserDO goodsUser:goodsUserList) {
+            GmGoodsInfoDO goodsInfo = goodsInfoService.get(Integer.parseInt(goodsUser.getType()));
+            String goodsName = goodsInfo.getGoodsName();
+            goodsUser.setOther(goodsName);
+            goodsUser.setRemark(parent.getName());
+            if(num.containsKey(goodsName)){
+                Integer goodsNum = num.get(goodsName);
+                goodsNum++;
+                num.replace(goodsName,goodsNum);
+            }else{
+                num.put(goodsName,1);
+            }
+
+        }
+
+        model.addAttribute("total",goodsUserList.size());
+        model.addAttribute("num",num);
+        model.addAttribute("list",goodsUserList);
+        return "wjfh/wdkc";
     }
     @RequestMapping("/fahuo")
     public String toFahuo(String goodsCode, Model model){
@@ -64,6 +127,7 @@ public class GmIndexController {
     public String toMyPer(){
         return "wjfh/myPer";
     }
+
 
 
 }

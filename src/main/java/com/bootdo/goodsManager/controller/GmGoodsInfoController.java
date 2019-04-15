@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.bootdo.common.utils.*;
+import com.bootdo.goodsManager.dao.GmGoodsUserDao;
 import com.bootdo.goodsManager.domain.GmGoodsUserDO;
 import com.bootdo.goodsManager.service.GmGoodsUserService;
 import com.bootdo.system.domain.UserDO;
 import io.swagger.models.auth.In;
+import org.apache.catalina.User;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -39,6 +41,8 @@ public class GmGoodsInfoController {
 	private GmGoodsInfoService gmGoodsInfoService;
 	@Autowired
 	private GmGoodsUserService goodsUserService;
+	@Autowired
+	private GmGoodsInfoService goodsInfoService;
 	
 	@GetMapping()
 	@RequiresPermissions("goodsManager:gmGoodsInfo:gmGoodsInfo")
@@ -51,8 +55,25 @@ public class GmGoodsInfoController {
 	@RequiresPermissions("goodsManager:gmGoodsInfo:gmGoodsInfo")
 	public PageUtils list(@RequestParam Map<String, Object> params){
 		//查询列表数据
+		UserDO user = ShiroUtils.getUser();
+		if(user==null){
+			ShiroUtils.logout();
+		}
+		Long userId = user.getUserId();
         Query query = new Query(params);
 		List<GmGoodsInfoDO> gmGoodsInfoList = gmGoodsInfoService.list(query);
+		for (int i = 0;i< gmGoodsInfoList.size();i++) {
+			GmGoodsInfoDO goodsInfoDO = gmGoodsInfoList.get(i);
+			Map<String,Object> param = new HashMap<>();
+			param.put("status","0");
+			param.put("userId",userId);
+			param.put("type",goodsInfoDO.getId()+"");
+			Integer num = goodsUserService.count(param);
+			goodsInfoDO.setRemark(num+"");
+			goodsInfoService.update(goodsInfoDO);
+			gmGoodsInfoList.set(i,goodsInfoDO);
+
+		}
 		int total = gmGoodsInfoService.count(query);
 		PageUtils pageUtils = new PageUtils(gmGoodsInfoList, total);
 		return pageUtils;

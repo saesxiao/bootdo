@@ -19,19 +19,18 @@
 		<h1 class="site-h1">代理订单</h1>
 		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 			<ul class="layui-tab-title">
-				<li><a href="/goodsManager/page/retail">零售发货</a></li>
-				<li class="layui-this"><a href="/goodsManager/page/ddgl">代理订单</a></li>
+				<li class="layui-this"><a>我的订单</a></li>
 			</ul>
 			<div class="item"></div>
 
 		</div>
 	</div>
-	<div class="resgcontain">
-		<div class="saomaiptbox">
-			<input type="text" class="publicIptSty widthman" id="" value="" placeholder="代理商昵称" readonly="readonly"/>
-			<span class="icon iconfont">&#xe602;</span>
-		</div>
-	</div>
+	<!--<div class="resgcontain">-->
+		<!--<div class="saomaiptbox">-->
+			<!--<input type="text" class="publicIptSty widthman" id="" value="" placeholder="代理商昵称" readonly="readonly"/>-->
+			<!--<span class="icon iconfont">&#xe602;</span>-->
+		<!--</div>-->
+	<!--</div>-->
 
 	<div class="resgcontain  layui-form" v-for="(dldds,key) in dldd">
 		<div class="item">
@@ -49,9 +48,7 @@
 				<div class="layui-col-xs12">总金额<span class="num">￥{{dldds.money}}</span>
 					<div class="layui-layout-right">
 						<!--:class="layui-btn-disabled"-->
-						<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" v-if="dldds.type == 1">
-							<a :href="'/goodsManager/page/fahuo?goodsCode='+key">去发货</a>
-						</button>
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled" v-if="dldds.type == 1">待处理</button>
 						<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled" v-if="dldds.type == 2">已发货</button>
 					</div>
 				</div>
@@ -86,7 +83,7 @@
                     $.ajax({
                         cache: true,
                         type: "POST",
-                        url: "/goodsManager/gmOrder/getSendOrder",
+                        url: "/goodsManager/gmOrder/getMyOrder",
                         error : function(request) {
                             layer.alert("Connection error");
                         },
