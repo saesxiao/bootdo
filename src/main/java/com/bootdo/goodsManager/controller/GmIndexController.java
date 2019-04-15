@@ -54,10 +54,15 @@ public class GmIndexController {
     public String toMyStock(){
         return "wjfh/myStock";
     }
-    // 我的业绩 奖励
+    // 我的奖励
     @RequestMapping("/myAward")
     public String toMyAward(){
         return "wjfh/myAward";
+    }
+    // 我的业绩
+    @RequestMapping("/myPer")
+    public String toMyPer(){
+        return "wjfh/myPer";
     }
 
 
