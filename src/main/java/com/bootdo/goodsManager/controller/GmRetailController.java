@@ -211,6 +211,7 @@ public class GmRetailController {
             List<GmOrderDO> orderList = orderService.list(query);
             res.put("order",orderList.size());
             res.put("name",user.getName());
+            res.put("invite",user.getInvite());
             DeptDO dept = deptService.get(user.getDeptId());
             res.put("level",dept.getName());
 
