@@ -44,6 +44,21 @@ public class GmIndexController {
     public String toRetail(){
         return "wjfh/retail";
     }
+    // 获取我的订单
+    @RequestMapping("/myOrder")
+    public String toMyOrder(){
+        return "wjfh/myOrder";
+    }
+    // 查看库存
+    @RequestMapping("/myStock")
+    public String toMyStock(){
+        return "wjfh/myStock";
+    }
+    // 我的业绩 奖励
+    @RequestMapping("/myAward")
+    public String toMyAward(){
+        return "wjfh/myAward";
+    }
 
 
 }
