@@ -1,8 +1,15 @@
 package com.bootdo.goodsManager.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.bootdo.common.utils.ShiroUtils;
+import com.bootdo.goodsManager.domain.GmProfitDetailDO;
+import com.bootdo.goodsManager.service.GmProfitDetailService;
+import com.bootdo.system.domain.UserDO;
+import com.bootdo.system.service.UserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -34,6 +41,82 @@ import com.bootdo.common.utils.R;
 public class GmProfitController {
 	@Autowired
 	private GmProfitService gmProfitService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private GmProfitDetailService profitDetailService;
+
+	@RequestMapping("/getMyProfit")
+	@ResponseBody
+	public Object getMyProfit(){
+		UserDO user = ShiroUtils.getUser();
+		if(user==null){
+			ShiroUtils.logout();
+			return R.error("请登录");
+		}
+		try {
+			Map<String,Object> query = new HashMap<>();
+			query.put("userId",user.getUserId());
+			List<GmProfitDO> profitList = gmProfitService.list(query);
+			if(profitList==null){
+				return R.error("未添加分润,请联系平台");
+			}
+			GmProfitDO profit = profitList.get(0);
+			query = new HashMap<>();
+			query.put("profitId",profit.getId());
+			List<GmProfitDetailDO> detailList = profitDetailService.list(query);
+			if(detailList==null){
+				return R.error("暂无分润");
+			}
+			List<GmProfitDetailDO> res = new ArrayList<>();
+			for (GmProfitDetailDO detail:detailList) {
+				UserDO parent = userService.getOutRole(detail.getParentId());
+				detail.setOther(parent.getName());
+				res.add(detail);
+			}
+
+			return res;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return R.error();
+	}
+
+
+//	@RequestMapping("/getSubProfit")
+//	@ResponseBody
+//	public Object getSubProfit(){
+//		UserDO user = ShiroUtils.getUser();
+//		if(user==null){
+//			ShiroUtils.logout();
+//			return R.error("请登录");
+//		}
+//		try {
+//			Map<String,Object> query = new HashMap<>();
+//			query.put("parentId",user.getUserId());
+//			List<GmProfitDO> subProfitList = gmProfitService.list(query);
+//			if(subProfitList==null){
+//				return R.ok("无下级");
+//			}
+//			GmProfitDO profit = profitList.get(0);
+//			query = new HashMap<>();
+//			query.put("profitId",profit.getId());
+//			List<GmProfitDetailDO> detailList = profitDetailService.list(query);
+//			if(detailList==null){
+//				return R.error("暂无分润");
+//			}
+//			List<GmProfitDetailDO> res = new ArrayList<>();
+//			for (GmProfitDetailDO detail:detailList) {
+//				UserDO parent = userService.getOutRole(detail.getParentId());
+//				detail.setOther(parent.getName());
+//			}
+//			return detailList;
+//		}catch (Exception e){
+//			e.printStackTrace();
+//		}
+//		return R.error();
+//	}
+
 	
 	@GetMapping()
 	@RequiresPermissions("goodsManager:gmProfit:gmProfit")
