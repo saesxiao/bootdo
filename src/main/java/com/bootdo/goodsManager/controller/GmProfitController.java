@@ -1,9 +1,6 @@
 package com.bootdo.goodsManager.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.bootdo.common.utils.ShiroUtils;
 import com.bootdo.goodsManager.domain.GmProfitDetailDO;
@@ -68,11 +65,22 @@ public class GmProfitController {
 			if(detailList==null){
 				return R.error("暂无分润");
 			}
-			List<GmProfitDetailDO> res = new ArrayList<>();
+			Map<String,List<GmProfitDetailDO>> res = new LinkedHashMap<>();
 			for (GmProfitDetailDO detail:detailList) {
-				UserDO parent = userService.getOutRole(detail.getParentId());
-				detail.setOther(parent.getName());
-				res.add(detail);
+				String orderCode = detail.getRemark();
+				if(res.containsKey(orderCode)){
+					List<GmProfitDetailDO> temp= res.get(orderCode);
+					UserDO parent = userService.getOutRole(detail.getParentId());
+					detail.setOther(parent.getName());
+					temp.add(detail);
+					res.replace(orderCode,temp);
+				}else{
+					List<GmProfitDetailDO> temp= new ArrayList<>();
+					UserDO parent = userService.getOutRole(detail.getParentId());
+					detail.setOther(parent.getName());
+					temp.add(detail);
+					res.put(orderCode,temp);
+				}
 			}
 
 			return res;
