@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>我的业绩</title>
+	<link rel="shortcut icon" href="https://gtms04.alicdn.com/tps/i4/TB1_oz6GVXXXXaFXpXXJDFnIXXX-64-64.ico" type="image/x-icon"/>
+	<link rel="stylesheet" href="https://g.alicdn.com/thx/cube/1.3.2/cube.min.css">
+	<link rel="stylesheet" href="/wjfh/css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="/wjfh/css/common.css"/>
+	<link rel="stylesheet" type="text/css" href="/wjfh/layui/css/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="/wjfh/css/style.css"/>
+	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="layui-form" id="myPer" v-cloak>
+	<div class="resgcontain">
+		<div class="saomaiptbox">
+			<input type="text" class="publicIptSty widthman" id="" value="" placeholder="订单编号" readonly="readonly"/>
+			<span class="icon iconfont">&#xe602;</span>
+		</div>
+	</div>
+	<div class="resgcontain"  v-for="(dldds,key) in dldd">
+		<div class="item">
+			<div class="dingdantop layui-row">
+				<div class="layui-col-xs8">订单编号:{{key}}</div>
+				<div class="layui-col-xs4" style="text-align: right"><button type="button" class="layui-btn layui-btn-xs layui-btn-disabled">已完成</button></div>
+			</div>
+		</div>
+		<div class="item">
+			<div class="dingdantop layui-row">
+				<div class="layui-col-xs8" v-for="(dlddss,index) in dldds.data" v-if="index<1">购买时间:{{dlddss.orderTime}}</div>
+
+			</div>
+		</div>
+		<div class="item dingdancot mb">
+			<div class="dingdantop layui-row item" v-for="(dlddss,index) in dldds.data">
+				<div class="layui-col-xs6">{{dlddss.goodsName}}</div>
+				<div class="layui-col-xs2"><span class="num">×{{dlddss.goodsNum}}</span></div>
+
+			</div>
+
+			<div class="dingdantop layui-row item mb">
+				<div class="layui-col-xs12">该订单总金额：<span class="num">￥{{dldds.money}}</span></div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<div class="pubfooter">
+	<div class="layui-row">
+		<div class="layui-col-xs3 tcenter footnav">
+			<a href="/goodsManager/page/index">
+				<span class="layui-icon footicon">&#xe68e;</span>
+				<div class="name">首页</div>
+			</a>
+		</div>
+		<div class="layui-col-xs3 tcenter footnav">
+			<a href="/goodsManager/page/ddgl">
+				<span class="layui-icon footicon">&#xe656;</span>
+				<div class="name">订单</div>
+			</a>
+		</div>
+		<div class="layui-col-xs3 tcenter footnav active">
+			<a href="/goodsManager/page/myPer">
+				<span class="icon iconfont footicon">&#xe623;</span>
+				<div class="name">业绩</div>
+			</a>
+		</div>
+		<div class="layui-col-xs3 tcenter footnav">
+			<a href="/goodsManager/page/xiaji">
+				<span class="layui-icon footicon">&#xe66f;</span>
+				<div class="name">下级</div>
+			</a>
+		</div>
+	</div>
+</div>
+	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+<script>
+    var idata = new  Vue({
+        el:"#myPer",
+        data:{
+            dldd:{}
+        },
+        methods:{
+
+        },
+        mounted:function () {
+
+            layui.use(['jquery', 'form','layer'], function() {
+                $ = layui.jquery,
+                    form = layui.form,
+                    layer = layui.layer;
+                layer.load(1);
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "/goodsManager/gmOrder/getMyOrder",
+                    error : function(request) {
+                        layer.alert("Connection error");
+                    },
+                    success : function(data) {
+						console.log(data);
+                        idata.dldd = data;
+                        layer.closeAll('loading');
+                    }
+                });
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "/goodsManager/gmProfit/getMyProfit",
+                    error : function(request) {
+                        layer.alert("Connection error");
+                    },
+                    success : function(data) {
+                        console.log(data);
+                        console.log(data);
+
+                    }
+                });
+            })
+        }
+    })
+</script>
+</body>
+</html>

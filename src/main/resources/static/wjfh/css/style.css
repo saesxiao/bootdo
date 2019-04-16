@@ -85,4 +85,28 @@ textarea.publicIptSty{resize: none;height: 80px;padding-top: 0.15rem;padding-lef
     border: 1px solid #e6e6e6;
     background-color: #FBFBFB;
 }
+.header,.header3{padding:15% 0px 2% 0px;background:#e8343d url(../img/new_year_icon5.png) no-repeat;width:100%;height:auto;overflow:hidden;background-size:100% auto;-webkit-background-size:100% auto;position:relative;}
+.header3,.header-top{ padding:15% 0px;}
+.header-main{ width:100%;}
+.header-left{ width:100%;text-align:center;padding:40px 0px 0px 0px;}
+.header-left h1{ color:#faeb6d; width:30%; margin:0px auto; padding-top:10px;}
+.header-left h1 b{ display:block;float:left;text-align:center; width:75%;font-size:50px; line-height:50px; vertical-align:middle;color: #fff;white-space: nowrap;}
+.header-left h1 span{ display:block;float:left;width:25%;font-size:18px;vertical-align:middle; text-align:left;}
+.header-left p{ color:#ffffff; font-size:30px;line-height:36px; margin-top:20px;}
+.header-right{ text-align:center}
+.header-footer{ text-align:center;vertical-align:middle; margin-top:10%;  font-size:22px; color:#faeb6d}
+.header-footer span{vertical-align:middle;}
+.header-footer img{ vertical-align:middle; margin-right:5px; width:40px;}
+.header-icon1{background:url(../img/new_year_icon6.png) no-repeat; width:150px; height:170px;background-size:100% 100%;-webkit-background-size:100% 100%; position:absolute; top:0px; left:0px; }
+a.header-a1{position:absolute; top:15px; right:20px; color:#ffffff; font-size:14px;line-height:22px; text-decoration:underline;color: #fff}
 
+.main1 .layui-btn{width: 130px;height: 50px;background-color: #fff;color: #e8343d;border: 2px solid #e8343d;border-radius: 5px;font-size: 18px;line-height: 50px;
+    margin-top: 30px;
+}
+.pubfooter{width: 100%;height: 60px;background: #FBFBFB;position: fixed;bottom: 0px;left: 0px;z-index: 99999;box-shadow: 0 -2px 3px -1px #f1f1f1}
+.tcenter{text-align: center}
+.footnav{padding-top: 0.15rem; color: #333}
+.footnav .footicon{font-size: 0.7rem;}
+.footnav .name{font-size: 0.31rem;line-height: 0.25rem}
+.footnav.active .footicon,.footnav.active .name{color: #FF5555}
+#idata{padding-bottom: 2rem;}

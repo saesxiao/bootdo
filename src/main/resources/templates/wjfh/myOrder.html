@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>代理订单</title>
+	<title>我的订单</title>
 	<link rel="shortcut icon" href="https://gtms04.alicdn.com/tps/i4/TB1_oz6GVXXXXaFXpXXJDFnIXXX-64-64.ico" type="image/x-icon"/>
 	<link rel="stylesheet" href="https://g.alicdn.com/thx/cube/1.3.2/cube.min.css">
 	<link rel="stylesheet" href="/wjfh/css/iconfont.css">
@@ -14,26 +14,28 @@
 	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-<div class="" id="dldd">
+<div class="" id="dldd" v-cloak>
 	<div class="resgcontain">
-		<h1 class="site-h1">代理订单</h1>
+		<h1 class="site-h1">我的订单</h1>
 		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-			<ul class="layui-tab-title">
-				<li><a href="/goodsManager/page/retail">零售发货</a></li>
-				<li class="layui-this"><a href="/goodsManager/page/ddgl">代理订单</a></li>
-			</ul>
+
 			<div class="item"></div>
 
 		</div>
 	</div>
 	<div class="resgcontain">
 		<div class="saomaiptbox">
-			<input type="text" class="publicIptSty widthman" id="" value="" placeholder="代理商昵称" readonly="readonly"/>
+			<input type="text" class="publicIptSty widthman" id="" value="" placeholder="订单编号" readonly="readonly"/>
 			<span class="icon iconfont">&#xe602;</span>
 		</div>
 	</div>
 
-	<div class="resgcontain  layui-form" v-for="(dldds,key) in dldd">
+	<div class="resgcontain  layui-form" v-for="(dldds,key) in dldd" v-if="dldds.type == 1">
+		<div class="item">
+			<div class="dingdantop layui-row">
+				<div class="layui-col-xs12">订单编号：{{key}}</div>
+			</div>
+		</div>
 		<div class="item">
 			<div class="dingdantop layui-row">
 				<div class="layui-col-xs5">收货人:{{dldds.name}}</div>
@@ -49,44 +51,17 @@
 				<div class="layui-col-xs12">总金额<span class="num">￥{{dldds.money}}</span>
 					<div class="layui-layout-right">
 						<!--:class="layui-btn-disabled"-->
-						<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" v-if="dldds.type == 1">
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-danger" v-if="dldds.type == 2">
 							<a :href="'/goodsManager/page/fahuo?goodsCode='+key">去发货</a>
 						</button>
-						<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled" v-if="dldds.type == 2">已发货</button>
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled" v-if="dldds.type == 3">已发货</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<div class="pubfooter">
-	<div class="layui-row">
-		<div class="layui-col-xs3 tcenter footnav">
-			<a href="/goodsManager/page/index">
-				<span class="layui-icon footicon">&#xe68e;</span>
-				<div class="name">首页</div>
-			</a>
-		</div>
-		<div class="layui-col-xs3 tcenter footnav active">
-			<a href="/goodsManager/page/ddgl">
-				<span class="layui-icon footicon">&#xe656;</span>
-				<div class="name">订单</div>
-			</a>
-		</div>
-		<div class="layui-col-xs3 tcenter footnav">
-			<a href="/goodsManager/page/myPer">
-				<span class="icon iconfont footicon">&#xe623;</span>
-				<div class="name">业绩</div>
-			</a>
-		</div>
-		<div class="layui-col-xs3 tcenter footnav">
-			<a href="/mine">
-				<span class="layui-icon footicon">&#xe66f;</span>
-				<div class="name">下级</div>
-			</a>
-		</div>
-	</div>
-</div>
+
 	
 
 	
@@ -113,13 +88,14 @@
                     $.ajax({
                         cache: true,
                         type: "POST",
-                        url: "/goodsManager/gmOrder/getSendOrder",
+                        url: "/goodsManager/gmOrder/getOrder",
                         error : function(request) {
                             layer.alert("Connection error");
                         },
                         success : function(data) {
-							console.log(data);
+
                             idata.dldd = data;
+                            console.log(data);
                             layer.closeAll('loading');
                         }
                     });
@@ -128,5 +104,4 @@
             }
         })
 	</script>
-</body>
 </html>

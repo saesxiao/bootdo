@@ -7,11 +7,11 @@
 	<title>下级管理</title>
 	<link rel="shortcut icon" href="https://gtms04.alicdn.com/tps/i4/TB1_oz6GVXXXXaFXpXXJDFnIXXX-64-64.ico" type="image/x-icon"/>
 	<link rel="stylesheet" href="https://g.alicdn.com/thx/cube/1.3.2/cube.min.css">
-	<link rel="stylesheet" href="css/iconfont.css">
-	<link rel="stylesheet" type="text/css" href="css/common.css"/>
-	<link rel="stylesheet" type="text/css" href="layui/css/layui.css"/>
-	<link rel="stylesheet" type="text/css" href="css/style.css"/>
-	<script src="js/flexible.js" type="text/javascript" charset="utf-8"></script>
+	<link rel="stylesheet" href="/wjfh/css/iconfont.css">
+	<link rel="stylesheet" type="text/css" href="/wjfh/css/common.css"/>
+	<link rel="stylesheet" type="text/css" href="/wjfh/layui/css/layui.css"/>
+	<link rel="stylesheet" type="text/css" href="/wjfh/css/style.css"/>
+	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 	<div class="resgcontain">
@@ -21,126 +21,104 @@
 			<span class="icon iconfont">&#xe602;</span>
 		</div>
 	</div>
+<div id="myPer" v-cloak>
+	<div class="resgcontain  layui-form" v-for="dldds in dldd">
+		<div class="item">
+			<div class="dingdantop layui-row xiajitop">
+				<div class="layui-col-xs5">{{dldds.userName}}<span class="layui-badge layui-bg-orange" style="margin-left: 0.2rem;">{{dldds.deptName}}</span></div>
+				<div class="layui-col-xs7">入驻时间:{{dldds.createTime}}</div>
+			</div>
+		</div>
+		<div class="item dingdancot mb">
+			<div class="dingdantop layui-row item xiajilist">
+				<div class="layui-col-xs3">产品名称</div>
+				<div class="layui-col-xs3">总订单</div>
+				<div class="layui-col-xs3">库存</div>
+				<div class="layui-col-xs3">销量</div>
+			</div>
+			<div class="dingdantop layui-row item xiajilist" v-for="(orderInfos,key) in dldds.orderInfo">
+				<div class="layui-col-xs3">{{key}}</div>
+				<div class="layui-col-xs3">{{orderInfos.total}}</div>
+				<div class="layui-col-xs3">{{orderInfos.stock}}</div>
+				<div class="layui-col-xs3">{{orderInfos.sail}}</div>
+			</div>
+			<div class="dingdantop layui-row item xiajilist ">
+				<div class="layui-col-xs6 textleft">
+					销量金额:<span class="num">￥{{dldds.amount}}</span>
+				</div>
+				<div class="layui-col-xs6 textleft">
+					已获得奖励：<span class="num">￥{{dldds.profit}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+	<div class="pubfooter">
+		<div class="layui-row">
+			<div class="layui-col-xs3 tcenter footnav">
+				<a href="/goodsManager/page/index">
+					<span class="layui-icon footicon">&#xe68e;</span>
+					<div class="name">首页</div>
+				</a>
+			</div>
+			<div class="layui-col-xs3 tcenter footnav">
+				<a href="/goodsManager/page/ddgl">
+					<span class="layui-icon footicon">&#xe656;</span>
+					<div class="name">订单</div>
+				</a>
+			</div>
+			<div class="layui-col-xs3 tcenter footnav">
+				<a href="/goodsManager/page/myPer">
+					<span class="icon iconfont footicon">&#xe623;</span>
+					<div class="name">业绩</div>
+				</a>
+			</div>
+			<div class="layui-col-xs3 tcenter footnav active">
+				<a href="/goodsManager/page/xiaji">
+					<span class="layui-icon footicon">&#xe66f;</span>
+					<div class="name">下级</div>
+				</a>
+			</div>
+		</div>
+	</div>
 
-	<div class="resgcontain  layui-form">
-		<div class="item">
-			<div class="dingdantop layui-row xiajitop">
-				<div class="layui-col-xs6"><i class=""><img class="nameimg" src="img/no1.png" ></i>代理商A<span class="layui-badge layui-bg-orange" style="margin-left: 0.2rem;">经销商</span></div>
-				<div class="layui-col-xs6">入驻时间:2018-10-15 10:20</div>
-			</div>
-		</div>
-		<div class="item dingdancot mb">
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品名称</div>
-				<div class="layui-col-xs3">总订单</div>
-				<div class="layui-col-xs3">库存</div>
-				<div class="layui-col-xs3">销量</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品AAA</div>
-				<div class="layui-col-xs3">10</div>
-				<div class="layui-col-xs3">5</div>
-				<div class="layui-col-xs3">5</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品BBB</div>
-				<div class="layui-col-xs3">10</div>
-				<div class="layui-col-xs3">2</div>
-				<div class="layui-col-xs3">8</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist ">
-				<div class="layui-col-xs6 textleft">
-					销量金额:<span class="num">￥5410</span>
-				</div>
-				<div class="layui-col-xs6 textleft">
-					已获得奖励：<span class="num">￥800</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div class="resgcontain  layui-form">
-		<div class="item">
-			<div class="dingdantop layui-row xiajitop">
-				<div class="layui-col-xs6"><i class=""><img class="nameimg" src="img/no2.png" ></i>代理商B<span class="layui-badge layui-bg-orange" style="margin-left: 0.2rem;">经销商</span></div>
-				<div class="layui-col-xs6">入驻时间:2018-10-15 10:20</div>
-			</div>
-		</div>
-		<div class="item dingdancot mb">
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品名称</div>
-				<div class="layui-col-xs3">总订单</div>
-				<div class="layui-col-xs3">库存</div>
-				<div class="layui-col-xs3">销量</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品AAA</div>
-				<div class="layui-col-xs3">10</div>
-				<div class="layui-col-xs3">5</div>
-				<div class="layui-col-xs3">5</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品BBB</div>
-				<div class="layui-col-xs3">10</div>
-				<div class="layui-col-xs3">2</div>
-				<div class="layui-col-xs3">8</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist ">
-				<div class="layui-col-xs6 textleft">
-					销量金额:<span class="num">￥5410</span>
-				</div>
-				<div class="layui-col-xs6 textleft">
-					已获得奖励：<span class="num">￥800</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div class="resgcontain  layui-form">
-		<div class="item">
-			<div class="dingdantop layui-row xiajitop">
-				<div class="layui-col-xs6"><i class=""><img class="nameimg" src="img/no3.png" ></i>代理商C<span class="layui-badge layui-bg-orange" style="margin-left: 0.2rem;">经销商</span></div>
-				<div class="layui-col-xs6">入驻时间:2018-10-15 10:20</div>
-			</div>
-		</div>
-		<div class="item dingdancot mb">
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品名称</div>
-				<div class="layui-col-xs3">总订单</div>
-				<div class="layui-col-xs3">库存</div>
-				<div class="layui-col-xs3">销量</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品AAA</div>
-				<div class="layui-col-xs3">10</div>
-				<div class="layui-col-xs3">5</div>
-				<div class="layui-col-xs3">5</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist">
-				<div class="layui-col-xs3">产品BBB</div>
-				<div class="layui-col-xs3">10</div>
-				<div class="layui-col-xs3">2</div>
-				<div class="layui-col-xs3">8</div>
-			</div>
-			<div class="dingdantop layui-row item xiajilist ">
-				<div class="layui-col-xs6 textleft">
-					销量金额:<span class="num">￥5410</span>
-				</div>
-				<div class="layui-col-xs6 textleft">
-					已获得奖励：<span class="num">￥800</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript">
-		layui.use(['form', 'layedit', 'laydate','upload'], function(){
-		  var form = layui.form
-		  ,layer = layui.layer
-		  ,layedit = layui.layedit
-		  ,upload = layui.upload
-		  ,laydate = layui.laydate;
-		 });
+	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+	<script>
+        var idata = new  Vue({
+            el:"#myPer",
+            data:{
+                dldd:{}
+            },
+            methods:{
+
+            },
+            mounted:function () {
+
+                layui.use(['jquery', 'form','layer'], function() {
+                    $ = layui.jquery,
+                        form = layui.form,
+                        layer = layui.layer;
+                    layer.load(1);
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        url: "/goodsManager/retail/subordinate",
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+                            console.log(data);
+                            idata.dldd = data;
+                            layer.closeAll('loading');
+                        }
+                    });
+
+                })
+            }
+        })
 	</script>
+</body>
 </html>
