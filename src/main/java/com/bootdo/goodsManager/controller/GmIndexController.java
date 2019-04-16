@@ -66,6 +66,10 @@ public class GmIndexController {
     public String toWddd(){
         return "wjfh/wddd";
     }
+    @RequestMapping("/xiaji")
+    public String toXiaji(){
+        return "wjfh/xiaji";
+    }
     @RequestMapping("/wdkc")
     public String toWdkc(Model model){
         // 获取当前用户
