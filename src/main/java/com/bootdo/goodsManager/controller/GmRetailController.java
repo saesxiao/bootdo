@@ -44,6 +44,11 @@ public class GmRetailController {
     @Autowired
     private GmOrderService orderService;
 
+    // 上级奖励金额
+    private static final Double REWARD_A = 80.0;
+    // 上上级奖励金额
+    private static final Double REWARD_B = 50.0;
+
     /**
      * 零售
      * @return
@@ -60,6 +65,23 @@ public class GmRetailController {
         Long userId = user.getUserId();
         try{
             String[]idsList = ids.split(",");
+
+            // 获取分润信息
+            GmProfitDO userProfit = profitService.getByUserId(user.getUserId());
+            // 查找上级用户
+            UserDO parent = userService.getOutRole(user.getParentId());
+            // 上级分润信息
+            GmProfitDO parentProfit = null;
+            // 当前用户等级
+            Long type = user.getDeptId();
+            //联合创始人发货时奖励自己和上级 总经销商只奖励自己
+            if(type==2){
+                if(parent!=null){
+                    parentProfit = profitService.getByUserId(parent.getUserId());
+                }
+            }
+
+
             for (String goodsCode:idsList) {
                 Map<String,Object> query = new HashMap<>();
                 query.put("status","0");
@@ -73,6 +95,35 @@ public class GmRetailController {
                 goodsUser.setStatus("3");
                 goodsUser.setOutTime(DateUtil.getDateTime());
                 goodsUserService.update(goodsUser);
+
+                if(type==2&&userProfit!=null&&parentProfit!=null){ //联合创始人
+                    GmProfitDetailDO profitDetail = new GmProfitDetailDO();
+                    // 给下级发货 自身直接奖励80
+                    profitDetail.setAmount(REWARD_A);
+                    profitDetail.setCreateTime(DateUtil.getDateTime());
+                    profitDetail.setStatus(2);
+                    // 谁奖励的 这里平台奖励的 也就是admin
+                    profitDetail.setParentId(parent.getUserId());
+                    profitDetail.setProfitId(userProfit.getId());
+                    profitDetail.setRemark("sold");
+                    profitDetailService.save(profitDetail);
+                    //  推荐人奖励 50
+                    profitDetail.setAmount(REWARD_B);
+                    profitDetail.setProfitId(parent.getUserId());
+                    profitDetailService.save(profitDetail);
+                }else if(type==3&&userProfit!=null){ //若果是经销商 发给下级或 直接给自己分润
+                    // 给下级发货 自身直接奖励80
+                    GmProfitDetailDO profitDetail = new GmProfitDetailDO();
+                    profitDetail.setAmount(REWARD_A);
+                    profitDetail.setCreateTime(DateUtil.getDateTime());
+                    profitDetail.setStatus(2);
+                    profitDetail.setParentId(parent.getUserId());
+                    profitDetail.setProfitId(userProfit.getId());
+                    profitDetail.setRemark("sold");
+                    profitDetailService.save(profitDetail);
+                }
+
+
             }
             return R.ok("零售成功");
         }catch (Exception e){

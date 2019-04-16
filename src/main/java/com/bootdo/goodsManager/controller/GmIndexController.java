@@ -42,34 +42,42 @@ public class GmIndexController {
     // 上上级奖励金额
     private static final Double REWARD_B = 50.0;
 
+    // 首页
     @RequestMapping("/index")
     public String toIndex(){
         return "wjfh/index";
     }
+    // 注册
     @RequestMapping("/resg")
     public String toResg(){
         return "wjfh/resg";
     }
+    // 登录
     @RequestMapping("/login")
     public String toLogin(){
         return "wjfh/login";
     }
+    // 进货
     @RequestMapping("/jinhuo")
     public String toJinhuo(){
         return "wjfh/jinhuo";
     }
+    // 下级订单
     @RequestMapping("/ddgl")
     public String toDdgl(){
         return "wjfh/dldd";
     }
+    // 我的订单
     @RequestMapping("/wddd")
     public String toWddd(){
         return "wjfh/wddd";
     }
+    // 下级列表
     @RequestMapping("/xiaji")
     public String toXiaji(){
         return "wjfh/xiaji";
     }
+    // 我的库存
     @RequestMapping("/wdkc")
     public String toWdkc(Model model){
         // 获取当前用户
@@ -102,11 +110,13 @@ public class GmIndexController {
         model.addAttribute("list",goodsUserList);
         return "wjfh/wdkc";
     }
+    // 发货
     @RequestMapping("/fahuo")
     public String toFahuo(String goodsCode, Model model){
         model.addAttribute("goodsCode",goodsCode);
         return "wjfh/fahuo";
     }
+    // 零售
     @RequestMapping("/retail")
     public String toRetail(){
         return "wjfh/retail";
@@ -130,6 +140,16 @@ public class GmIndexController {
     @RequestMapping("/myPer")
     public String toMyPer(){
         return "wjfh/myPer";
+    }
+    // 邀请
+    @RequestMapping("/yaoqing")
+    public String toYq(){
+        return "wjfh/yaoqing";
+    }
+    // 升级
+    @RequestMapping("/shengji")
+    public String toSj(){
+        return "wjfh/shengji";
     }
 
 
