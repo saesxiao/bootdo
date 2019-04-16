@@ -9,6 +9,7 @@ import com.bootdo.goodsManager.domain.*;
 import com.bootdo.goodsManager.service.*;
 import com.bootdo.system.domain.UserDO;
 import com.bootdo.system.service.UserService;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -223,6 +224,14 @@ public class GmOrderController {
 					GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
 					money += order.getGoodsNum()*goodsInfo.getGoodsPrice();
 				}
+				query = new HashMap<>();
+				query.put("remark",orderCode);
+				List<GmProfitDetailDO> detailDOS = profitDetailService.list(query);
+				Double profit = 0.0;
+				for (GmProfitDetailDO detail:detailDOS) {
+					profit += detail.getAmount();
+				}
+				child.put("profit",profit);
 				child.put("money",money);
 				res.replace(orderCode,child);
 			}
@@ -319,8 +328,13 @@ public class GmOrderController {
 			query.put("parentId",user.getUserId());
 			query.put("type",orderCode);
 			List<GmOrderDO> orderList= gmOrderService.list(query);
+			Map<Integer,Integer> validSize = new HashMap<>();
 			for (GmOrderDO orderDO:orderList) {
-				orderSize += orderDO.getGoodsNum();
+				Integer goodsId = orderDO.getGoodsId();
+				Integer goodsNum = orderDO.getGoodsNum();
+				orderSize += goodsNum;
+				validSize.put(goodsId,goodsNum);
+
 			}
 			if(codeSize!=orderSize){
 				return R.error("与请求发货数量不相符!");
@@ -368,6 +382,25 @@ public class GmOrderController {
 			}
 			// 处理完的goodsUserList
 			goodsUserList = hasCode(goodsUserList,orderList,goodsCodes);
+
+
+			if(goodsUserList.size()!=codeSize){
+				return R.error("无效二维码!");
+			}
+			Map<Integer,Integer> validSizeRes = new HashMap<>();
+			for (GmGoodsUserDO goodsUser:goodsUserList) {
+				Integer goodsId = Integer.parseInt(goodsUser.getType());
+				if(validSizeRes.containsKey(goodsId)){
+					validSizeRes.replace(goodsId,validSizeRes.get(goodsId)+1);
+				}else{
+					validSizeRes.put(goodsId,1);
+				}
+			}
+			for (Integer num:validSizeRes.keySet()) {
+				if(validSizeRes.get(num)!=validSize.get(num)){
+					return R.error("二维码与订单不符!请核对");
+				}
+			}
 
 			for (GmGoodsUserDO goodsUser:goodsUserList) {
 				// 先将这个库存改变状态
@@ -488,7 +521,7 @@ public class GmOrderController {
 					for (int i = 0; i < goodsNum-size; i++) {
 						loop:for (int j = 0;j<gmGoodsUserList.size();j++) {
 							GmGoodsUserDO goodsUser = gmGoodsUserList.get(j);
-							if(goodsUser.getType().equals(String.valueOf(goodsId))){
+							if(goodsUser.getType().equals(String.valueOf(goodsId))&&StringUtils.isBlank(goodsUser.getGoodsCode())){
 								tempList.add(goodsUser);
 								tempMap.replace(goodsNum,tempList);
 								orderMap.replace(goodsId,tempMap);
