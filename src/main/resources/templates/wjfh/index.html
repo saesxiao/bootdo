@@ -60,26 +60,34 @@
             </div>
             <div class="layui-col-xs3">
                 <div class="index_navIcon">
-                    <span class="icon iconfont indexnavicon bgcolor5">&#xe623;</span>
-                    <div class="name">我的业绩</div>
+                    <a href="/goodsManager/page/myPer">
+                        <span class="icon iconfont indexnavicon bgcolor5">&#xe623;</span>
+                        <div class="name">我的业绩</div>
+                    </a>
                 </div>
             </div>
             <div class="layui-col-xs3">
                 <div class="index_navIcon">
-                    <span class="icon iconfont indexnavicon bgcolor6">&#xe608;</span>
-                    <div class="name">我的奖励</div>
+                    <a href="/goodsManager/page/myAward">
+                        <span class="icon iconfont indexnavicon bgcolor6">&#xe608;</span>
+                        <div class="name">我的奖励</div>
+                    </a>
                 </div>
             </div>
             <div class="layui-col-xs3">
                 <div class="index_navIcon">
-                    <span class="icon iconfont indexnavicon bgcolor7">&#xe66d;</span>
-                    <div class="name">邀请好友</div>
+                    <a href="">
+                        <span class="icon iconfont indexnavicon bgcolor7">&#xe66d;</span>
+                        <div class="name">邀请好友</div>
+                    </a>
                 </div>
             </div>
             <div class="layui-col-xs3">
                 <div class="index_navIcon">
-                    <span class="icon iconfont indexnavicon bgcolor8">&#xe66b;</span>
-                    <div class="name">我要升级</div>
+                    <a href="">
+                        <span class="icon iconfont indexnavicon bgcolor8">&#xe66b;</span>
+                        <div class="name">我要升级</div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -106,20 +114,48 @@
         </div>
     </div>
 </div>
-
+<div class="pubfooter">
+    <div class="layui-row">
+        <div class="layui-col-xs3 tcenter footnav active">
+            <a href="/goodsManager/page/index">
+                <span class="layui-icon footicon">&#xe68e;</span>
+                <div class="name">首页</div>
+            </a>
+        </div>
+        <div class="layui-col-xs3 tcenter footnav">
+            <a href="/goodsManager/page/ddgl">
+                <span class="layui-icon footicon">&#xe656;</span>
+                <div class="name">订单</div>
+            </a>
+        </div>
+        <div class="layui-col-xs3 tcenter footnav">
+            <a href="/goodsManager/page/myPer">
+                <span class="icon iconfont footicon">&#xe623;</span>
+                <div class="name">业绩</div>
+            </a>
+        </div>
+        <div class="layui-col-xs3 tcenter footnav">
+            <a href="/mine">
+                <span class="layui-icon footicon">&#xe66f;</span>
+                <div class="name">下级</div>
+            </a>
+        </div>
+    </div>
+</div>
 <script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    var idata = new Vue({
-        el: "#idata",
-        data: {
-            name: '',
-            level: '',
-            order: '',
-            profit: '',
-            stock: '',
-            subordinate: ''
+    var idata = new  Vue({
+        el:"#idata",
+        data:{
+            name:'',
+            level:'',
+            order:'',
+            profit:'',
+            stock:'',
+            subordinate:'',
+            invite:''
         },
         methods: {},
         mounted: function () {
