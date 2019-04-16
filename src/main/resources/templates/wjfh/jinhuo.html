@@ -69,13 +69,19 @@
             methods:{
 				shopFun:function(){
                     var goodss ={};
+                    var isNone = 0;
                     for(goodsdata in idata.goodsdatas){
                         var ids = idata.goodsdatas[goodsdata].id;
                         var vals = document.getElementById(idata.goodsdatas[goodsdata].id).value;
                         var key = [ids];
                         goodss[key] = vals;
+                        isNone += vals;
                         //goodss.ids = vals;
                     }
+                    if(isNone<1){
+                        layer.alert("至少订购一件");
+                        return;
+					}
 
 				    var jsonStr = {
 						"address": idata.address,
@@ -93,8 +99,8 @@
                             layer.alert("Connection error");
                         },
                         success : function(data) {
-                            console.log(data);
                             layer.alert(data.msg);
+                            window.location.href="/goodsManager/page/wddd";
                         }
                     });
 				}
