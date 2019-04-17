@@ -16,33 +16,33 @@
 	<div class="resgcontain">
 		<h1 class="site-h1">欢迎注册 — <!-- 五季芳禾 --></h1>
 		<div class="layui-form-item">
-			<label class="layui-form-label">微信号:</label>
+			<label class="layui-form-label" style="min-width: 15%">微信号:</label>
 			<div class="layui-input-block">
-				<input type="text" name="wxchat" lay-verify="required" autocomplete="off" placeholder="请输入微信号" v-model="wxchat" class="layui-input">
+				<input type="text" name="wxchat" style="width: 95%;margin-left: 5%" lay-verify="required" autocomplete="off" placeholder="请输入微信号" v-model="wxchat" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-form-item">
-			<label class="layui-form-label">昵称:</label>
+			<label class="layui-form-label" style="min-width: 15%">昵称:</label>
 			<div class="layui-input-block">
-				<input type="text" name='name' class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入昵称" v-model="name" />
+				<input type="text" name='name' style="width: 95%;margin-left: 5%" class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入昵称" v-model="name" />
 			</div>
 		</div>
 		<div class="layui-form-item">
-			<label class="layui-form-label">手机号:</label>
+			<label class="layui-form-label" style="min-width: 15%">手机号:</label>
 			<div class="layui-input-block">
-				<input type="text" name="mobile" class="layui-input" value="18201328712" required lay-verify="required|phone" autocomplete="off" placeholder="请输入手机号" v-model="mobile" />
+				<input type="text" name="mobile" style="width: 95%;margin-left: 5%" class="layui-input" value="" required lay-verify="required|phone" autocomplete="off" placeholder="请输入手机号" v-model="mobile" />
 			</div>
 		</div>
 		<div class="layui-form-item">
-			<label class="layui-form-label">密码:</label>
+			<label class="layui-form-label" style="min-width: 15%">密码:</label>
 			<div class="layui-input-block">
-				<input type="password" name='password' class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入密码" v-model="pass" />
+				<input type="password" name='password' style="width: 95%;margin-left: 5%" class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入密码" v-model="pass" />
 			</div>
 		</div>
 		<div class="layui-form-item">
-			<label class="layui-form-label">邀请码:</label>
+			<label class="layui-form-label" style="min-width: 15%">邀请码:</label>
 			<div class="layui-input-block">
-				<input type="text" name="invite" class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入邀请码" v-model="code" />
+				<input type="text" name="invite" class="layui-input" style="width: 95%;margin-left: 5%" value="" required lay-verify="required" autocomplete="off" placeholder="请输入邀请码" v-model="code" />
 				<p class="nimpp fs12"><span class="icon iconfont">&#xe60f;</span>请联系您的上级获取邀请码</p>
 			</div>
 
@@ -107,7 +107,7 @@
     var vm = new Vue({
         el:'#regbox',
         data:{
-            wxchat:'1',name:'1',mobile:'18152144919',pass:'1',code:'ComuTmhB',sheng:'',shi:'',qu:'',address:''
+            wxchat:'',name:'',mobile:'',pass:'',code:'',sheng:'',shi:'',qu:'',address:''
         },
         methods:{
             regFun:function(){

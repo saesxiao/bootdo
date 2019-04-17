@@ -69,6 +69,7 @@ public class ShiroConfig {
     ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        shiroFilterFactoryBean.setLoginUrl("/goodsManager/page/resg");
         shiroFilterFactoryBean.setLoginUrl("/goodsManager/page/login");
         shiroFilterFactoryBean.setSuccessUrl("/goodsManager/page/index");
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
@@ -88,6 +89,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/logout", "logout");
         filterChainDefinitionMap.put("/", "anon");
         filterChainDefinitionMap.put("/goodsManager/page/login", "anon");
+        filterChainDefinitionMap.put("/goodsManager/page/resg", "anon");
         filterChainDefinitionMap.put("/blog", "anon");
         filterChainDefinitionMap.put("/blog/open/**", "anon");
         filterChainDefinitionMap.put("/**", "authc");

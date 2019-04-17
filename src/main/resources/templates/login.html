@@ -61,16 +61,16 @@
                        class="form-control pword m-b" th:value="${password}"/>
                 <a id="login" class="btn btn-login btn-block">登录</a>
                 <div class="row">
-                    <div class="col-xs-6 pull_left">
-                        <div class="form-group">
-                            <input class="form-control" type="tel" name="verify" id="verify" placeholder="请输入验证码" maxlength="4">
-                        </div>
-                    </div>
-                    <div class="col-xs-6 pull_left">
-                        <a href="javascript:void(0);" rel="external nofollow" title="点击更换验证码">
-                            <img style="margin-top: 12px;" id="imgVerify" src="" alt="更换验证码" height="36" width="100%" onclick="getVerify(this);">
-                        </a>
-                    </div>
+                    <!--<div class="col-xs-6 pull_left">-->
+                        <!--<div class="form-group">-->
+                            <!--<input class="form-control" type="tel" name="verify" id="verify" placeholder="请输入验证码" maxlength="4">-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="col-xs-6 pull_left">-->
+                        <!--<a href="javascript:void(0);" rel="external nofollow" title="点击更换验证码">-->
+                            <!--<img style="margin-top: 12px;" id="imgVerify" src="" alt="更换验证码" height="36" width="100%" onclick="getVerify(this);">-->
+                        <!--</a>-->
+                    <!--</div>-->
                 </div>
                 <!--按钮模块-->
                 <!--<div class="outside-login">-->
@@ -139,7 +139,7 @@
     function login() {
         $.ajax({
             type: "POST",
-            url: ctx + "login",
+            url: ctx + "loginOutVerify",
             data: $('#signupForm').serialize(),
             success: function (r) {
                 if (r.code == 0) {

@@ -43,7 +43,7 @@ public class LoginController extends BaseController {
     String welcome(Model model) {
 
 //        return "redirect:/blog";
-        return "login";
+        return "wjfh/login";
     }
 
     @Log("请求访问主页")
