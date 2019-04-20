@@ -67,6 +67,8 @@ public class GmOrderController {
 		if(parent==null){
 			return R.error(403,"无上级");
 		}
+		// 创建订单
+		GmOrderDO orderDO = new GmOrderDO();
 		try {
 			Long userId = user.getUserId();
 			Long parentId = user.getParentId();
@@ -79,8 +81,7 @@ public class GmOrderController {
 			String time = DateUtil.getDateTime();
 			String orderCode = "XD"+OrderTool.getOrderNo(5);
 
-			// 创建订单
-			GmOrderDO orderDO = new GmOrderDO();
+
 			orderDO.setUserId(userId);
 			orderDO.setParentId(parentId);
 			orderDO.setOrderStatus(1);
@@ -96,33 +97,43 @@ public class GmOrderController {
 				Integer goodsId = Integer.parseInt(key);
 				GmGoodsInfoDO goods = goodsInfoService.get(goodsId);
 				String tempNum = String.valueOf(map.get(key));
-				if(StringUtils.isBlank(tempNum)){
-					tempNum = "0";
+				if(StringUtils.isNotBlank(tempNum)){
+					Integer goodsNum  = Integer.parseInt(tempNum);
+					GmOrderDetailDO orderDetail = new GmOrderDetailDO();
+					orderDetail.setGoodsId(goods.getId());
+					orderDetail.setGoodsNum(Integer.parseInt(tempNum));
+					orderDetail.setOrderId(orderDO.getId());
+					orderDetailService.save(orderDetail);
+					Integer level = Math.toIntExact(user.getDeptId());
+					String levelPrice = goods.getGoodsPrice().split(",")[level-2];
+					amount += Double.parseDouble(levelPrice)*goodsNum;
 				}
-				Integer goodsNum  = Integer.parseInt(tempNum);
-				// 如果此商品有且 需求数量大于零
-				if(goods!=null&&goodsNum>0){
-					Map<String,Object> query = new HashMap<>();
-					query.put("userId",parentId); // 根据上级id 查询到上级的库存
-					query.put("status",0);
-					query.put("type",goods.getId());
-					List<GmGoodsUserDO> list =goodsUserService.list(query);
-					// 如果上级库存大于需求数量
-					if(list.size()>=goodsNum){
-						GmOrderDetailDO orderDetail = new GmOrderDetailDO();
-						orderDetail.setGoodsId(goods.getId());
-						orderDetail.setGoodsNum(goodsNum);
-						orderDetail.setOrderId(orderDO.getId());
-						orderDetailService.save(orderDetail);
-						Integer level = Math.toIntExact(user.getDeptId());
-						String levelPrice = goods.getGoodsPrice().split(",")[level-2];
-						amount += Double.parseDouble(levelPrice)*goodsNum;
-					}else{
-						//通时删除订单
-						gmOrderService.remove(orderDO.getId());
-						return R.error("上级库存不足");
-					}
-				}
+
+
+//				Integer goodsNum  = Integer.parseInt(tempNum);
+//				// 如果此商品有且 需求数量大于零
+//				if(goods!=null&&goodsNum>0){
+//					Map<String,Object> query = new HashMap<>();
+//					query.put("userId",parentId); // 根据上级id 查询到上级的库存
+//					query.put("status",0);
+//					query.put("type",goods.getId());
+//					List<GmGoodsUserDO> list =goodsUserService.list(query);
+//					// 如果上级库存大于需求数量
+//					if(list.size()>=goodsNum){
+//						GmOrderDetailDO orderDetail = new GmOrderDetailDO();
+//						orderDetail.setGoodsId(goods.getId());
+//						orderDetail.setGoodsNum(goodsNum);
+//						orderDetail.setOrderId(orderDO.getId());
+//						orderDetailService.save(orderDetail);
+//						Integer level = Math.toIntExact(user.getDeptId());
+//						String levelPrice = goods.getGoodsPrice().split(",")[level-2];
+//						amount += Double.parseDouble(levelPrice)*goodsNum;
+//					}else{
+//						//通时删除订单
+//						gmOrderService.remove(orderDO.getId());
+//						return R.error("上级库存不足");
+//					}
+//				}
 			}
 			orderDO.setAmount(amount);
 			gmOrderService.update(orderDO);
@@ -130,6 +141,7 @@ public class GmOrderController {
 
 		}catch (Exception e){
 			e.printStackTrace();
+			gmOrderService.remove(orderDO.getId());
 			return R.error();
 		}
 	}
