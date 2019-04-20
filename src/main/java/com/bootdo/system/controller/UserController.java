@@ -6,7 +6,14 @@ import com.bootdo.common.controller.BaseController;
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.service.DictService;
 import com.bootdo.common.utils.*;
+import com.bootdo.goodsManager.dao.GmOrderDetailDao;
+import com.bootdo.goodsManager.domain.GmOrderDO;
+import com.bootdo.goodsManager.domain.GmOrderDetailDO;
 import com.bootdo.goodsManager.domain.GmProfitDO;
+import com.bootdo.goodsManager.domain.GmProfitDetailDO;
+import com.bootdo.goodsManager.service.GmOrderDetailService;
+import com.bootdo.goodsManager.service.GmOrderService;
+import com.bootdo.goodsManager.service.GmProfitDetailService;
 import com.bootdo.goodsManager.service.GmProfitService;
 import com.bootdo.system.domain.DeptDO;
 import com.bootdo.system.domain.RoleDO;
@@ -43,6 +50,12 @@ public class UserController extends BaseController {
     DeptService deptService;
     @Autowired
     GmProfitService profitService;
+    @Autowired
+    GmProfitDetailService profitDetailService;
+    @Autowired
+    GmOrderService orderService;
+    @Autowired
+    GmOrderDetailService orderDetailService;
 
     @RequiresPermissions("sys:user:user")
     @GetMapping("")
@@ -167,6 +180,32 @@ public class UserController extends BaseController {
             return R.error(1, "演示系统不允许修改,完整体验请部署程序");
         }
         if (userService.remove(id) > 0) {
+            Map<String,Object> query = new HashMap<>();
+            query.put("userId",id);
+            List<GmOrderDO> orderlist = orderService.list(query);
+            for (GmOrderDO order:orderlist) {
+                if(orderService.remove(order.getId())>0){
+                    query = new HashMap<>();
+                    query.put("orderId",order.getId());
+                    List<GmOrderDetailDO> orderDetailList = orderDetailService.list(query);
+                    for (GmOrderDetailDO detail:orderDetailList) {
+                        orderDetailService.remove(detail.getId());
+                    }
+                }
+            }
+            query = new HashMap<>();
+            query.put("userId",id);
+            List<GmProfitDO> profitList = profitService.list(query);
+            for (GmProfitDO profit:profitList) {
+                if(profitService.remove(profit.getId())>0){
+                    query = new HashMap<>();
+                    query.put("profitId",profit.getId());
+                    List<GmProfitDetailDO> profitDetailList = profitDetailService.list(query);
+                    for (GmProfitDetailDO detail:profitDetailList) {
+                        profitDetailService.remove(detail.getId());
+                    }
+                }
+            }
             return R.ok();
         }
         return R.error();

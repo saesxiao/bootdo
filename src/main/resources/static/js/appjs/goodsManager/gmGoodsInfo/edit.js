@@ -8,12 +8,15 @@ $.validator.setDefaults({
 	}
 });
 function update() {
+    var loading = layer.load(2, {
+        shade: [0.1,'#505050'] //0.1透明度的白色背景
+    });
 	$.ajax({
 		cache : true,
 		type : "POST",
 		url : "/goodsManager/gmGoodsInfo/update",
 		data : $('#signupForm').serialize(),// 你的formid
-		async : false,
+		async : true,
 		error : function(request) {
 			parent.layer.alert("Connection error");
 		},
@@ -23,6 +26,7 @@ function update() {
 				parent.reLoad();
 				var index = parent.layer.getFrameIndex(window.name); // 获取窗口索引
 				parent.layer.close(index);
+                layer.close(loading);
 
 			} else {
 				parent.layer.alert(data.msg)
