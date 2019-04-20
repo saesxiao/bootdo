@@ -315,6 +315,7 @@ public class GmRetailController {
         res.put("parentDeptId",parent.getDeptId());
         res.put("parentDeptName",parentDept.getName());
         res.put("deptId",user.getDeptId());
+        res.put("mobile",user.getMobile());
         return R.ok(res);
     }
 
