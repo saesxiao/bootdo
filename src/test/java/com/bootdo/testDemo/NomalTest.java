@@ -23,8 +23,18 @@ public class NomalTest {
 
     @Test
     public void test3(){
-        Integer month = 1;
-        Integer pastTwoMonth = month-2>0?month-2:12+(month-2);
-        System.out.println(pastTwoMonth);
+        Integer today = Integer.parseInt(DateUtil.getDay());
+        Integer month = 12;
+        Integer year = Integer.parseInt(DateUtil.getYear());
+        Integer userLevel = 2;
+        Integer pastMonth = userLevel==2?3:2;
+
+        // 获取本月一号 和两个月前的一号
+        Integer pastTwoMonth = month-pastMonth>0?month-pastMonth:12+(month-pastMonth);
+        Integer pastYear = month-pastMonth>0?year:year-1;
+        String monthStart = pastYear + "-" + (pastTwoMonth<10?"0"+pastTwoMonth:pastTwoMonth) + "-" + "01 00:00:00";
+        String monthEnd = DateUtil.getFirstDayOfMonth()+" 00:00:00";
+        System.out.println(monthStart);
+        System.out.println(monthEnd);
     }
 }
