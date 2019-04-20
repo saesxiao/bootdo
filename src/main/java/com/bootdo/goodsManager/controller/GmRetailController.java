@@ -309,6 +309,12 @@ public class GmRetailController {
         res.put("city",user.getCity());
         res.put("district",user.getDistrict());
         res.put("liveAddress",user.getLiveAddress());
+        UserDO parent = userService.getOutRole(user.getParentId());
+        DeptDO parentDept = deptService.get(parent.getDeptId());
+        res.put("parentName",parent.getName());
+        res.put("parentDeptId",parent.getDeptId());
+        res.put("parentDeptName",parentDept.getName());
+        res.put("deptId",user.getDeptId());
         return R.ok(res);
     }
 
