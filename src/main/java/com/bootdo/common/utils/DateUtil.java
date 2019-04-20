@@ -254,13 +254,50 @@ public class DateUtil extends org.apache.commons.lang3.time.DateUtils {
 		String result = df.format(calendar.getTime());
 		return result;
 	}
+
+
 	/**
-	 * @param args
-	 * @throws ParseException
+	 * 获取本月第一天
 	 */
-	public static void main(String[] args) throws ParseException {
-		System.out.println(getDate("yyyy-MM-dd HH:mm:ss"));
-		System.out.println(getPastHour(1));
-		System.out.println(getPastDate(1));
+	public static String getFirstDayOfMonth(){
+		//获取前月的第一天
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, 0);
+		c.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天
+		return format.format(c.getTime());
+	}
+
+	/**
+	 * 获取本月最后一天
+	 */
+	public static String getLastDayOfMonth(){
+		//获取前月的第一天
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar ca = Calendar.getInstance();
+		ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+		return format.format(ca.getTime());
+	}
+
+	/**
+	 * 获取上月第一天
+	 */
+	public static String getFirstDayOfLastMonth(){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar   cal_1=Calendar.getInstance();//获取当前日期
+		cal_1.add(Calendar.MONTH, -1);
+		cal_1.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天
+		return format.format(cal_1.getTime())+" 00:00:00";
+	}
+
+	/**
+	 * 获取上月最后一天
+	 */
+	public static String getLastDayOfLastMonth(){
+		//获取前月的第一天
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cale = Calendar.getInstance();
+		cale.set(Calendar.DAY_OF_MONTH,0);//设置为1号,当前日期既为本月第一天
+		return format.format(cale.getTime())+" 23:29:59";
 	}
 }
