@@ -7,7 +7,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.bootdo.common.utils.*;
 import com.bootdo.goodsManager.domain.*;
 import com.bootdo.goodsManager.service.*;
+import com.bootdo.system.domain.DeptDO;
 import com.bootdo.system.domain.UserDO;
+import com.bootdo.system.service.DeptService;
 import com.bootdo.system.service.UserService;
 import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Param;
@@ -41,6 +43,8 @@ public class GmOrderController {
 	private GmProfitDetailService profitDetailService;
 	@Autowired
 	private GmOrderDetailService orderDetailService;
+	@Autowired
+	private DeptService deptService;
 
 	// 上级奖励金额
 	private static final Double REWARD_A = 80.0;
@@ -216,6 +220,7 @@ public class GmOrderController {
 		}
 		try{
 			UserDO user = userService.getOutRole(order.getUserId());
+			DeptDO dept = deptService.get(user.getDeptId());
 
 			if(order!=null){
 				Map<String,Object> query = new HashMap<>();
@@ -227,6 +232,7 @@ public class GmOrderController {
 				res.put("data",detailList);
 				res.put("address",order.getRemark());
 				res.put("name",user.getName());
+				res.put("deptName",dept.getName());
 			}
 		}catch (Exception e){
 			e.printStackTrace();
