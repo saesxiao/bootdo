@@ -270,6 +270,9 @@ public class GmRetailController {
             res.put("invite",user.getInvite());
             DeptDO dept = deptService.get(user.getDeptId());
             res.put("level",dept.getName());
+            res.put("deptId",dept.getDeptId());
+            UserDO parent = userService.getOutRole(user.getParentId());
+            res.put("parent",parent.getName());
 
 
         }catch (Exception e){
