@@ -17,13 +17,13 @@ textarea.publicIptSty{resize: none;height: 80px;padding-top: 0.15rem;padding-lef
 .logobox{text-align: center;padding: 1rem 0rem 0.8rem 0rem;}
 .logobox img{height: 2.5rem;}
 .site-h1 {
-	padding: 0.3rem;
+    padding: 0.3rem;
     color: #393D49;
     border-bottom: 1px solid #eee;
     font-size: 0.45rem;
     font-weight: 300;
-	text-align: center;
-	margin-bottom: 0.4rem;
+    text-align: center;
+    margin-bottom: 0.4rem;
 }
 .cotpad{padding: 0rem 0.25rem;}
 .posire{position: relative;margin-bottom: 0.25rem;}
@@ -35,7 +35,7 @@ textarea.publicIptSty{resize: none;height: 80px;padding-top: 0.15rem;padding-lef
 .Noresg{text-align: center;color: #666;padding: 0.6rem;}
 .Noresg a{color: #5FB878;}
 .banner{position: relative;}
-.shareIcon{position: absolute;right: 0.25rem;top: 0.2rem;font-size: 0.7rem;color: #000;width: 0.65rem;height: 0.65rem;text-align: center;}
+.shareIcon{position: absolute;right: 0.25rem;top: 0.2rem;font-size: 0.5rem;color: #000;width: 0.65rem;height: 0.65rem;text-align: center;}
 .welcomeYu{padding: 0.25rem 0rem;font-size: 0.4rem;color: #666;}
 .welcomeYu .icon{margin-right: 0.15rem;font-size: 0.4rem;color: #009688;}
 .welcomeYu p{font-size: 0.3rem;padding-top: 0.1rem;}
@@ -131,3 +131,4 @@ a.header-a1{position:absolute; top:15px; right:20px; color:#ffffff; font-size:14
 .sjdengji span{color: #ff5500;font-size: 0.4rem;}
 .danjia1{text-decoration: line-through;}
 .dengjino{width: 0.4rem;}
+.mb0{margin-bottom: 0px!important;}

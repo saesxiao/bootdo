@@ -13,12 +13,12 @@
     <link rel="stylesheet" type="text/css" href="/wjfh/css/style.css"/>
     <script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
-<body>
-<div id="idata" v-cloak>
+<body id="body" >
+<div id="idata" v-cloak style="display: none">
     <div class="resgcontain">
         <div class="banner">
             <img src="/wjfh/img/banner.jpg">
-            <span class="shareIcon icon iconfont">&#xe69e;</span>
+            <span class="shareIcon icon iconfont">&#xe656;</span>
         </div>
         <div class="welcomeYu">欢迎您！{{name}} <span class="layui-badge layui-bg-orange">{{level}}</span>
             <p><!-- <span class="icon iconfont">&#xe61f;</span> -->这里是公告，这里是公告，这里是公告，这里是公告，这里是公告，这里是公告，</p>
@@ -26,7 +26,7 @@
     </div>
     <div class="resgcontain">
         <div class="layui-row">
-            <div class="layui-col-xs3 mbnum">
+            <div class="layui-col-xs3 mbnum" :class="{mb0:deptId ==1}">
                 <div class="index_navIcon">
                     <a href="/goodsManager/page/ddgl">
                         <span class="icon iconfont indexnavicon bgcolor1">&#xe651;</span>
@@ -34,7 +34,7 @@
                     </a>
                 </div>
             </div>
-            <div class="layui-col-xs3 mbnum">
+            <div class="layui-col-xs3 mbnum" v-if = 'deptId !=1'>
                 <div class="index_navIcon">
                     <a href="/goodsManager/page/jinhuo">
                         <span class="icon iconfont indexnavicon bgcolor2">&#xe600;</span>
@@ -42,7 +42,7 @@
                     </a>
                 </div>
             </div>
-            <div class="layui-col-xs3 mbnum">
+            <div class="layui-col-xs3 mbnum" :class="{mb0:deptId ==1}">
                 <div class="index_navIcon">
                     <a href="/goodsManager/page/wddd">
                         <span class="icon iconfont indexnavicon bgcolor3">&#xe601;</span>
@@ -50,7 +50,7 @@
                     </a>
                 </div>
             </div>
-            <div class="layui-col-xs3 mbnum">
+            <div class="layui-col-xs3 mbnum" :class="{mb0:deptId ==1}">
                 <div class="index_navIcon">
                     <a href="/goodsManager/page/wdkc">
                         <span class="icon iconfont indexnavicon bgcolor4">&#xe63d;</span>
@@ -58,7 +58,7 @@
                     </a>
                 </div>
             </div>
-            <div class="layui-col-xs3">
+            <div class="layui-col-xs3" v-if = 'deptId !=1'>
                 <div class="index_navIcon">
                     <a href="/goodsManager/page/myPer">
                         <span class="icon iconfont indexnavicon bgcolor5">&#xe623;</span>
@@ -66,7 +66,7 @@
                     </a>
                 </div>
             </div>
-            <div class="layui-col-xs3">
+            <div class="layui-col-xs3" v-if = 'deptId !=1'>
                 <div class="index_navIcon">
                     <a href="/goodsManager/page/myAward">
                         <span class="icon iconfont indexnavicon bgcolor6">&#xe608;</span>
@@ -74,7 +74,7 @@
                     </a>
                 </div>
             </div>
-            <div class="layui-col-xs3">
+            <div class="layui-col-xs3" :class="{mb0:deptId ==1}">
                 <div class="index_navIcon">
                     <a href="/goodsManager/page/yaoqing">
                         <span class="icon iconfont indexnavicon bgcolor7">&#xe66d;</span>
@@ -82,7 +82,7 @@
                     </a>
                 </div>
             </div>
-            <div class="layui-col-xs3">
+            <div class="layui-col-xs3"  v-cloak v-if = 'deptId !=1'>
                 <div class="index_navIcon">
                     <a href="/goodsManager/page/shengji">
                         <span class="icon iconfont indexnavicon bgcolor8">&#xe66b;</span>
@@ -159,11 +159,12 @@
         data:{
             name:'',
             level:'',
-            order:'',
-            profit:'',
-            stock:'',
-            subordinate:'',
-            invite:''
+            order:'0',
+            profit:'0',
+            stock:'0',
+            subordinate:'0',
+            invite:'0',
+            deptId:''
         },
         methods: {},
         mounted: function () {
@@ -175,6 +176,15 @@
                 layer.ready(function(){
                     layer.load(1);
                 });
+                $('.shareIcon').on('click',function () {
+                    layer.confirm('您确认要退出当前账号吗？', {
+                        btn: ['确认','取消'] //按钮
+                    }, function(){
+                        parent.location.href = '/goodsManager/page/login';
+                    }, function(){
+
+                    });
+                })
                 $.ajax({
                     cache: true,
                     type: "POST",
@@ -185,22 +195,41 @@
                     },
                     success: function (data) {
                         console.log(data);
-                        if (data.code == 500) {
+                        if (data.code == 500 ) {
                             parent.location.href = '/goodsManager/page/login';
-                        } else {
+                        } else if(data.code != 1){
                             idata.name = data.name;
                             idata.level = data.level;
                             idata.order = data.order;
                             idata.profit = data.profit;
                             idata.stock = data.stock;
                             idata.subordinate = data.subordinate;
+                            idata.deptId = data.deptId;
+                            $("#idata").show();
+                            layer.closeAll('loading');
+                        }else{
+                            layer.msg(data.msg, {icon: 5,time: 1200});
                             layer.closeAll('loading');
                         }
 
 
                     }
                 });
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "/goodsManager/page/promotion",
 
+                    error: function (request) {
+                        layer.alert("Connection error");
+                    },
+                    success: function (data) {
+                        console.log(data);
+
+
+
+                    }
+                });
             })
         }
     })

@@ -21,16 +21,18 @@
 			<span class="icon iconfont">&#xe602;</span>
 		</div>
 	</div>
-	<div class="resgcontain"  v-for="(dldds,key) in dldd">
+	<div class="resgcontain"  v-for="(dldds,key) in dldd" v-if="dldds.status != 1">
 		<div class="item">
 			<div class="dingdantop layui-row">
 				<div class="layui-col-xs8">订单编号:{{key}}</div>
-				<div class="layui-col-xs4" style="text-align: right"><button type="button" class="layui-btn layui-btn-xs layui-btn-disabled">已完成</button></div>
+				<div class="layui-col-xs4" style="text-align: right">
+					<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled">已完成</button>
+				</div>
 			</div>
 		</div>
 		<div class="item">
 			<div class="dingdantop layui-row">
-				<div class="layui-col-xs8" v-for="(dlddss,index) in dldds.data" v-if="index<1">购买时间:{{dlddss.orderTime}}</div>
+				<div class="layui-col-xs8">购买时间:{{dldds.createTime}}</div>
 
 			</div>
 		</div>
@@ -42,7 +44,7 @@
 			</div>
 
 			<div class="dingdantop layui-row item mb">
-				<div class="layui-col-xs12">该订单总金额：<span class="num">￥{{dldds.money}}</span></div>
+				<div class="layui-col-xs12">该订单总金额：<span class="num">￥{{dldds.amount}}</span></div>
 
 			</div>
 		</div>
@@ -76,7 +78,7 @@
 		</div>
 	</div>
 </div>
-	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
@@ -95,33 +97,23 @@
                 $ = layui.jquery,
                     form = layui.form,
                     layer = layui.layer;
-                layer.load(1);
+                layer.ready(function(){
+                    layer.load(1);
+                });
                 $.ajax({
                     cache: true,
                     type: "POST",
-                    url: "/goodsManager/gmOrder/getMyOrder",
+                    url: "/goodsManager/gmOrder/getSendOrder",
                     error : function(request) {
                         layer.alert("Connection error");
                     },
                     success : function(data) {
-						console.log(data);
+                        console.log(data);
                         idata.dldd = data;
                         layer.closeAll('loading');
                     }
                 });
-                $.ajax({
-                    cache: true,
-                    type: "POST",
-                    url: "/goodsManager/gmProfit/getMyProfit",
-                    error : function(request) {
-                        layer.alert("Connection error");
-                    },
-                    success : function(data) {
-                        console.log(data);
-                        console.log(data);
 
-                    }
-                });
             })
         }
     })

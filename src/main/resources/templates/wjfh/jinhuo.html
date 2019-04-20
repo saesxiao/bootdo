@@ -21,8 +21,10 @@
 			<h1 class="site-h1">我的上级</h1>
 			<!-- <div class="logobox"><img src="img/logo.png" ></div> -->
 			<div class="item">
-				<div class="layui-form-item"><input type="radio" name="sex" value="nv" title="上级的名字" checked>
-					<span class="layui-badge layui-bg-orange" style="vertical-align: sub;">联合创始人</span>
+				<div class="layui-form-item">
+					<i class="layui-icon" style="color: #5FB878;vertical-align: bottom;">&#xe643;</i>
+					<span class="layui-badge layui-bg-orange" style="background-color: inherit!important;color: #666!important;">{{usermess.parentName}}</span>
+					<span class="layui-badge layui-bg-orange" style="">{{usermess.parentDeptName}}</span>
 				</div>
 			</div>
 		</div>
@@ -36,13 +38,15 @@
 				<div class="layui-form-item goodss">
 					<div class="layui-form-mid layui-word-aux">{{goodsdata.goodsName}}</div>
 					<div class="layui-input-block">
-						<div class="layui-form-mid layui-word-aux">￥5</div>
-						<input style="width: 50px;text-align: center;padding: 0px;float: right;" type="number" name="title" :id="goodsdata.id" placeholder="请输入数量" value="0" maxlength="6" class="layui-input goodss">
+						<div  name="goodsPrice">
+							<div class="layui-form-mid layui-word-aux" >￥<span>{{goodsdata.goodsPrice.split(',')[usermess.deptId-2]}}</span></div>
+							<input style="width: 50px;text-align: center;padding: 0px;float: right;" type="number" name="title" :id="goodsdata.id" placeholder="0" value="" maxlength="6" class="layui-input goodss" onblur="showAmount()">
+						</div>
 					</div>
 				</div>
 			</div>
 			<div class="layui-form-item" style="margin-bottom: 0px;">
-				<div class="layui-form-mid layui-word-aux">订单金额：<span style="font-size: 0.4rem;color: #ff5500;">50</span>元</div>
+				<div class="layui-form-mid layui-word-aux">订单金额：<span style="font-size: 0.4rem;color: #ff5500;" id="showAmountSpan">0</span>元</div>
 			</div>
 		</div>
 		<div class="cotpad">
@@ -52,13 +56,13 @@
 		</div>
 		<div class="resgcontain">
 			<div class="item">
-				<input type="number" name="title"  placeholder="收件人" value="" class="layui-input goodss">
+				<input type="text" name="title"  placeholder="收件人" value="" class="layui-input goodss" v-model="usermess.userName">
 			</div>
 			<div class="item">
-				<input type="number" name="title"  placeholder="收件手机号码" value="" class="layui-input goodss">
+				<input type="phone" name="title"  placeholder="收件手机号码" value="" class="layui-input goodss" v-model="usermess.mobile">
 			</div>
 			<div class="item">
-				<textarea class="publicIptSty widthman" placeholder="">{{sheng}}&nbsp;{{shi}}&nbsp;{{qu}}&nbsp;{{address}}</textarea>
+				<textarea class="publicIptSty widthman" placeholder="">{{sheng.split('_')[0]}}&nbsp;{{shi.split('_')[0]}}&nbsp;{{qu}}&nbsp;{{address}}</textarea>
 			</div>
 			<div class="item">
 				<button type="button" class="layui-btn layui-btn-danger" id="test7"><i class="layui-icon"></i>{{updatebtnname}}</button>
@@ -75,134 +79,159 @@
 	</form>
 </div>
 
-	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
-	<script type="text/javascript">
-        var idata = new  Vue({
-            el:"#jinhuo",
-            data:{
-                goodsdatas:'',
-				img:'',
-				sheng:'',
-				shi:'',
-				qu:'',
-				address:'',
-                updatebtnname:'上传截图'
-            },
-            methods:{
-				shopFun:function(){
-                    var goodss ={};
-                    var isNone = 0;
-                    for(goodsdata in idata.goodsdatas){
-                        var ids = idata.goodsdatas[goodsdata].id;
-                        var vals = document.getElementById(idata.goodsdatas[goodsdata].id).value;
-                        var key = [ids];
-                        goodss[key] = vals;
-                        isNone += vals;
-                        //goodss.ids = vals;
-                    }
-                    if(isNone<1){
-                        layer.alert("至少订购一件");
-                        return;
-					}
+<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+<script type="text/javascript">
+    var idata = new  Vue({
+        el:"#jinhuo",
+        data:{
+            goodsdatas:'',
+            img:'',
+            sheng:'',
+            shi:'',
+            qu:'',
+            address:'',
+            updatebtnname:'上传截图',
+            usermess:'',
+            goodsPrice: 0,
+            isNone:0,   //订单数量
+            goodss:{}   // 订单信息
+        },
+        methods:{
+            shopFun:function(){
 
-				    var jsonStr = {
-						"address": idata.address,
-						"imgUrl": idata.img,
-						"goods":goodss
-					};
-					var param = {"jsonStr":JSON.stringify(jsonStr)}
-                    console.log(jsonStr);
-                    $.ajax({
-                        cache: true,
-                        data: param,
-                        type: "POST",
-                        url: "/goodsManager/gmOrder/saveOrder",
-                        error : function(request) {
-                            layer.alert("Connection error");
-                        },
-                        success : function(data) {
+                idata.peronblur();
+                if(idata.isNone<1){
+                    layer.alert("至少订购一件");
+                    return;
+                }
+                var shouhuo = idata.usermess.userName+', ' +idata.usermess.mobile+' ,' + idata.sheng.split('_')[0] +', ' +idata.shi.split('_')[0] +', '+idata.qu +' '+idata.address;
+                var jsonStr = {
+                    "address": shouhuo,
+                    "imgUrl": idata.img,
+                    "goods":idata.goodss
+                };
+                var param = {"jsonStr":JSON.stringify(jsonStr)}
+                console.log(jsonStr);
+                $.ajax({
+                    cache: true,
+                    data: param,
+                    type: "POST",
+                    url: "/goodsManager/gmOrder/saveOrder",
+                    error : function(request) {
+                        layer.alert("Connection error");
+                    },
+                    success : function(data) {
+
+                        if(data.code == 500){
                             layer.alert(data.msg);
-                            window.location.href="/goodsManager/page/wddd";
+                        }else{
+                            console.log(data);
+                            layer.msg('下单成功!', {icon: 6,time: 1200},function () {
+                                //parent.location.href = '/goodsManager/page/wddd';
+                            });
+
                         }
-                    });
-				}
+
+                    }
+                });
             },
-            mounted:function () {
+            peronblur:function () {
 
-                layui.use(['jquery', 'form','layer','upload'], function() {
-                    $ = layui.jquery,
-                        form = layui.form,
-                        upload = layui.upload,
-                        layer = layui.layer;
-                    var uploadInst = upload.render({
-                        elem: '#test7' //绑定元素
-                        ,url: '/common/sysFile/upload' //上传接口
-                        ,done: function(res){
-                            //上传完毕回调
-							console.log(res);
-							$('.pevimg').show();
-                            idata.img = res.fileName;
 
-                        }
-                        ,before: function(obj){
-                            //预读本地文件示例，不支持ie8
-                            obj.preview(function(index, file, result){
-                                $('#pevimg').attr('src', result); //图片链接（base64）
-								idata.updatebtnname = '重新上传';
+                console.log(2);
+                for(goodsdata in idata.goodsdatas){
+                    var ids = idata.goodsdatas[goodsdata].id;
+                    var vals = document.getElementById(idata.goodsdatas[goodsdata].id).value;
+                    var key = [ids];
+                    idata.goodss[key] = vals;
+                    idata.isNone += vals;
+                    //goodss.ids = vals;
+                    idata.goodsPrice += idata.goodsdatas[goodsdata].goodsPrice.split(',')[idata.usermess.deptId-2]*vals;
+
+                }
+            }
+        },
+        mounted:function () {
+
+            layui.use(['jquery', 'form','layer','upload'], function() {
+                $ = layui.jquery,
+                    form = layui.form,
+                    upload = layui.upload,
+                    layer = layui.layer;
+                layer.ready(function(){
+                    layer.load(1);
+                });
+                var uploadInst = upload.render({
+                    elem: '#test7' //绑定元素
+                    ,url: '/common/sysFile/upload' //上传接口
+                    ,done: function(res){
+                        //上传完毕回调
+                        console.log(res);
+                        $('.pevimg').show();
+                        idata.img = res.fileName;
+
+                    }
+                    ,before: function(obj){
+                        //预读本地文件示例，不支持ie8
+                        obj.preview(function(index, file, result){
+                            $('#pevimg').attr('src', result); //图片链接（base64）
+                            idata.updatebtnname = '重新上传';
+                        });
+                    }
+                    ,error: function(){
+                        //请求异常回调
+                    }
+                });
+                $.ajax({
+                    cache: true,
+                    type: "GET",
+                    url: "/goodsManager/gmGoodsInfo/getList",
+                    error : function(request) {
+                        layer.alert("Connection error");
+                    },
+                    success : function(data) {
+                        console.log(data);
+                        if(data.code == 500){
+                            parent.location.href = '/goodsManager/page/login';
+                        }else{
+                            idata.goodsdatas = data;
+                            layer.closeAll('loading');
+                            layui.use(['form','element'], function() {
+                                var form = layui.form,element = layui.element;
+                                element.init();
+                                form.render();
                             });
                         }
-                        ,error: function(){
-                            //请求异常回调
+                    }
+                });
+                $.ajax({
+                    cache: true,
+                    type: "GET",
+                    url: "/goodsManager/retail/address",
+                    error : function(request) {
+                        layer.alert("Connection error");
+                    },
+                    success : function(data) {
+                        console.log(data);
+                        if(data.code == 500){
+                            parent.location.href = '/goodsManager/page/login';
+                        }else{
+                            idata.sheng = data.province;
+                            idata.shi = data.city;
+                            idata.qu = data.district;
+                            idata.address = data.liveAddress;
+                            idata.usermess = data;
+                            layui.use(['form','element'], function() {
+                                var form = layui.form,element = layui.element;
+                                element.init();
+                                form.render();
+                            });
                         }
-                    });
-                    $.ajax({
-                        cache: true,
-                        type: "GET",
-                        url: "/goodsManager/gmGoodsInfo/getList",
-                        error : function(request) {
-                            layer.alert("Connection error");
-                        },
-                        success : function(data) {
-                            //console.log(data);
-                            if(data.code == 500){
-                                parent.location.href = '/goodsManager/page/login';
-                            }else{
-								idata.goodsdatas = data;
-                                layui.use(['form','element'], function() {
-                                    var form = layui.form,element = layui.element;
-                                    element.init();
-                                    form.render();
-                                });
-                            }
-                        }
-                    });
-                    $.ajax({
-                        cache: true,
-                        type: "GET",
-                        url: "/goodsManager/retail/address",
-                        error : function(request) {
-                            layer.alert("Connection error");
-                        },
-                        success : function(data) {
-                            console.log(data);
-                            if(data.code == 500){
-                                parent.location.href = '/goodsManager/page/login';
-                            }else{
-                                idata.sheng = data.province;
-                                idata.shi = data.city;
-                                idata.qu = data.district;
-                                idata.address = data.liveAddress;
-                                layui.use(['form','element'], function() {
-                                    var form = layui.form,element = layui.element;
-                                    element.init();
-                                    form.render();
-                                });
-                            }
-                        }
-                    });
+                    }
+                });
 //                    form.on('checkbox(lay-goods)', function (data) {
 //                        console.log(data.elem);
 //                        if (data.elem.checked) {
@@ -212,9 +241,22 @@
 //                        }
 //                    })
 
-                })
-            }
+            })
+        }
+    })
+
+    function showAmount() {
+        var amount = 0;
+        var goodsPriceList = $("div[name='goodsPrice']")
+        $(goodsPriceList).each(function (index,value) {
+            var price = $(value).find("span").eq(0).html();
+            var num = $(value).find("input").eq(0).val()==null?0:$(value).find("input").eq(0).val();
+            amount += price*num;
+
         })
-	</script>
+        $("#showAmountSpan").html(amount);
+
+    }
+</script>
 </body>
 </html>

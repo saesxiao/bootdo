@@ -19,24 +19,24 @@
 		<h1 class="site-h1">我的订单</h1>
 		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 			<!--<ul class="layui-tab-title">-->
-				<!--<li class="layui-this"><a>我的订单</a></li>-->
+			<!--<li class="layui-this"><a>我的订单</a></li>-->
 			<!--</ul>-->
 			<!--<div class="item"></div>-->
 
 		</div>
 	</div>
 	<!--<div class="resgcontain">-->
-		<!--<div class="saomaiptbox">-->
-			<!--<input type="text" class="publicIptSty widthman" id="" value="" placeholder="代理商昵称" readonly="readonly"/>-->
-			<!--<span class="icon iconfont">&#xe602;</span>-->
-		<!--</div>-->
+	<!--<div class="saomaiptbox">-->
+	<!--<input type="text" class="publicIptSty widthman" id="" value="" placeholder="代理商昵称" readonly="readonly"/>-->
+	<!--<span class="icon iconfont">&#xe602;</span>-->
+	<!--</div>-->
 	<!--</div>-->
 
 	<div class="resgcontain  layui-form" v-for="(dldds,key) in dldd">
 		<div class="item">
 			<div class="dingdantop layui-row">
 				<div class="layui-col-xs5">收货人:{{dldds.name}}</div>
-				<div class="layui-col-xs7" v-for="(dlddss,index) in dldds.data" v-if="index<1">下单时间:{{dlddss.orderTime}}</div>
+				<div class="layui-col-xs7">下单时间:{{dldds.createTime}}</div>
 			</div>
 		</div>
 		<div class="item dingdancot mb">
@@ -45,11 +45,11 @@
 				<div class="layui-col-xs6"><span class="num">×{{dlddss.goodsNum}}</span></div>
 			</div>
 			<div class="dingdantop layui-row item mb">
-				<div class="layui-col-xs12">总金额<span class="num">￥{{dldds.money}}</span>
+				<div class="layui-col-xs12">总金额<span class="num">￥{{dldds.amount}}</span>
 					<div class="layui-layout-right">
 						<!--:class="layui-btn-disabled"-->
-						<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled" v-if="dldds.type == 1">待处理</button>
-						<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled" v-if="dldds.type == 2">已发货</button>
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled" v-if="dldds.status == 1">待处理</button>
+						<button type="button" class="layui-btn layui-btn-xs layui-btn-disabled" v-if="dldds.status == 2">已发货</button>
 					</div>
 				</div>
 			</div>
@@ -57,46 +57,48 @@
 	</div>
 </div>
 
-	
 
-	
-	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
-	<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
-	<script>
-        var idata = new  Vue({
-            el:"#dldd",
-            data:{
-                dldd:{}
-            },
-            methods:{
 
-            },
-            mounted:function () {
 
-                layui.use(['jquery', 'form','layer'], function() {
-                    $ = layui.jquery,
-                        form = layui.form,
-                        layer = layui.layer;
+<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
+<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+<script>
+    var idata = new  Vue({
+        el:"#dldd",
+        data:{
+            dldd:{}
+        },
+        methods:{
+
+        },
+        mounted:function () {
+
+            layui.use(['jquery', 'form','layer'], function() {
+                $ = layui.jquery,
+                    form = layui.form,
+                    layer = layui.layer;
+                layer.ready(function(){
                     layer.load(1);
-                    $.ajax({
-                        cache: true,
-                        type: "POST",
-                        url: "/goodsManager/gmOrder/getMyOrder",
-                        error : function(request) {
-                            layer.alert("Connection error");
-                        },
-                        success : function(data) {
+                });
+                $.ajax({
+                    cache: true,
+                    type: "POST",
+                    url: "/goodsManager/gmOrder/getMyOrder",
+                    error : function(request) {
+                        layer.alert("Connection error");
+                    },
+                    success : function(data) {
+                        console.log(data);
+                        idata.dldd = data;
+                        layer.closeAll('loading');
+                    }
+                });
 
-                            idata.dldd = data;
-                            layer.closeAll('loading');
-                        }
-                    });
-
-                })
-            }
-        })
-	</script>
+            })
+        }
+    })
+</script>
 </body>
 </html>
