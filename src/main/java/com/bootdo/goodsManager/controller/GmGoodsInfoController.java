@@ -124,6 +124,7 @@ public class GmGoodsInfoController {
 						goodsUser.setType(gmGoodsInfo.getId()+"");
 						goodsUser.setInTime(DateUtil.getDateTime());
 						goodsUser.setBatch(1);
+						goodsUser.setGoodsCode("-");
 						goodsUserService.save(goodsUser);
 					}
 				}
@@ -162,6 +163,7 @@ public class GmGoodsInfoController {
 						goodsUser.setType(gmGoodsInfo.getId()+"");
 						goodsUser.setInTime(DateUtil.getDateTime());
 						goodsUser.setBatch(1);
+						goodsUser.setGoodsCode("-");
 						goodsUserService.save(goodsUser);
 					}
 				}else{

@@ -186,6 +186,7 @@ public class GmIndexController{
                 user.setDeptId(children.getDeptId());
                 user.setDeptName(children.getName());
                 user.setCreateTime(DateUtil.getDateTime());
+                user.setStatus(1);
                 level = children.getDeptId()+"";
             } else { //如果没有下级 注册为经销商
                 user.setDeptId(dept.getDeptId());

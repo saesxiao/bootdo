@@ -193,7 +193,8 @@ public class GmRetailController {
                 for (GmGoodsUserDO goodsUser:sailList) {
                     Integer goodsId = Integer.parseInt(goodsUser.getType());
                     GmGoodsInfoDO goods = goodsInfoService.get(goodsId);
-//                    sailAmount += goods.getGoodsPrice();
+                    String[]priceList = goods.getGoodsPrice().split(",");
+                    sailAmount += Double.parseDouble(priceList[3]);
                 }
                 info.put("amount",sailAmount);
 
@@ -261,12 +262,8 @@ public class GmRetailController {
             query.put("parentId",userId);
             List<GmOrderDO> orderList = orderService.list(query);
             Integer num = 0;
-            String tempOrderCode = "";
-            for (GmOrderDO orderDO:orderList) {
-                if(!orderDO.getType().equals(tempOrderCode)){
-                    tempOrderCode = orderDO.getType();
-                    num++;
-                }
+            if(orderList!=null){
+                num = orderList.size();
             }
             res.put("order",num);
             res.put("name",user.getName());

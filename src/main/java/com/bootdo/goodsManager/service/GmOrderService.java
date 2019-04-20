@@ -9,8 +9,8 @@ import java.util.Map;
  * 发货订单表
  * 
  * @author xyy
- * @email 1992lcg@163.com
- * @date 2019-04-04 16:01:15
+ * @email 615131288@qq.com
+ * @date 2019-04-20 14:04:15
  */
 public interface GmOrderService {
 	

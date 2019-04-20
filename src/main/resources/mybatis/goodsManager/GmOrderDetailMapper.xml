@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bootdo.goodsManager.dao.GmOrderDetailDao">
+
+    <select id="get" resultType="com.bootdo.goodsManager.domain.GmOrderDetailDO">
+		select `id`,`order_id`,`goods_id`,`goods_num`,`type`,`other`,`remark` from gm_order_detail where id = #{value}
+	</select>
+
+    <select id="list" resultType="com.bootdo.goodsManager.domain.GmOrderDetailDO">
+        select a.id AS id,a.order_id AS orderId ,a.goods_id AS goodsId, a.goods_num AS goodsNum,a.type AS type, a.other AS other ,a.remark AS remark ,
+        b.goods_name AS goodsName,b.goods_price AS goodsPrice from gm_order_detail a,gm_goods_info b
+        <where>
+            <if test="id != null and id != ''">and a.id = #{id}</if>
+            <if test="orderId != null and orderId != ''">and a.order_id = #{orderId}</if>
+            <if test="goodsId != null and goodsId != ''">and a.goods_id = #{goodsId}</if>
+            <if test="goodsNum != null and goodsNum != ''">and a.goods_num = #{goodsNum}</if>
+            <if test="type != null and type != ''">and a.type = #{type}</if>
+            <if test="other != null and other != ''">and a.other = #{other}</if>
+            <if test="remark != null and remark != ''">and a.remark = #{remark}</if>
+            AND a.goods_id=b.id
+        </where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+            <otherwise>
+                order by a.id desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*) from gm_order_detail
+        <where>
+            <if test="id != null and id != ''">and id = #{id}</if>
+            <if test="orderId != null and orderId != ''">and order_id = #{orderId}</if>
+            <if test="goodsId != null and goodsId != ''">and goods_id = #{goodsId}</if>
+            <if test="goodsNum != null and goodsNum != ''">and goods_num = #{goodsNum}</if>
+            <if test="type != null and type != ''">and type = #{type}</if>
+            <if test="other != null and other != ''">and other = #{other}</if>
+            <if test="remark != null and remark != ''">and remark = #{remark}</if>
+        </where>
+    </select>
+
+    <insert id="save" parameterType="com.bootdo.goodsManager.domain.GmOrderDetailDO" useGeneratedKeys="true"
+            keyProperty="id">
+		insert into gm_order_detail
+		(
+			`order_id`, 
+			`goods_id`, 
+			`goods_num`, 
+			`type`, 
+			`other`, 
+			`remark`
+		)
+		values
+		(
+			#{orderId}, 
+			#{goodsId}, 
+			#{goodsNum}, 
+			#{type}, 
+			#{other}, 
+			#{remark}
+		)
+	</insert>
+
+    <update id="update" parameterType="com.bootdo.goodsManager.domain.GmOrderDetailDO">
+        update gm_order_detail
+        <set>
+            <if test="orderId != null">`order_id` = #{orderId},</if>
+            <if test="goodsId != null">`goods_id` = #{goodsId},</if>
+            <if test="goodsNum != null">`goods_num` = #{goodsNum},</if>
+            <if test="type != null">`type` = #{type},</if>
+            <if test="other != null">`other` = #{other},</if>
+            <if test="remark != null">`remark` = #{remark}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="remove">
+		delete from gm_order_detail where id = #{value}
+	</delete>
+
+    <delete id="batchRemove">
+        delete from gm_order_detail where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

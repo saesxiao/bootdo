@@ -9,8 +9,8 @@ import java.util.Date;
  * 发货订单表
  * 
  * @author xyy
- * @email 1992lcg@163.com
- * @date 2019-04-04 16:01:15
+ * @email 615131288@qq.com
+ * @date 2019-04-20 14:04:15
  */
 public class GmOrderDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -21,10 +21,10 @@ public class GmOrderDO implements Serializable {
 	private Long userId;
 	//上级id
 	private Long parentId;
-	//商品表id
-	private Integer goodsId;
-	//商品数量
-	private Integer goodsNum;
+	//订单金额
+	private Double amount;
+	//订单唯一编号
+	private String orderCode;
 	//1-待处理2-已处理3-失效
 	private Integer orderStatus;
 	//订单日期
@@ -37,9 +37,6 @@ public class GmOrderDO implements Serializable {
 	private String other;
 	//收货地址
 	private String remark;
-
-	//商品名称
-	private String goodsName;
 
 	/**
 	 * 设置：订单表id
@@ -78,28 +75,28 @@ public class GmOrderDO implements Serializable {
 		return parentId;
 	}
 	/**
-	 * 设置：商品表id
+	 * 设置：订单金额
 	 */
-	public void setGoodsId(Integer goodsId) {
-		this.goodsId = goodsId;
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 	/**
-	 * 获取：商品表id
+	 * 获取：订单金额
 	 */
-	public Integer getGoodsId() {
-		return goodsId;
+	public Double getAmount() {
+		return amount;
 	}
 	/**
-	 * 设置：商品数量
+	 * 设置：订单唯一编号
 	 */
-	public void setGoodsNum(Integer goodsNum) {
-		this.goodsNum = goodsNum;
+	public void setOrderCode(String orderCode) {
+		this.orderCode = orderCode;
 	}
 	/**
-	 * 获取：商品数量
+	 * 获取：订单唯一编号
 	 */
-	public Integer getGoodsNum() {
-		return goodsNum;
+	public String getOrderCode() {
+		return orderCode;
 	}
 	/**
 	 * 设置：1-待处理2-已处理3-失效
@@ -138,47 +135,39 @@ public class GmOrderDO implements Serializable {
 		return endTime;
 	}
 	/**
-	 * 设置：预留
+	 * 设置：订单编号
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 	/**
-	 * 获取：预留
+	 * 获取：订单编号
 	 */
 	public String getType() {
 		return type;
 	}
 	/**
-	 * 设置：预留
+	 * 设置：截图地址
 	 */
 	public void setOther(String other) {
 		this.other = other;
 	}
 	/**
-	 * 获取：预留
+	 * 获取：截图地址
 	 */
 	public String getOther() {
 		return other;
 	}
 	/**
-	 * 设置：预留
+	 * 设置：收货地址
 	 */
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
 	/**
-	 * 获取：预留
+	 * 获取：收货地址
 	 */
 	public String getRemark() {
 		return remark;
-	}
-
-	public String getGoodsName() {
-		return goodsName;
-	}
-
-	public void setGoodsName(String goodsName) {
-		this.goodsName = goodsName;
 	}
 }

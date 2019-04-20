@@ -4,17 +4,17 @@
 <mapper namespace="com.bootdo.goodsManager.dao.GmOrderDao">
 
 	<select id="get" resultType="com.bootdo.goodsManager.domain.GmOrderDO">
-		select `id`,`user_id`,`parent_id`,`goods_id`,`goods_num`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark` from gm_order where id = #{value}
+		select `id`,`user_id`,`parent_id`,`amount`,`order_code`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark` from gm_order where id = #{value}
 	</select>
 
 	<select id="list" resultType="com.bootdo.goodsManager.domain.GmOrderDO">
-		select `id`,`user_id`,`parent_id`,`goods_id`,`goods_num`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark` from gm_order
+		select `id`,`user_id`,`parent_id`,`amount`,`order_code`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark` from gm_order
         <where>  
 		  		  <if test="id != null and id != ''"> and id = #{id} </if>
 		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
 		  		  <if test="parentId != null and parentId != ''"> and parent_id = #{parentId} </if>
-		  		  <if test="goodsId != null and goodsId != ''"> and goods_id = #{goodsId} </if>
-		  		  <if test="goodsNum != null and goodsNum != ''"> and goods_num = #{goodsNum} </if>
+		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
+		  		  <if test="orderCode != null and orderCode != ''"> and order_code = #{orderCode} </if>
 		  		  <if test="orderStatus != null and orderStatus != ''"> and order_status = #{orderStatus} </if>
 		  		  <if test="orderTime != null and orderTime != ''"> and order_time = #{orderTime} </if>
 		  		  <if test="endTime != null and endTime != ''"> and end_time = #{endTime} </if>
@@ -41,8 +41,8 @@
 		  		  <if test="id != null and id != ''"> and id = #{id} </if>
 		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
 		  		  <if test="parentId != null and parentId != ''"> and parent_id = #{parentId} </if>
-		  		  <if test="goodsId != null and goodsId != ''"> and goods_id = #{goodsId} </if>
-		  		  <if test="goodsNum != null and goodsNum != ''"> and goods_num = #{goodsNum} </if>
+		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
+		  		  <if test="orderCode != null and orderCode != ''"> and order_code = #{orderCode} </if>
 		  		  <if test="orderStatus != null and orderStatus != ''"> and order_status = #{orderStatus} </if>
 		  		  <if test="orderTime != null and orderTime != ''"> and order_time = #{orderTime} </if>
 		  		  <if test="endTime != null and endTime != ''"> and end_time = #{endTime} </if>
@@ -57,8 +57,8 @@
 		(
 			`user_id`, 
 			`parent_id`, 
-			`goods_id`, 
-			`goods_num`, 
+			`amount`, 
+			`order_code`, 
 			`order_status`, 
 			`order_time`, 
 			`end_time`, 
@@ -70,8 +70,8 @@
 		(
 			#{userId}, 
 			#{parentId}, 
-			#{goodsId}, 
-			#{goodsNum}, 
+			#{amount}, 
+			#{orderCode}, 
 			#{orderStatus}, 
 			#{orderTime}, 
 			#{endTime}, 
@@ -86,8 +86,8 @@
 		<set>
 			<if test="userId != null">`user_id` = #{userId}, </if>
 			<if test="parentId != null">`parent_id` = #{parentId}, </if>
-			<if test="goodsId != null">`goods_id` = #{goodsId}, </if>
-			<if test="goodsNum != null">`goods_num` = #{goodsNum}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="orderCode != null">`order_code` = #{orderCode}, </if>
 			<if test="orderStatus != null">`order_status` = #{orderStatus}, </if>
 			<if test="orderTime != null">`order_time` = #{orderTime}, </if>
 			<if test="endTime != null">`end_time` = #{endTime}, </if>
