@@ -193,7 +193,7 @@ public class GmRetailController {
                 for (GmGoodsUserDO goodsUser:sailList) {
                     Integer goodsId = Integer.parseInt(goodsUser.getType());
                     GmGoodsInfoDO goods = goodsInfoService.get(goodsId);
-                    sailAmount += goods.getGoodsPrice();
+//                    sailAmount += goods.getGoodsPrice();
                 }
                 info.put("amount",sailAmount);
 

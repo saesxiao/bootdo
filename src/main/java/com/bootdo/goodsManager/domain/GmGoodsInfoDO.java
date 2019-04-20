@@ -20,7 +20,7 @@ public class GmGoodsInfoDO implements Serializable {
 	//商品名称
 	private String goodsName;
 	//商品单价
-	private Double goodsPrice;
+	private String goodsPrice;
 	//商品条码
 	private String barCode;
 	//状态(1可售0停售)
@@ -61,13 +61,13 @@ public class GmGoodsInfoDO implements Serializable {
 	/**
 	 * 设置：商品单价
 	 */
-	public void setGoodsPrice(Double goodsPrice) {
+	public void setGoodsPrice(String goodsPrice) {
 		this.goodsPrice = goodsPrice;
 	}
 	/**
 	 * 获取：商品单价
 	 */
-	public Double getGoodsPrice() {
+	public String getGoodsPrice() {
 		return goodsPrice;
 	}
 	/**

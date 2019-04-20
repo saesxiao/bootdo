@@ -167,7 +167,7 @@ public class GmOrderController {
 				Double money = 0.0;
 				for (GmOrderDO order:list) {
 					GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
-					money += order.getGoodsNum()*goodsInfo.getGoodsPrice();
+//					money += order.getGoodsNum()*goodsInfo.getGoodsPrice();
 				}
 				child.put("money",money);
 				res.replace(orderCode,child);
@@ -222,7 +222,7 @@ public class GmOrderController {
 				Double money = 0.0;
 				for (GmOrderDO order:list) {
 					GmGoodsInfoDO goodsInfo = goodsInfoService.get(order.getGoodsId());
-					money += order.getGoodsNum()*goodsInfo.getGoodsPrice();
+//					money += order.getGoodsNum()*goodsInfo.getGoodsPrice();
 				}
 				query = new HashMap<>();
 				query.put("remark",orderCode);
