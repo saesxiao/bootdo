@@ -18,7 +18,7 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label" style="min-width: 15%">微信号:</label>
 			<div class="layui-input-block">
-				<input type="text" name="wxchat" style="width: 95%;margin-left: 5%" lay-verify="required" autocomplete="off" placeholder="请输入微信号" v-model="wxchat" class="layui-input">
+				<input type="text" name="wechat" style="width: 95%;margin-left: 5%" lay-verify="required" autocomplete="off" placeholder="请输入微信号" v-model="wxchat" class="layui-input">
 			</div>
 		</div>
 		<div class="layui-form-item">
@@ -30,7 +30,8 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label" style="min-width: 15%">手机号:</label>
 			<div class="layui-input-block">
-				<input type="text" name="mobile" style="width: 95%;margin-left: 5%" class="layui-input" value="" required lay-verify="required|phone" autocomplete="off" placeholder="请输入手机号" v-model="mobile" />
+				<input type="text" name="mobile" id="mobile" style="width: 95%;margin-left: 5%" class="layui-input" value="" required lay-verify="required|phone" autocomplete="off" placeholder="请输入手机号" v-model="mobile" />
+				<input type="hidden" name="username" id="username">
 			</div>
 		</div>
 		<div class="layui-form-item">
@@ -57,7 +58,7 @@
 	</div>
 	<div class="resgcontain">
 		<div class="layui-form-item">
-			<input type="text" name="name" style="" class="layui-input" value="" required lay-verify="required|phone" autocomplete="off" placeholder="请输入收件人" v-model="mobile" />
+			<input type="text" name="name" style="" class="layui-input" value="" required lay-verify="required" autocomplete="off" placeholder="请输入收件人" v-model="name" />
 
 		</div>
 		<div class="item mb">
@@ -89,7 +90,7 @@
 
 		</div>
 		<div class="item">
-			<textarea class="publicIptSty widthman" lay-verify="required" placeholder="详细到门牌,例如和平大道54号2410室"  v-model="address"></textarea>
+			<textarea class="publicIptSty widthman" name="liveAddress" lay-verify="required" placeholder="详细到门牌,例如和平大道54号2410室"  v-model="address"></textarea>
 		</div>
 	</div>
 	<div class="cotpad">
@@ -131,10 +132,11 @@
                     $form = $('form');
                 //监听提交
                 form.on('submit(resgSubmit)', function(data){
+                    $("#username").val($("#mobile").val());
 					$.ajax({
 						cache: true,
 						type: "POST",
-						url: "/sys/user/register",
+						url: "/goodsManager/page/register",
 						data: $('#regbox').serialize(),// 你的formid
 						error : function(request) {
 							layer.alert("Connection error");
@@ -144,36 +146,36 @@
 
 						}
 					});
-                    axios.post('/sys/user/register', {
-                        params:{
-                            wechat:vm.wxchat,
-                            name:vm.name,
-                            username:vm.mobile,
-                            mobile:vm.mobile,
-                            password:vm.pass,
-                            invite:vm.code,
-                            province:vm.sheng,
-                            city:vm.shi,
-                            district:vm.qu,
-                            liveAddress:vm.address,
-                        },
-                        dataType: 'json', //服务器返回json格式数据
-                        type: 'post', //HTTP请求类型
-                    })
-                        .then(function(response) {
-                            console.log(vm.sheng);
-                            console.log(response);
-                            if(response.data.code == 200){
-                                layer.msg('注册成功！', {time: 1200});
-							}else{
-                                layer.msg(response.data.msg, {time: 1200});
-							}
-                            //layer.msg('验证码发送成功！', {time: 1200});
-
-                        })
-                        .catch(function (error) {
-                            //layer.msg(error)
-                        });
+//                    axios.post('/sys/user/register', {
+//                        params:{
+//                            wechat:vm.wxchat,
+//                            name:vm.name,
+//                            username:vm.mobile,
+//                            mobile:vm.mobile,
+//                            password:vm.pass,
+//                            invite:vm.code,
+//                            province:vm.sheng,
+//                            city:vm.shi,
+//                            district:vm.qu,
+//                            liveAddress:vm.address,
+//                        },
+//                        dataType: 'json', //服务器返回json格式数据
+//                        type: 'post', //HTTP请求类型
+//                    })
+//                        .then(function(response) {
+//                            console.log(vm.sheng);
+//                            console.log(response);
+//                            if(response.data.code == 200){
+//                                layer.msg('注册成功！', {time: 1200});
+//							}else{
+//                                layer.msg(response.data.msg, {time: 1200});
+//							}
+//                            //layer.msg('验证码发送成功！', {time: 1200});
+//
+//                        })
+//                        .catch(function (error) {
+//                            //layer.msg(error)
+//                        });
                     return false;
                 });
                 //自定义验证规则

@@ -106,10 +106,17 @@ public class UserServiceImpl implements UserService {
         List<Long> roles = user.getRoleIds();
         userRoleMapper.removeByUserId(userId);
         List<UserRoleDO> list = new ArrayList<>();
-        for (Long roleId : roles) {
+        if(roles!=null){
+            for (Long roleId : roles) {
+                UserRoleDO ur = new UserRoleDO();
+                ur.setUserId(userId);
+                ur.setRoleId(roleId);
+                list.add(ur);
+            }
+        }else{
             UserRoleDO ur = new UserRoleDO();
             ur.setUserId(userId);
-            ur.setRoleId(roleId);
+            ur.setRoleId(60L);
             list.add(ur);
         }
         if (list.size() > 0) {
@@ -125,10 +132,17 @@ public class UserServiceImpl implements UserService {
         List<Long> roles = user.getRoleIds();
         userRoleMapper.removeByUserId(userId);
         List<UserRoleDO> list = new ArrayList<>();
-        for (Long roleId : roles) {
+        if(roles!=null){
+            for (Long roleId : roles) {
+                UserRoleDO ur = new UserRoleDO();
+                ur.setUserId(userId);
+                ur.setRoleId(roleId);
+                list.add(ur);
+            }
+        }else{
             UserRoleDO ur = new UserRoleDO();
             ur.setUserId(userId);
-            ur.setRoleId(roleId);
+            ur.setRoleId(60L);
             list.add(ur);
         }
         if (list.size() > 0) {
