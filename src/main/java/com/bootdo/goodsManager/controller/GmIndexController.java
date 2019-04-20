@@ -169,42 +169,30 @@ public class GmIndexController{
     @PostMapping("/register")
     @ResponseBody
     R register(UserDO user) {
-        System.out.println(user);
         try{
-            String level = "";
             UserDO parent = userService.getByInvite(user.getInvite());
             if (parent == null) {
                 return R.error("邀请码错误");
             }
             user.setPassword(MD5Utils.encrypt(user.getUsername(), user.getPassword()));
-            DeptDO dept = deptService.get(parent.getDeptId());
-            Map<String, Object> query = new HashMap<>();
-            query.put("parentId", dept.getDeptId());
-            List<DeptDO> childrenList = deptService.list(query);
-            if (childrenList != null && childrenList.size() > 0) { // 如果有下级 注册时候为下级
-                DeptDO children = childrenList.get(0);
-                user.setDeptId(children.getDeptId());
-                user.setDeptName(children.getName());
-                user.setCreateTime(DateUtil.getDateTime());
-                user.setStatus(1);
-                level = children.getDeptId()+"";
-            } else { //如果没有下级 注册为经销商
-                user.setDeptId(dept.getDeptId());
-                user.setDeptName(dept.getName());
-                level = dept.getDeptId()+"";
-            }
+            DeptDO dept = deptService.get(5L);
 
+            user.setDeptId(dept.getDeptId());
+            user.setDeptName(dept.getName());
+            user.setCreateTime(DateUtil.getDateTime());
+            user.setStatus(1);
+            user.setParentId(parent.getUserId());
             if (userService.save(user) > 0) {
-                user.setParentId(parent.getUserId());
-                user.setCreateTime(DateUtil.getDateTime());
                 user.setInvite(RandomCode.toSerialCode(user.getUserId()));
-                userService.update(user);
-                GmProfitDO profit = new GmProfitDO();
-                profit.setUserId(user.getUserId());
-                profit.setParentId(parent.getUserId());
-                profit.setLevel(level);
-                profitService.save(profit);
-                return R.ok();
+                if(userService.update(user)>0){
+                    GmProfitDO profit = new GmProfitDO();
+                    profit.setUserId(user.getUserId());
+                    profit.setParentId(parent.getUserId());
+                    profit.setLevel(dept.getDeptId()+"");
+                    profitService.save(profit);
+                    return R.ok();
+                }
+
             }
         }catch (Exception e){
             e.printStackTrace();

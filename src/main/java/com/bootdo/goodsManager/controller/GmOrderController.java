@@ -171,7 +171,7 @@ public class GmOrderController {
 				tempList.put("amount",order.getAmount());
 				tempList.put("createTime",order.getOrderTime());
 				tempList.put("orderId",order.getId());
-				res.put(orderCode+"-"+order.getId(),tempList);
+				res.put(orderCode,tempList);
 			}
 
 		}catch (Exception e){
@@ -204,12 +204,19 @@ public class GmOrderController {
 	@RequestMapping("/getOrderOne")
 	public Object getOrderOne(String orderId){
 		Map<String,Object> res = new HashMap<>();
-		try{
-			UserDO user = ShiroUtils.getUser();
-			if(user==null){
-				ShiroUtils.logout();
+		GmOrderDO order = null;
+		try {
+			order = gmOrderService.get(Long.parseLong(orderId));
+			if(order==null){
+				return R.error("订单号错误");
 			}
-			GmOrderDO order = gmOrderService.get(Long.parseLong(orderId));
+		}catch (Exception e){
+			e.printStackTrace();
+			return R.error("订单号错误");
+		}
+		try{
+			UserDO user = userService.getOutRole(order.getUserId());
+
 			if(order!=null){
 				Map<String,Object> query = new HashMap<>();
 				query.put("orderId",order.getId());
@@ -219,7 +226,7 @@ public class GmOrderController {
 				res.put("img",order.getOther());
 				res.put("data",detailList);
 				res.put("address",order.getRemark());
-
+				res.put("name",user.getName());
 			}
 		}catch (Exception e){
 			e.printStackTrace();

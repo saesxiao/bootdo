@@ -82,7 +82,10 @@ function validateRule() {
 				required : "#newsletter:checked",
 				minlength : 2
 			},
-			agree : "required"
+			agree : "required",
+            invite : {
+                required : true
+            }
 		},
 		messages : {
 
@@ -104,6 +107,7 @@ function validateRule() {
 				equalTo : icon + "两次输入的密码不一致"
 			},
 			email : icon + "请输入您的E-mail",
+			invite: icon + "请输入上级邀请码"
 		}
 	})
 }
