@@ -272,7 +272,7 @@ public class GmRetailController {
             res.put("level",dept.getName());
             res.put("deptId",dept.getDeptId());
             UserDO parent = userService.getOutRole(user.getParentId());
-            res.put("parent",parent.getName());
+            res.put("parent",parent!=null?parent.getName():"无上级");
 
 
         }catch (Exception e){
