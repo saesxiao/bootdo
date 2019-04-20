@@ -14,10 +14,34 @@
 	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-<div class="" id="fahuo">
-	<div class="resgcontain layui-form">
-		<h1 class="site-h1">我要发货-代理发货</h1>
-		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+<div class="layui-form" id="fahuo" v-cloak>
+	<div class="resgcontain">
+		<h1 class="site-h1">收货信息</h1>
+		<div class="layui-tab layui-tab-brief">
+			<div class="layui-form-item">
+				<input type="radio" name="sex" value="nv" :title="receiptName" checked>
+				<span class="layui-badge layui-bg-orange" style="vertical-align: sub;">联合创始人</span>
+			</div>
+			<div class="item">
+				<input type="text" class="publicIptSty widthman"  value="收件人" placeholder=""/>
+			</div>
+			<div class="item">
+				<input type="text" class="publicIptSty widthman"  :value="goodsdata.receiptPhone" placeholder="" />
+			</div>
+			<div class="item">
+				<textarea placeholder="" class="publicIptSty widthman">{{goodsdata.receiptProvince}}&nbsp;{{goodsdata.receiptCity}} &nbsp;{{goodsdata.receiptDistrict}} &nbsp;{{goodsdata.receiptAddress}} </textarea>
+			</div>
+		</div>
+	</div>
+	<div class="cotpad">
+		<fieldset class="layui-elem-field layui-field-title site-title">
+			<legend><a name="compatibility">扫码出货</a></legend>
+		</fieldset>
+	</div>
+	<div class="resgcontain">
+
+
+		<div class="layui-tab layui-tab-brief">
 
 			<div v-for="(goodsdatas,key) in goodsdata.data">
 				<div class="item"></div>
@@ -36,16 +60,15 @@
 				</div>
 			</div>
 			<div class="item">
-				<textarea class="publicIptSty widthman layui-input-disabled" placeholder="二维码" v-model="tiaoxingma"></textarea>
+				<textarea class="publicIptSty widthman" placeholder="二维码" v-model="tiaoxingma"></textarea>
 			</div>
 
-			<div class="item">
+			<div class="item" style="margin-bottom: 0px;">
 				<input type="text" class="publicIptSty widthman" value="" placeholder="运单编号"  v-model="postCode"/>
+				<img style="display: none;" id="imgUrl" src="">
 			</div>
 
-			<div class="item">
-				<img  id="imgUrl">
-			</div>
+
 		</div>
 	</div>
 	<div class="shangpd">
@@ -64,7 +87,8 @@
                 goodsdata:{},
 				tiaoxingma:'',
                 postCode:'',
-                orderCode:''
+                orderCode:'',
+                receiptName:''
             },
             methods:{
                 fahuofun:function () {
@@ -108,8 +132,10 @@
                         layer = layui.layer;
                     var local = window.location.href,goodscode='';
                     goodscode = local.split('=')[1];
-                    console.log(goodscode);
                     idata.orderCode = goodscode;
+                    layer.ready(function(){
+                        layer.load(1);
+                    });
                     $.ajax({
                         cache: true,
                         type: "POST",
@@ -119,12 +145,19 @@
                             layer.alert("Connection error");
                         },
                         success : function(data) {
-                            console.log(data);
+                            idata.receiptName = data.receiptName;
                             idata.goodsdata = data;
-                            console.log(idata.goodsdata);
-                            console.log(data.img);
-                            $("#imgUrl").attr("src",data.img);
-							form.render();
+                            console.log(data);
+                            layer.closeAll('loading');
+                            if(data.img != ''){
+                                $("#imgUrl").show();
+                                $("#imgUrl").attr("src",data.img);
+
+							}
+//                            layui.use('form', function() {
+//                                var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+//                                form.render();
+//                            });
                         }
                     });
 

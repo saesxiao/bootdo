@@ -96,20 +96,28 @@
         <div class="icontit"><span class="icon iconfont">&#xe653;</span>运营数据</div>
         <div class="layui-row">
             <div class="layui-col-xs4 yunyingdata">
-                <div class="data">{{order}}</div>
-                <div class="name">订单总数</div>
+                <a href="/goodsManager/page/ddgl">
+                    <div class="data">{{order}}</div>
+                    <div class="name">订单总数</div>
+                </a>
             </div>
             <div class="layui-col-xs4 yunyingdata">
-                <div class="data">{{profit}}</div>
-                <div class="name">已获得奖励</div>
+                <a href="/goodsManager/page/myAward">
+                    <div class="data">{{profit}}</div>
+                    <div class="name">已获得奖励</div>
+                </a>
             </div>
             <div class="layui-col-xs4 yunyingdata">
-                <div class="data">{{subordinate}}</div>
-                <div class="name">我的下级</div>
+                <a href="/goodsManager/page/xiaji">
+                    <div class="data">{{subordinate}}</div>
+                    <div class="name">我的下级</div>
+                </a>
             </div>
             <div class="layui-col-xs4 yunyingdata">
-                <div class="data">{{stock}}</div>
-                <div class="name">我的库存</div>
+                <a href="/goodsManager/page/wdkc">
+                    <div class="data">{{stock}}</div>
+                    <div class="name">我的库存</div>
+                </a>
             </div>
         </div>
     </div>
@@ -164,7 +172,9 @@
                 $ = layui.jquery,
                     form = layui.form,
                     layer = layui.layer;
-                layer.load(1);
+                layer.ready(function(){
+                    layer.load(1);
+                });
                 $.ajax({
                     cache: true,
                     type: "POST",

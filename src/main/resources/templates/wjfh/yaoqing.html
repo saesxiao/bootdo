@@ -14,22 +14,92 @@
 	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
+	<div class="resgcontain">
+		<div class="shareimg"><img class="openshare" src="/wjfh/img/yaoqing.png" alt=""></div>
+		<div class="sharetit">分享·邀请码</div>
+		<div class="sharecode"><span id="invite"></span></div>
+		<div style="height: 15px;"></div>
+	</div>
+	<div class="resgcontain">
+		<div class="qrcode">
+			<div id="qrcode"></div>
+			<p>长按保存二维码</p>
+		</div>
 
+	</div>
+	<div class="resgcontain">
+		<!--<h2 class="shareez">每邀请一个代理出货总部会给您奖励<span>80</span>元</h2>-->
+		<h2 class="shareez">欢迎开启五季芳禾健康事业！<br>
+			往后余生，健康是你，富有是你……
+		</h2>
+		<div class="sharefoot">
+			<button class="firendquanbtn openshare"><i class="icon iconfont"></i>朋友圈分享</button>
+			<button class="firendbtn openshare"><i class="icon iconfont"></i>好友分享</button>
+		</div>
+		<div style="height: 15px;"></div>
+	</div>
+	<div class="sharemb"></div>
 	<script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+	<!-- 实现网址生成二维码 -->
+	<script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
 	<script>
+    window.onload = function () {
         layui.use(['jquery', 'form','layer'], function() {
             $ = layui.jquery,
                 form = layui.form,
                 layer = layui.layer;
-
-
-            layer.msg('这个。。。还在开发！', {icon: 5,time: 2000},function () {
-                parent.location.href = '/goodsManager/page/index';
+            var invite;
+            layer.ready(function(){
+                layer.load(1);
             });
+
+            $.ajax({
+                cache: true,
+                type: "POST",
+                url: "/goodsManager/retail/mine",
+
+                error: function (request) {
+                    layer.alert("Connection error");
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data.code == 500) {
+                        parent.location.href = '/goodsManager/page/login';
+                    } else {
+                        invite = data.invite;
+                        $("#invite").text(invite);
+                        layer.closeAll('loading');
+                        makeCode();
+                    }
+
+
+                }
+            });
+            $(".sharemb").on("click",function () {
+                $(".sharemb").hide();
+            })
+            $(".openshare").on("click",function () {
+                $(".sharemb").show();
+            })
+
+            // 二维码图片的大小
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                width : 100,
+                height : 100
+            });
+
+            // 根据url生成二维码
+            function makeCode () {
+                var elText = 'http://www.5jfh.cn/goodsManager/page/resg?code='+invite;
+                $('#CopyHref').attr('data-clipboard-text',elText);
+                qrcode.makeCode(elText);
+            }
+
         })
+    }
 	</script>
 </body>
 </html>

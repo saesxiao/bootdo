@@ -22,10 +22,16 @@
 		</div>
 	</div>
 <div id="myPer" v-cloak>
-	<div class="resgcontain  layui-form" v-for="dldds in dldd">
+	<div class="resgcontain  layui-form" v-for="(dldds,index) in dldd">
 		<div class="item">
 			<div class="dingdantop layui-row xiajitop">
-				<div class="layui-col-xs5">{{dldds.userName}}<span class="layui-badge layui-bg-orange" style="margin-left: 0.2rem;">{{dldds.deptName}}</span></div>
+				<div class="layui-col-xs5">
+					<img class="dengjino" v-if="index == 0" src="/wjfh/img/no1.png" alt="">
+					<img class="dengjino" v-if="index == 1" src="/wjfh/img/no2.png" alt="">
+					<img class="dengjino" v-if="index == 2" src="/wjfh/img/no3.png" alt="">
+					{{dldds.userName}}
+					<span class="layui-badge layui-bg-orange" style="margin-left: 0.2rem;">{{dldds.deptName}}</span>
+				</div>
 				<div class="layui-col-xs7">入驻时间:{{dldds.createTime}}</div>
 			</div>
 		</div>
@@ -36,7 +42,7 @@
 				<div class="layui-col-xs3">库存</div>
 				<div class="layui-col-xs3">销量</div>
 			</div>
-			<div class="dingdantop layui-row item xiajilist" v-for="(orderInfos,key) in dldds.orderInfo">
+			<div class="dingdantop layui-row item xiajilist" v-for="(orderInfos,key,index) in dldds.orderInfo">
 				<div class="layui-col-xs3">{{key}}</div>
 				<div class="layui-col-xs3">{{orderInfos.total}}</div>
 				<div class="layui-col-xs3">{{orderInfos.stock}}</div>
@@ -101,7 +107,9 @@
                     $ = layui.jquery,
                         form = layui.form,
                         layer = layui.layer;
-                    layer.load(1);
+                    layer.ready(function(){
+                        layer.load(1);
+                    });
                     $.ajax({
                         cache: true,
                         type: "POST",

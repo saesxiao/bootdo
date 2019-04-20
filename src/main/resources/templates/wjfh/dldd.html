@@ -109,7 +109,9 @@
                     $ = layui.jquery,
                         form = layui.form,
                         layer = layui.layer;
-                    layer.load(1);
+                    layer.ready(function(){
+                        layer.load(1);
+                    });
                     $.ajax({
                         cache: true,
                         type: "POST",

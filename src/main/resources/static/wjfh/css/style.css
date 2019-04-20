@@ -1,5 +1,7 @@
 body{background-color: #f1f1f1;position: relative}
-v-cloak{display: none}
+[v-cloak] {
+    display: none !important;
+}
 *{font-size: 0.35rem;color: #666;}
 .resgcontain{margin: 0.25rem;background-color: #fff;border-radius: 3px;padding: 0.2rem 0.25rem;}
 .resgcontain .item{margin-bottom: 0.25rem;}
@@ -110,3 +112,22 @@ a.header-a1{position:absolute; top:15px; right:20px; color:#ffffff; font-size:14
 .footnav .name{font-size: 0.31rem;line-height: 0.25rem}
 .footnav.active .footicon,.footnav.active .name{color: #FF5555}
 #idata{padding-bottom: 2rem;}
+.pevimg{padding-top: 0.5rem;}
+.shareimg{width: 60%;margin:  0px auto;}
+.sharetit{text-align: center;color: #666;font-size: 0.45rem;margin-bottom: 0.15rem;}
+.sharecode{text-align: center;color: #666;}
+.sharecode span{padding-bottom: 3px;border-bottom: 2px solid #666;font-size: 0.7rem;}
+.shareez{font-size: 0.4rem;color: #666;text-align: center}
+.shareez span{font-size: 0.6rem;color: #ff5500}
+.sharefoot{text-align: center;margin-top: 0.4rem;}
+.sharefoot button{width: 2.8rem;height: 1rem;margin:0px 0.2rem;border-radius: 0.5rem;border: 0px;color: #fff}
+.sharefoot button.firendquanbtn{background-color: #ff5500}
+.sharefoot button.firendbtn{background-color: #00B83F;}
+.qrcode{width: 100px;margin: 0 auto;}
+.qrcode p{font-size: 14px;padding-top: 5px;}
+.sharemb{background: url("../img/sharemb.png") no-repeat;background-size: cover;position: fixed;width: 100%;height: 100%;z-index: 999999;top: 0px;left: 0px;display: none;}
+.jinsheng li{font-size: 0.4rem;}
+.sjdengji{margin-bottom: 10px;font-size: 0.4rem;line-height: 0.6rem}
+.sjdengji span{color: #ff5500;font-size: 0.4rem;}
+.danjia1{text-decoration: line-through;}
+.dengjino{width: 0.4rem;}

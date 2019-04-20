@@ -56,6 +56,10 @@
 		</fieldset>
 	</div>
 	<div class="resgcontain">
+		<div class="layui-form-item">
+			<input type="text" name="name" style="" class="layui-input" value="" required lay-verify="required|phone" autocomplete="off" placeholder="请输入收件人" v-model="mobile" />
+
+		</div>
 		<div class="item mb">
 			<div class="layui-form-item layui-row mb">
 				<div class="layui-col-xs12">
@@ -95,7 +99,7 @@
 		<button class="layui-btn layui-btn-fluid resgSubmit"  lay-submit lay-filter="resgSubmit">注册</button>
 	</div>
 </form>
-<div class="Noresg">已有账号？<a href="">立即登录</a></div>
+<div class="Noresg">已有账号？<a href="/goodsManager/page/login">立即登录</a></div>
 <script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="/wjfh/js/area.js" type="text/javascript" charset="utf-8"></script>
 <script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
@@ -140,36 +144,36 @@
 
 						}
 					});
-//                    axios.post('/sys/user/register', {
-//                        params:{
-//                            wechat:vm.wxchat,
-//                            name:vm.name,
-//                            username:vm.mobile,
-//                            mobile:vm.mobile,
-//                            password:vm.pass,
-//                            invite:vm.code,
-//                            province:vm.sheng,
-//                            city:vm.shi,
-//                            district:vm.qu,
-//                            liveAddress:vm.address,
-//                        },
-//                        dataType: 'json', //服务器返回json格式数据
-//                        type: 'post', //HTTP请求类型
-//                    })
-//                        .then(function(response) {
-//                            console.log(vm.sheng);
-//                            console.log(response);
-//                            if(response.data.code == 200){
-//                                layer.msg('注册成功！', {time: 1200});
-//							}else{
-//                                layer.msg(response.data.msg, {time: 1200});
-//							}
-//                            //layer.msg('验证码发送成功！', {time: 1200});
-//
-//                        })
-//                        .catch(function (error) {
-//                            //layer.msg(error)
-//                        });
+                    axios.post('/sys/user/register', {
+                        params:{
+                            wechat:vm.wxchat,
+                            name:vm.name,
+                            username:vm.mobile,
+                            mobile:vm.mobile,
+                            password:vm.pass,
+                            invite:vm.code,
+                            province:vm.sheng,
+                            city:vm.shi,
+                            district:vm.qu,
+                            liveAddress:vm.address,
+                        },
+                        dataType: 'json', //服务器返回json格式数据
+                        type: 'post', //HTTP请求类型
+                    })
+                        .then(function(response) {
+                            console.log(vm.sheng);
+                            console.log(response);
+                            if(response.data.code == 200){
+                                layer.msg('注册成功！', {time: 1200});
+							}else{
+                                layer.msg(response.data.msg, {time: 1200});
+							}
+                            //layer.msg('验证码发送成功！', {time: 1200});
+
+                        })
+                        .catch(function (error) {
+                            //layer.msg(error)
+                        });
                     return false;
                 });
                 //自定义验证规则
