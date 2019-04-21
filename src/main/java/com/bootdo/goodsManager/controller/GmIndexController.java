@@ -201,9 +201,10 @@ public class GmIndexController{
      */
     @ResponseBody
     @RequestMapping("/promotion")
-    public R promotion(UserDO user){
+    public R promotion(){
         try {
 
+            UserDO user = ShiroUtils.getUser();
             // 判断用户等级 1 平台管理者 2联合创始人 3总经销商 4经销商 5VIP客户
             Long userLevel = user.getDeptId();
             // 获取当前日期

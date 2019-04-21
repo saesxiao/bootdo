@@ -124,6 +124,11 @@
                     form = layui.form,
                     layer = layui.layer,
                     $form = $('form');
+                var pageurl = window.location.href;
+                console.log(pageurl);
+                if (pageurl.indexOf("?") != -1){
+                    vm.code = pageurl.split('?')[1].split('=')[1];
+                }
                 //监听提交
                 form.on('submit(resgSubmit)', function(data){
                     layer.ready(function(){
@@ -131,27 +136,28 @@
                     });
                     $("#username").val($("#mobile").val());
                     console.log($('#regbox').serialize());
-//					$.ajax({
-//						cache: true,
-//						type: "POST",
-//						url: "/goodsManager/page/register",
-//						data: $('#regbox').serialize(),// 你的formid
-//						error : function(request) {
-//							layer.alert("Connection error");
-//						},
-//						success : function(data) {
-//                            layer.closeAll('loading');
-//						    if(data.code == 500){
-//                                layer.msg(data.msg, {icon: 5,time: 1200});
-//							}else{
-//                                layer.msg(data.msg, {icon: 6,time: 1200},function () {
-//                                    parent.location.href = '/goodsManager/page/login';
-//                                });
-//							}
-//							console.log(data);
-//
-//						}
-//					});
+					$.ajax({
+						cache: true,
+						type: "POST",
+						url: "/goodsManager/page/register",
+						data: $('#regbox').serialize(),// 你的formid
+						error : function(request) {
+							layer.alert("Connection error");
+						},
+						success : function(data) {
+
+                            layer.closeAll('loading');
+						    if(data.code == 500){
+                                layer.msg(data.msg, {icon: 5,time: 1200});
+							}else{
+                                layer.msg(data.msg, {icon: 6,time: 1200},function () {
+                                    parent.location.href = '/goodsManager/page/login';
+                                });
+							}
+							console.log(data);
+
+						}
+					});
 //                    axios.post('/sys/user/register', {
 //                        params:{
 //                            wechat:vm.wxchat,

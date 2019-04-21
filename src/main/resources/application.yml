@@ -3,7 +3,7 @@ server:
 #    tomcat:
 #        max-threads: 1000
 #        min-spare-threads: 30
-  port: 8099
+  port: 80
 #    uri-encoding: utf-8
 #security:
 #  basic:
@@ -16,7 +16,7 @@ spring:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
   profiles: 
-    active: dev
+    active: pro
   servlet:
     multipart:
       max-file-size: 30Mb
@@ -35,3 +35,10 @@ mybatis:
   typeAliasesPackage: com.bootdo.**.domain
 #[弃用]配置缓存和session存储方式，默认ehcache,可选redis,[弃用]调整至 spring cache type【shiro.用户，权限，session，spring.cache通用】
 #[弃用]cacheType: ehcache
+
+wechat:
+  appId: wxcff90894f5b7a499
+  appSecret: 2b0fbcedf77c0519b7d927a31425bc18
+  url:
+    accessToken: https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
+    apiTicket: https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi

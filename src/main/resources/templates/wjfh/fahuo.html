@@ -55,8 +55,8 @@
 				</div>
 				<div class="item">
 					<div class="saomaiptbox">
-						<textarea class="publicIptSty widthman" :id="goodsdatas.goodsId" placeholder="二维码" ></textarea>
-						<span class="icon iconfont">&#xe68c;</span>
+						<textarea class="publicIptSty widthman " id="qrcode"  placeholder="二维码" ></textarea>
+						<span class="icon iconfont" :id="goodsdatas.goodsId">&#xe68c;</span>
 					</div>
 
 				</div>
@@ -75,12 +75,15 @@
 	<div class="shangpd">
 		<button class="layui-btn layui-btn-fluid resgSubmit" @click="fahuofun();">确认出货</button>
 	</div>
+	<button id="ceshi">dakai</button>
 </div>
 
 <script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
 <script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
 <script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+<script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+
 <script>
     var idata = new  Vue({
         el:"#fahuo",
@@ -137,7 +140,10 @@
                     }
                 });
 
-            }
+            },
+
+
+
         },
         mounted:function () {
 
@@ -163,7 +169,6 @@
                     success : function(data) {
                         idata.receiptName = data.receiptName;
                         idata.goodsdata = data;
-                        console.log(idata.goodsdata);
                         layer.closeAll('loading');
                         $("#fahuo").show();
                         if(data.img != ''){
@@ -181,6 +186,100 @@
             })
         }
     })
+	window.onload = function () {
+        var link = location.href.split('#')[0];
+        $.ajax({
+            cache: true,
+            type: "GET",
+			data:{"url":link},
+            url: "/wechat/wechatParam",
+            error : function(request) {
+                layer.alert("Connection error");
+            },
+            success : function(data) {
+                console.log(data);
+                wx.config({
+                     debug: true,
+                    appId: data.appid,
+                    timestamp: data.timestamp,
+                    nonceStr: data.nonceStr,
+                    signature: data.signature,
+                    jsApiList: [
+                        'checkJsApi',
+                        'onMenuShareTimeline',
+                        'onMenuShareAppMessage',
+                        'onMenuShareQQ',
+                        'onMenuShareWeibo',
+                        'hideMenuItems',
+                        'showMenuItems',
+                        'hideAllNonBaseMenuItem',
+                        'showAllNonBaseMenuItem',
+                        'translateVoice',
+                        'startRecord',
+                        'stopRecord',
+                        'onRecordEnd',
+                        'playVoice',
+                        'pauseVoice',
+                        'stopVoice',
+                        'uploadVoice',
+                        'downloadVoice',
+                        'chooseImage',
+                        'previewImage',
+                        'uploadImage',
+                        'downloadImage',
+                        'getNetworkType',
+                        'openLocation',
+                        'getLocation',
+                        'hideOptionMenu',
+                        'showOptionMenu',
+                        'closeWindow',
+                        'scanQRCode',
+                        'chooseWXPay',
+                        'openProductSpecificView',
+                        'addCard',
+                        'chooseCard',
+                        'openCard'
+                    ]
+
+                });
+            }
+        });
+
+
+        wx.ready(function () {
+            $('#ceshi').on('click',function () {
+                wx.scanQRCode({
+                    needResult: 1,
+//                    desc: 'scanQRCode desc',
+                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有　　
+                    success: function (res) {
+                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果　
+                        if(result.indexOf(',') > 0) {
+                            var dealserialNumber = serialNumber.split(',')[1];
+                            dealserialNumber = dealserialNumber.replace(/[^a-z\d]/ig, "");
+                            $("#qrcode").html(dealserialNumber);
+                        }
+                    }
+
+
+//                        var serialNumber = res.resultStr;
+//                        if(serialNumber.indexOf(',') > 0){
+//                            var dealserialNumber=serialNumber.split(',')[1];
+//                            dealserialNumber = dealserialNumber.replace(/[^a-z\d]/ig, "");
+//                            alert(dealserialNumber);
+//
+//                        }else{
+//
+//                        }
+
+
+
+
+                });
+            })
+
+		});
+    }
 </script>
 </body>
 </html>

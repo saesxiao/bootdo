@@ -93,6 +93,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/goodsManager/page/register", "anon");
         filterChainDefinitionMap.put("/blog", "anon");
         filterChainDefinitionMap.put("/blog/open/**", "anon");
+        filterChainDefinitionMap.put("/MP_verify_7WEUD8HH3Y2s5rZd.txt", "anon");
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
