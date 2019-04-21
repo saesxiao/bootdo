@@ -236,7 +236,7 @@ public class GmIndexController{
                     userService.update(user);
                     return R.ok("由于您的进货量达到平台要求,系统已自动将您的登记变更为\"经销商\"");
                 }
-            }else if(today==21){ //判断是否为本月一号
+            }else if(today==1){ //判断是否为本月一号
 
                 // 总经销商和经销商晋升
                 if(userLevel==2||userLevel==3||userLevel==4){

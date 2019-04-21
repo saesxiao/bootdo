@@ -43,57 +43,60 @@ public class WechatApiUtils {
     //获取微信参数
     @RequestMapping("/wechatParam")
     @ResponseBody
-    public Map<String, String> getWechatParam(String url){
+    public Map<String, String> getWechatParam(String url) {
         try {
             //当前时间
             long now = System.currentTimeMillis();
 
             //判断accessToken是否已经存在或者token是否过期
-            if(StringUtils.isBlank(accessToken)||(now - getTokenTime > tokenExpireTime*1000)){
+            if (StringUtils.isBlank(accessToken) || (now - getTokenTime > tokenExpireTime * 1000)) {
                 JSONObject tokenInfo = getAccessToken();
-                if(tokenInfo != null){
+                if (tokenInfo != null) {
                     accessToken = tokenInfo.getString("access_token");
                     tokenExpireTime = tokenInfo.getLongValue("expires_in");
                     //获取token的时间
                     getTokenTime = System.currentTimeMillis();
-                }else{
+                } else {
                 }
 
             }
 
             //判断jsApiTicket是否已经存在或者是否过期
-            if(StringUtils.isBlank(jsApiTicket)||(now - getTiketTime > ticketExpireTime*1000)){
+            if (StringUtils.isBlank(jsApiTicket) || (now - getTiketTime > ticketExpireTime * 1000)) {
                 JSONObject ticketInfo = getJsApiTicket();
-                if(ticketInfo!=null){
-                    System.out.println("ticketInfo====>"+ticketInfo.toJSONString());
+                if (ticketInfo != null) {
+                    System.out.println("ticketInfo====>" + ticketInfo.toJSONString());
                     jsApiTicket = ticketInfo.getString("ticket");
                     ticketExpireTime = ticketInfo.getLongValue("expires_in");
                     getTiketTime = System.currentTimeMillis();
-                }else{
+                } else {
                 }
             }
 
             //生成微信权限验证的参数
-            Map<String, String> wechatParam= makeWXTicket(jsApiTicket,url);
+            Map<String, String> wechatParam = makeWXTicket(jsApiTicket, url);
             return wechatParam;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
     //获取accessToken
-    private JSONObject getAccessToken(){
+    private JSONObject getAccessToken() {
         //String accessTokenUrl = https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET
-        String requestUrl = accessTokenUrl.replace("APPID",appId).replace("APPSECRET",appSecret);
+        String requestUrl = accessTokenUrl.replace("APPID", appId).replace("APPSECRET", appSecret);
         JSONObject result = JSONObject.parseObject(HttpUtil.get(requestUrl));
-        return result ;
+        return result;
     }
 
     //获取ticket
-    private JSONObject getJsApiTicket(){
+    private JSONObject getJsApiTicket() {
         //String apiTicketUrl = https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi
+        System.out.println(apiTicketUrl);
+        System.out.println(accessToken);
         String requestUrl = apiTicketUrl.replace("ACCESS_TOKEN", accessToken);
+        System.out.println(requestUrl);
         JSONObject result = JSONObject.parseObject(HttpUtil.get(requestUrl));
         return result;
     }
@@ -111,8 +114,7 @@ public class WechatApiUtils {
                 "&noncestr=" + nonceStr +
                 "&timestamp=" + timestamp +
                 "&url=" + url;
-        try
-        {
+        try {
             MessageDigest crypt = null;
             try {
                 crypt = MessageDigest.getInstance("SHA-1");
@@ -122,8 +124,7 @@ public class WechatApiUtils {
             crypt.reset();
             crypt.update(string1.getBytes("UTF-8"));
             signature = byteToHex(crypt.digest());
-        } catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
@@ -136,21 +137,23 @@ public class WechatApiUtils {
 
         return ret;
     }
+
     //字节数组转换为十六进制字符串
     private static String byteToHex(final byte[] hash) {
         Formatter formatter = new Formatter();
-        for (byte b : hash)
-        {
+        for (byte b : hash) {
             formatter.format("%02x", b);
         }
         String result = formatter.toString();
         formatter.close();
         return result;
     }
+
     //生成随机字符串
     private static String createNonceStr() {
         return UUID.randomUUID().toString();
     }
+
     //生成时间戳
     private static String createTimestamp() {
         return Long.toString(System.currentTimeMillis() / 1000);

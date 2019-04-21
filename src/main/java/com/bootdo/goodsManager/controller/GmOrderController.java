@@ -267,6 +267,9 @@ public class GmOrderController {
 		if(user==null){
 			ShiroUtils.logout();
 		}
+		if(StringUtils.isBlank(orderId)||StringUtils.isBlank(ids)){
+			return R.error("参数错误");
+		}
 		// 储存二维码信息
 		Map<String,List<String>> goodsCodes = null;
 
