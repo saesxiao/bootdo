@@ -180,7 +180,7 @@ public class GmOrderController {
 				Map<String,Object> tempList = new HashMap<>();
 				tempList.put("data",orderDetailList);
 				tempList.put("status",order.getOrderStatus());
-				if(niceName==null){
+				if(isMine==null){
 					niceName = userService.getOutRole(order.getUserId()).getName();
 				}
 				tempList.put("name",niceName);
