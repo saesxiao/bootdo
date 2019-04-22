@@ -126,6 +126,11 @@ public class GmIndexController{
     public String toSj(){
         return "wjfh/shengji";
     }
+    // 晋升规则
+    @RequestMapping("/guize")
+    public String toGz(){
+        return "wjfh/guize";
+    }
 
     // 我的库存
     @RequestMapping("/wdkc")
