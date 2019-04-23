@@ -117,7 +117,7 @@ function load() {
                         align : 'center',
                         formatter : function(value, row, index) {
                             var code = row.goods_code;
-                            if(code!=null&&code!=""){
+                            if(code!="-"){
                                 var f = '<a class="btn btn-success btn-sm" href="#" title="追踪订单"  mce_href="#" onclick="getOrder(\''
                                     + code
                                     + '\')"><i class="fa fa-paper-plane"></i>&nbsp;&nbsp;&nbsp;追踪订单</a> ';

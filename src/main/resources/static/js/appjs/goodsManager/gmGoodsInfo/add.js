@@ -9,7 +9,7 @@ $.validator.setDefaults({
 });
 function save() {
 
-	var priceList=$("#goodsPrice").split(",");
+	var priceList=$("#goodsPrice").val().split(",");
 	if(priceList==null||priceList.length!=4){
         layer.alert("单价填写错误,格式为: 创始人价格,总经销价格,经销商价格,零售价格");
         return false;
