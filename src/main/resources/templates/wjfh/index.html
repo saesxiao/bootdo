@@ -98,13 +98,19 @@
             <div class="layui-col-xs4 yunyingdata">
                 <a href="/goodsManager/page/ddgl">
                     <div class="data">{{order}}</div>
-                    <div class="name">订单总数</div>
+                    <div class="name">下级订单</div>
                 </a>
             </div>
             <div class="layui-col-xs4 yunyingdata">
                 <a href="/goodsManager/page/myAward">
                     <div class="data">{{profit}}</div>
                     <div class="name">已获得奖励</div>
+                </a>
+            </div>
+            <div class="layui-col-xs4 yunyingdata">
+                <a href="/goodsManager/page/wddd">
+                    <div class="data">{{wddd}}</div>
+                    <div class="name">我的订单</div>
                 </a>
             </div>
             <div class="layui-col-xs4 yunyingdata">
@@ -164,7 +170,8 @@
             stock:'0',
             subordinate:'0',
             invite:'0',
-            deptId:''
+            deptId:'',
+            wddd:0
         },
         methods: {},
         mounted: function () {
@@ -218,16 +225,17 @@
                 $.ajax({
                     cache: true,
                     type: "POST",
-                    url: "/goodsManager/page/promotion",
-
-                    error: function (request) {
+                    url: "/goodsManager/gmOrder/getSendOrder",
+                    error : function(request) {
                         layer.alert("Connection error");
                     },
-                    success: function (data) {
+                    success : function(data) {
                         console.log(data);
+                        for (len in data){
+                            idata.wddd++;
+                        }
 
-
-
+                        layer.closeAll('loading');
                     }
                 });
             })

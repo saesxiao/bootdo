@@ -37,7 +37,7 @@
 		<div class="item">
 			<div class="dingdantop layui-row">
 				<div class="layui-col-xs5">收货人:{{dldds.name}}</div>
-				<div class="layui-col-xs7" v-for="(dlddss,index) in dldds.data" v-if="index<1">下单时间:{{dlddss.orderTime}}</div>
+				<div class="layui-col-xs7">下单时间:{{dldds.createTime}}</div>
 			</div>
 		</div>
 		<div class="item dingdancot mb">
@@ -61,7 +61,7 @@
 </div>
 <div class="pubfooter">
 	<div class="layui-row">
-		<div class="layui-col-xs3 tcenter footnav">
+		<div class="layui-col-xs3 tcenter footnav ">
 			<a href="/goodsManager/page/index">
 				<span class="layui-icon footicon">&#xe68e;</span>
 				<div class="name">首页</div>
@@ -80,7 +80,7 @@
 			</a>
 		</div>
 		<div class="layui-col-xs3 tcenter footnav">
-			<a href="/mine">
+			<a href="/goodsManager/page/xiaji">
 				<span class="layui-icon footicon">&#xe66f;</span>
 				<div class="name">下级</div>
 			</a>

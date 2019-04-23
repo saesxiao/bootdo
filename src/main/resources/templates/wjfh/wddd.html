@@ -17,12 +17,15 @@
 <div class="" id="dldd">
 	<div class="resgcontain">
 		<h1 class="site-h1">我的订单</h1>
-		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-			<!--<ul class="layui-tab-title">-->
-			<!--<li class="layui-this"><a>我的订单</a></li>-->
-			<!--</ul>-->
-			<!--<div class="item"></div>-->
-
+		<div class="layui-row">
+			<div class="layui-form layui-col-xs5">
+				<select name="time" lay-verify="">
+					<option value="">请选择时间</option>
+					<option value="010">一个月内</option>
+					<option value="021">三个月内</option>
+					<option value="0571">一年内</option>
+				</select>
+			</div>
 		</div>
 	</div>
 	<!--<div class="resgcontain">-->

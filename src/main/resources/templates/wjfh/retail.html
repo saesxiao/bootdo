@@ -26,11 +26,11 @@
 			<div class="item">
 				<div class="saomaiptbox">
 					<input type="text" class="publicIptSty widthman"  value="" placeholder="商品二维码" readonly="readonly"/>
-					<span class="icon iconfont">&#xe68c;</span>
+					<span class="icon iconfont" @click="openwxSaoma()">&#xe68c;</span>
 				</div>
 			</div>
 			<div class="item">
-				<textarea class="publicIptSty widthman" placeholder="二维码" v-model="tiaoxingma"></textarea>
+				<textarea class="publicIptSty widthman" id="erwemaarrval" placeholder="二维码" v-model="tiaoxingma"></textarea>
 			</div>
 		</div>
 	</div>
@@ -43,43 +43,66 @@
 	<script src="/wjfh/js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/wjfh/js/axios.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/js/jquery.min.js?v=2.1.4" th:src="@{/js/jquery.min.js?v=2.1.4}"></script>
+<script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 	<script>
         var idata = new  Vue({
             el:"#fahuo",
             data:{
 				tiaoxingma:'',
+                textval:''
             },
             methods:{
                 fahuofun:function () {
-
-                    $.ajax({
-                        cache: true,
-                        type: "POST",
-                        data:{
-                            ids:idata.tiaoxingma,
-                        },
-                        url: "/goodsManager/retail/toRetail",
-                        error : function(request) {
-                            layer.alert("Connection error");
-                        },
-                        success : function(data) {
-                            if(idata.tiaoxingma !=''){
+                    if(idata.textval !=''){
+                        $.ajax({
+                            cache: true,
+                            type: "POST",
+                            data:{
+                                ids:idata.tiaoxingma,
+                            },
+                            url: "/goodsManager/retail/toRetail",
+                            error : function(request) {
+                                layer.alert("Connection error");
+                            },
+                            success : function(data) {
                                 if(data.code != 500){
                                     layer.msg('出货成功!', {icon: 6,time: 1200},function () {
-                                        //parent.location.href = '/goodsManager/page/index';
+                                        parent.location.href = '/goodsManager/page/index';
                                     });
                                 }else{
                                     layer.msg(data.msg, {icon: 5,time: 1200},function () {
                                         //parent.location.href = '/goodsManager/page/index';
                                     });
                                 }
-							}else{
-                                layer.msg('请先扫码出货！', {icon: 5,time: 1200});
-							}
+                            }
+                        });
 
+                    }else{
+                        layer.msg('请先扫码出货！', {icon: 5,time: 1200});
+                    }
 
+                },
+                openwxSaoma:function () {
 
-                        }
+                    wx.ready(function () {
+                        wx.scanQRCode({
+                            needResult: 1,
+//                    		desc: 'scanQRCode desc',
+                            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有　　
+                            success: function (res) {
+                                var serialNumber = res.resultStr;
+                                if(serialNumber.indexOf(',') > 0){
+                                    var dealserialNumber=serialNumber.split(',')[1];
+                                    dealserialNumber = dealserialNumber.replace(/[^a-z\d]/ig, "");
+                                    idata.textval.push(dealserialNumber);
+                                    idata.textval = new Set(idata.textval);
+                                    $("#erwemaarrval").val(idata.textval);
+                                }else{
+
+                                }
+                            }
+                        });
+
                     });
                 }
             },
@@ -89,7 +112,63 @@
                     $ = layui.jquery,
                         form = layui.form,
                         layer = layui.layer;
+                    var link = location.href.split('#')[0];
+                    $.ajax({
+                        //cache: false,
+                        type: "GET",
+                        data:{"url":link},
+                        url: "/wechat/wechatParam",
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+                            console.log(data);
+                            wx.config({
+                                debug: false,
+                                appId: data.appid,
+                                timestamp: data.timestamp,
+                                nonceStr: data.nonceStr,
+                                signature: data.signature,
+                                jsApiList: [
+                                    'checkJsApi',
+                                    'onMenuShareTimeline',
+                                    'onMenuShareAppMessage',
+                                    'onMenuShareQQ',
+                                    'onMenuShareWeibo',
+                                    'hideMenuItems',
+                                    'showMenuItems',
+                                    'hideAllNonBaseMenuItem',
+                                    'showAllNonBaseMenuItem',
+                                    'translateVoice',
+                                    'startRecord',
+                                    'stopRecord',
+                                    'onRecordEnd',
+                                    'playVoice',
+                                    'pauseVoice',
+                                    'stopVoice',
+                                    'uploadVoice',
+                                    'downloadVoice',
+                                    'chooseImage',
+                                    'previewImage',
+                                    'uploadImage',
+                                    'downloadImage',
+                                    'getNetworkType',
+                                    'openLocation',
+                                    'getLocation',
+                                    'hideOptionMenu',
+                                    'showOptionMenu',
+                                    'closeWindow',
+                                    'scanQRCode',
+                                    'chooseWXPay',
+                                    'openProductSpecificView',
+                                    'addCard',
+                                    'chooseCard',
+                                    'openCard'
+                                ]
 
+                            });
+                        }
+                    });
 
                 })
             }

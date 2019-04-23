@@ -14,7 +14,7 @@
 <body>
 <form class="layui-form" method="post" id="regbox">
 	<div class="resgcontain">
-		<h1 class="site-h1">欢迎注册 — <!-- 五季芳禾 --></h1>
+		<h1 class="site-h1">欢迎注册 — 五季芳禾</h1>
 		<div class="layui-form-item">
 			<label class="layui-form-label" style="min-width: 15%">微信号:</label>
 			<div class="layui-input-block">
@@ -73,7 +73,7 @@
 				</div>
 				<div class="layui-col-xs12">
 					<div class="posire" style="display: none;">
-						<select id="area" name="area" lay-filter="area" lay-verify="required">
+						<select id="area" name="district" lay-filter="area" lay-verify="required">
 							<option value="">请选择县/区</option>
 						</select>
 					</div>
@@ -127,7 +127,10 @@
                 var pageurl = window.location.href;
                 console.log(pageurl);
                 if (pageurl.indexOf("?") != -1){
-                    vm.code = pageurl.split('?')[1].split('=')[1];
+                    if(pageurl.split('?')[1].split('&')[1] != -1){
+                        vm.code = pageurl.split('?')[1].split('&')[0].split('=')[1];
+					}
+
                 }
                 //监听提交
                 form.on('submit(resgSubmit)', function(data){
@@ -263,7 +266,7 @@
                 for (var i = 0; i < areas.length; i++) {
                     areaHtml += '<option value="' + areas[i].areaName + '">' + areas[i].areaName + '</option>';
                 }
-                $form.find('select[name=area]').append(areaHtml).parent().show();
+                $form.find('select[name=district]').append(areaHtml).parent().show();
                 form.render();
                 form.on('select(area)', function(data) {
                     vm.qu = data.value;

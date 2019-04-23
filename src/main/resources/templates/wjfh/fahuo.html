@@ -14,7 +14,9 @@
 	<script src="/wjfh/js/flexible.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
+
 <div class="layui-form" id="fahuo" style="display: none;">
+
 	<div class="resgcontain">
 		<h1 class="site-h1">收货信息</h1>
 		<div class="layui-tab layui-tab-brief">
@@ -46,6 +48,7 @@
 		<div class="layui-tab layui-tab-brief">
 
 			<div v-for="(goodsdatas,key) in goodsdata.data">
+
 				<div class="item"></div>
 				<div class="item">
 					<div class="saomaiptbox">
@@ -55,8 +58,9 @@
 				</div>
 				<div class="item">
 					<div class="saomaiptbox">
-						<textarea class="publicIptSty widthman " id="qrcode"  placeholder="二维码" ></textarea>
-						<span class="icon iconfont" :id="goodsdatas.goodsId">&#xe68c;</span>
+						<textarea class="publicIptSty widthman erwemaarrval" :data-id="goodsdatas.goodsId" :data-len="goodsdatas.goodsNum" placeholder="二维码"></textarea>
+
+						<span class="icon iconfont" :id="goodsdatas.goodsId" @click="openwxSaoma(goodsdatas.goodsId)">&#xe68c;</span>
 					</div>
 
 				</div>
@@ -75,7 +79,7 @@
 	<div class="shangpd">
 		<button class="layui-btn layui-btn-fluid resgSubmit" @click="fahuofun();">确认出货</button>
 	</div>
-	<button id="ceshi">dakai</button>
+
 </div>
 
 <script src="/wjfh/layui/layui.js" type="text/javascript" charset="utf-8"></script>
@@ -85,200 +89,210 @@
 <script src="http://res2.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 
 <script>
-    var idata = new  Vue({
-        el:"#fahuo",
-        data:{
-            goodsdata:{},
-            tiaoxingma:'',
-            postCode:'',
-            orderCode:'',
-            receiptName:'',
-            goodss:'',
-            isNone:'',
-            goodss:{}
 
-        },
-        methods:{
-            fahuofun:function () {
-                var len = 0;
-                var ddaa = idata.goodsdata.data;
-
-                for(goodsdata in idata.goodsdata.data){
-                    var ids = idata.goodsdata.data[goodsdata].goodsId;
-                    var vals = document.getElementById(idata.goodsdata.data[goodsdata].goodsId).value;
-
-                    var key = [ids];
-                    idata.goodss[key] = vals;
-                    idata.isNone += vals;
-
-                }
-                var jsonStr = {
-                    "address": idata.goodsdata.address,
-                    "imgUrl": idata.goodsdata.img,
-                    "goods":idata.goodss
-                };
-                console.log(jsonStr);
-                var param = {"jsonStr":JSON.stringify(jsonStr)}
-                $.ajax({
-                    cache: true,
-                    type: "POST",
-                    data:param,
-                    url: "/goodsManager/gmOrder/sendOrder",
-                    error : function(request) {
-                        layer.alert("Connection error");
-                    },
-                    success : function(data) {
-                        if(data.code != 500){
-                            layer.msg('出货成功!', {icon: 6,time: 1200},function () {
-                                parent.location.href = '/goodsManager/page/ddgl';
-                            });
-                        }else{
-                            layer.msg(data.msg, {icon:5,time: 1200});
-                        }
-                        console.log(data);
-
-                    }
-                });
-
-            },
-
-
-
-        },
-        mounted:function () {
-
-            layui.use(['jquery', 'form','layer'], function() {
-                $ = layui.jquery,
-                    form = layui.form,
-                    layer = layui.layer;
-                var local = window.location.href,goodscode='';
-                goodscode = local.split('=')[1];
-                idata.orderCode = goodscode;
-                layer.ready(function(){
-                    layer.load(1);
-                });
-                console.log(goodscode);
-                $.ajax({
-                    cache: true,
-                    type: "POST",
-                    data:{orderId:goodscode},
-                    url: "/goodsManager/gmOrder/getOrderOne",
-                    error : function(request) {
-                        layer.alert("Connection error");
-                    },
-                    success : function(data) {
-                        idata.receiptName = data.receiptName;
-                        idata.goodsdata = data;
-                        layer.closeAll('loading');
-                        $("#fahuo").show();
-                        if(data.img != ''){
-                            $("#imgUrl").show();
-                            $("#imgUrl").attr("src",data.img);
-
-                        }
-//                            layui.use('form', function() {
-//                                var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
-//                                form.render();
-//                            });
-                    }
-                });
-
-            })
-        }
-    })
 	window.onload = function () {
-        var link = location.href.split('#')[0];
-        $.ajax({
-            cache: true,
-            type: "GET",
-			data:{"url":link},
-            url: "/wechat/wechatParam",
-            error : function(request) {
-                layer.alert("Connection error");
+        var idata = new  Vue({
+            el:"#fahuo",
+            data:{
+                goodsdata:{},
+                tiaoxingma:'',
+                postCode:'',
+                orderCode:'',
+                receiptName:'',
+                goodss:'',
+                isNone:'',
+                goodss:{},
+                textval:{},
+				orderId:''
+
             },
-            success : function(data) {
-                console.log(data);
-                wx.config({
-                     debug: true,
-                    appId: data.appid,
-                    timestamp: data.timestamp,
-                    nonceStr: data.nonceStr,
-                    signature: data.signature,
-                    jsApiList: [
-                        'checkJsApi',
-                        'onMenuShareTimeline',
-                        'onMenuShareAppMessage',
-                        'onMenuShareQQ',
-                        'onMenuShareWeibo',
-                        'hideMenuItems',
-                        'showMenuItems',
-                        'hideAllNonBaseMenuItem',
-                        'showAllNonBaseMenuItem',
-                        'translateVoice',
-                        'startRecord',
-                        'stopRecord',
-                        'onRecordEnd',
-                        'playVoice',
-                        'pauseVoice',
-                        'stopVoice',
-                        'uploadVoice',
-                        'downloadVoice',
-                        'chooseImage',
-                        'previewImage',
-                        'uploadImage',
-                        'downloadImage',
-                        'getNetworkType',
-                        'openLocation',
-                        'getLocation',
-                        'hideOptionMenu',
-                        'showOptionMenu',
-                        'closeWindow',
-                        'scanQRCode',
-                        'chooseWXPay',
-                        'openProductSpecificView',
-                        'addCard',
-                        'chooseCard',
-                        'openCard'
-                    ]
+            methods:{
+                fahuofun:function () {
+                    var len = 0;
+                    var ddaa = idata.goodsdata.data;
 
-                });
-            }
-        });
-
-
-        wx.ready(function () {
-            $('#ceshi').on('click',function () {
-                wx.scanQRCode({
-                    needResult: 1,
-//                    desc: 'scanQRCode desc',
-                    scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有　　
-                    success: function (res) {
-                        var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果　
-                        if(result.indexOf(',') > 0) {
-                            var dealserialNumber = serialNumber.split(',')[1];
-                            dealserialNumber = dealserialNumber.replace(/[^a-z\d]/ig, "");
-                            $("#qrcode").html(dealserialNumber);
-                        }
+                    for(goodsdata in idata.goodsdata.data){
+                        var ids = idata.goodsdata.data[goodsdata].goodsId;
+                        //var vals = document.getElementById(idata.goodsdata.data[goodsdata].goodsId).value;
+                        var vals = [];
+                        vals = $(".erwemaarrval[data-id ='"+idata.goodsdata.data[goodsdata].goodsId+"']").val().split(",");
+                        var key = [ids];
+                        //var key = [ids];
+                        idata.goodss[key] = vals;
                     }
+                    //console.log(JSON.stringify(idata.goodss));
+
+                    var jsonStr = {
+                        "orderId": idata.orderCode,
+                        "ids":JSON.stringify(idata.goodss),
+                        "postCode":idata.postCode
+                    };
+
+                    var param = {"jsonStr":JSON.stringify(jsonStr)};
+                    console.log(jsonStr);
+                    if($('.erwemaarrval').val() != ''){
+                        $.ajax({
+                            cache: true,
+                            type: "POST",
+                            data:jsonStr,
+                            url: "/goodsManager/gmOrder/sendOrder",
+                            error : function(request) {
+                                layer.alert("Connection error");
+                            },
+                            success : function(data) {
+                                if(data.code != 500){
+                                    layer.msg('出货成功!', {icon: 6,time: 1200},function () {
+                                        parent.location.href = '/goodsManager/page/ddgl';
+                                    });
+                                }else{
+                                    layer.msg(data.msg, {icon:5,time: 1200});
+                                }
+                                console.log(data);
+
+                            }
+                        });
+					}else{
+                        layer.msg('请扫码或者输入二维码编号', {icon:5,time: 1200});
+					}
+
+                },
+                openwxSaoma:function (id) {
+
+                    wx.ready(function () {
+                        wx.scanQRCode({
+                            needResult: 1,
+//                    		desc: 'scanQRCode desc',
+                            scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有　　
+                            success: function (res) {
+                                var serialNumber = res.resultStr;
+                                if(serialNumber.indexOf(',') > 0){
+                                    var dealserialNumber= [];
+                                    var dealserialNumber=serialNumber.split(',')[1];
+                                    dealserialNumber.push(dealserialNumber.replace(/[^a-z\d]/ig, ""));
+                                    var set = new Set(dealserialNumber);
+                                    idata.textval[id] = set;
+									alert(idata.textval[id]);
+                                    $('.erwemaarrval[data-id = "'+id+'"]').val(idata.textval[id]);
+                                }else{
+
+                                }
+                            }
+                        });
+
+                    });
+                }
 
 
-//                        var serialNumber = res.resultStr;
-//                        if(serialNumber.indexOf(',') > 0){
-//                            var dealserialNumber=serialNumber.split(',')[1];
-//                            dealserialNumber = dealserialNumber.replace(/[^a-z\d]/ig, "");
-//                            alert(dealserialNumber);
-//
-//                        }else{
-//
-//                        }
+            },
+            mounted:function () {
+
+                layui.use(['jquery', 'form','layer'], function() {
+                    $ = layui.jquery,
+                        form = layui.form,
+                        layer = layui.layer;
+
+                    //--------------------------扫码部分------------------------------
+
+                    var link = location.href.split('#')[0];
+                    $.ajax({
+                        //cache: false,
+                        type: "GET",
+                        data:{"url":link},
+                        url: "/wechat/wechatParam",
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+                            console.log(data);
+                            wx.config({
+                                debug: true,
+                                appId: data.appid,
+                                timestamp: data.timestamp,
+                                nonceStr: data.nonceStr,
+                                signature: data.signature,
+                                jsApiList: [
+                                    'checkJsApi',
+                                    'onMenuShareTimeline',
+                                    'onMenuShareAppMessage',
+                                    'onMenuShareQQ',
+                                    'onMenuShareWeibo',
+                                    'hideMenuItems',
+                                    'showMenuItems',
+                                    'hideAllNonBaseMenuItem',
+                                    'showAllNonBaseMenuItem',
+                                    'translateVoice',
+                                    'startRecord',
+                                    'stopRecord',
+                                    'onRecordEnd',
+                                    'playVoice',
+                                    'pauseVoice',
+                                    'stopVoice',
+                                    'uploadVoice',
+                                    'downloadVoice',
+                                    'chooseImage',
+                                    'previewImage',
+                                    'uploadImage',
+                                    'downloadImage',
+                                    'getNetworkType',
+                                    'openLocation',
+                                    'getLocation',
+                                    'hideOptionMenu',
+                                    'showOptionMenu',
+                                    'closeWindow',
+                                    'scanQRCode',
+                                    'chooseWXPay',
+                                    'openProductSpecificView',
+                                    'addCard',
+                                    'chooseCard',
+                                    'openCard'
+                                ]
+
+                            });
+                        }
+                    });
+
+                    var local = window.location.href,goodscode='';
+                    goodscode = local.split('=')[1];
+                    idata.orderCode = goodscode;
+                    layer.ready(function(){
+                        layer.load(1);
+                    });
+                    console.log(goodscode);
+                    $.ajax({
+                        cache: true,
+                        type: "POST",
+                        data:{orderId:goodscode},
+                        url: "/goodsManager/gmOrder/getOrderOne",
+                        error : function(request) {
+                            layer.alert("Connection error");
+                        },
+                        success : function(data) {
+                            idata.receiptName = data.receiptName;
+                            idata.goodsdata = data;
+                            layer.closeAll('loading');
+                            $("#fahuo").show();
+                            if(data.img != ''){
+                                $("#imgUrl").show();
+                                $("#imgUrl").attr("src",data.img);
+
+                            }
+                            console.log(idata.goodsdata);
+                            var idsarr=[];
+                            for (goodsindex in idata.goodsdata.data){
+                                idsarr.push(idata.goodsdata.data[goodsindex].goodsId)
+                            }
 
 
 
 
-                });
-            })
 
-		});
+                            //------------------------扫码部分end---------------------------
+                        }
+                    });
+
+                })
+            }
+        })
     }
 </script>
 </body>

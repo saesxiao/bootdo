@@ -111,7 +111,7 @@ a.header-a1{position:absolute; top:15px; right:20px; color:#ffffff; font-size:14
 .footnav .footicon{font-size: 0.7rem;}
 .footnav .name{font-size: 0.31rem;line-height: 0.25rem}
 .footnav.active .footicon,.footnav.active .name{color: #FF5555}
-#idata{padding-bottom: 2rem;}
+#idata,#dldd{padding-bottom: 2rem;}
 .pevimg{padding-top: 0.5rem;}
 .shareimg{width: 60%;margin:  0px auto;}
 .sharetit{text-align: center;color: #666;font-size: 0.45rem;margin-bottom: 0.15rem;}
