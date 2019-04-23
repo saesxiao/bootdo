@@ -1,5 +1,5 @@
 bootdo:
-  uploadPath: /var/uploaded_files/
+  uploadPath: /www/wwwroot/wjfh/uploaded_files/
   username: test
   password: 111111
 logging:
