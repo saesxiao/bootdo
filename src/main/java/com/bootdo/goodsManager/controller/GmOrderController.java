@@ -463,6 +463,25 @@ public class GmOrderController {
 				// 如果不是平台发货 则必须要正确的二维码
 				// 遍历二维码数组 查找有二维码的库存 并添加到临时库存
 				loop: for (String goodsId:codes.keySet()) {
+
+					// 获取 统计订单数量Map 的改商品订单数量
+					Integer num = validSize.get(Integer.parseInt(goodsId));
+
+					// 获取此商品id 的库存
+					query = new HashMap<>();
+					query.put("userId", user.getUserId());
+					query.put("status", "0");
+					query.put("type", goodsId);
+					List<GmGoodsUserDO> goodsUserListOutCode = goodsUserService.list(query);
+
+					// 判断库存是否足够
+					if(goodsUserListOutCode.size()<num){
+						res.put("resCode",401);
+						res.put("data","库存不足");
+						flag = false;
+						break loop;
+					}
+
 					List<String> qrCodeList = codes.get(String.valueOf(goodsId));
 					if(qrCodeList!=null){
 						for (String qrCode:qrCodeList) {
