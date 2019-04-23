@@ -472,7 +472,7 @@ public class GmOrderController {
 							query.put("goodsCode", qrCode);
 							List<GmGoodsUserDO> temp = goodsUserService.list(query);
 
-							if (temp != null) {
+							if (temp != null&&temp.size()>0) {
 								GmGoodsUserDO goodsUser = temp.get(0);
 								Integer goodsUserId = Integer.parseInt(goodsUser.getType());
 								List<GmGoodsUserDO> tempList = tempMap.get(goodsUserId);
