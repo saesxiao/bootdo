@@ -149,7 +149,7 @@ public class GmIndexController{
             GmGoodsInfoDO goodsInfo = goodsInfoService.get(Integer.parseInt(goodsUser.getType()));
             String goodsName = goodsInfo.getGoodsName();
             goodsUser.setOther(goodsName);
-            goodsUser.setRemark(parent.getName());
+            goodsUser.setRemark(parent!=null?parent.getName():"-");
             if(num.containsKey(goodsName)){
                 Integer goodsNum = num.get(goodsName);
                 goodsNum++;
