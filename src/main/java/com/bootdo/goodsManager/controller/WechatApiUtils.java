@@ -77,7 +77,8 @@ public class WechatApiUtils {
             Map<String, String> wechatParam = makeWXTicket(jsApiTicket, url);
             return wechatParam;
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            System.out.println("=======>   重新获取"+e.getMessage());
         }
         return null;
     }
@@ -93,10 +94,7 @@ public class WechatApiUtils {
     //获取ticket
     private JSONObject getJsApiTicket() {
         //String apiTicketUrl = https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi
-        System.out.println(apiTicketUrl);
-        System.out.println(accessToken);
         String requestUrl = apiTicketUrl.replace("ACCESS_TOKEN", accessToken);
-        System.out.println(requestUrl);
         JSONObject result = JSONObject.parseObject(HttpUtil.get(requestUrl));
         return result;
     }

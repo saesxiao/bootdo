@@ -308,5 +308,12 @@ public class GmIndexController{
         return R.ok("暂无晋升信息");
     }
 
+    @RequestMapping("/deptList")
+    @ResponseBody
+    public Object getDeptList(){
+        List<DeptDO> deptList = deptService.list(new HashMap<>());
+        return deptList;
+    }
+
 
 }
