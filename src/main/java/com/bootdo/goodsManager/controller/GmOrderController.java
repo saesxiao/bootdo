@@ -78,6 +78,7 @@ public class GmOrderController {
 			Map<String,Object> map = JSONObject.parseObject(goodsInfo.toJSONString(),Map.class);
 			String address= param.getString("address");
 			String imgUrl = param.getString("imgUrl");
+			Double amount = Double.parseDouble(param.getString("amount"));
 			String time = DateUtil.getDateTime();
 			String orderCode = "XD"+OrderTool.getOrderNo(5);
 
@@ -91,7 +92,6 @@ public class GmOrderController {
 			orderDO.setOrderCode(orderCode);
 			gmOrderService.save(orderDO);
 
-			Double amount = 0.0;
 			// 循环商品订单
 			for (String key : map.keySet()) {
 				Integer goodsId = Integer.parseInt(key);
@@ -101,12 +101,9 @@ public class GmOrderController {
 					Integer goodsNum  = Integer.parseInt(tempNum);
 					GmOrderDetailDO orderDetail = new GmOrderDetailDO();
 					orderDetail.setGoodsId(goods.getId());
-					orderDetail.setGoodsNum(Integer.parseInt(tempNum));
+					orderDetail.setGoodsNum(goodsNum);
 					orderDetail.setOrderId(orderDO.getId());
 					orderDetailService.save(orderDetail);
-					Integer level = Math.toIntExact(user.getDeptId());
-					String levelPrice = goods.getGoodsPrice().split(",")[level-2];
-					amount += Double.parseDouble(levelPrice)*goodsNum;
 				}
 
 
@@ -186,6 +183,7 @@ public class GmOrderController {
 				tempList.put("name",niceName);
 				tempList.put("amount",order.getAmount());
 				tempList.put("createTime",order.getOrderTime());
+				tempList.put("endTime",order.getEndTime());
 				tempList.put("orderId",order.getId());
 				res.put(orderCode,tempList);
 			}

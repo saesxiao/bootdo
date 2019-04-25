@@ -49,6 +49,8 @@ public class GmIndexController{
     private GmOrderService gmOrderService;
     @Autowired
     private GmOrderDetailService orderDetailService;
+    @Autowired
+    private GmPromotionService promotionService;
 
     // 首页
     @RequestMapping("/index")
@@ -201,12 +203,60 @@ public class GmIndexController{
         return R.error();
     }
 
+
     /**
-     *  获取当前用户订单列表 晋升逻辑
+     *  获取当前用户订单列表 自动晋升逻辑
      */
     @ResponseBody
     @RequestMapping("/promotion")
-    public R promotion(){
+    public R promotion(String deptId,String newDeptId){
+        if(StringUtils.isBlank(deptId)||StringUtils.isBlank(newDeptId)){
+            return R.error("参数错误!");
+        }
+        Long oldUserDept = null;
+        Long newUserDept = null;
+        Long userId = null;
+        try{
+            oldUserDept = Long.parseLong(deptId);
+            newUserDept = Long.parseLong(newDeptId);
+        }catch (Exception e){
+            return R.error("参数错误!");
+        }
+        try {
+            UserDO user = ShiroUtils.getUser();
+            userId = user.getUserId();
+            Map<String,Object> query = new HashMap<>();
+            query.put("userId",userId);
+            query.put("oldDept",oldUserDept);
+            query.put("newDept",newUserDept);
+            List<GmPromotionDO> promotionList = promotionService.list(query);
+            if(promotionList==null&&user.getDeptId()==oldUserDept){
+                user.setDeptId(newUserDept);
+                if(userService.update(user)>0){
+                    GmPromotionDO promotion = new GmPromotionDO();
+                    promotion.setUserId(userId);
+                    promotion.setOldDept(oldUserDept);
+                    promotion.setNewDept(newUserDept);
+                    promotion.setPromotionTime(DateUtil.getDateTime());
+                    promotion.setNoticeStatus(1);
+                    if(promotionService.save(promotion)>0){
+                        return R.ok(promotion.getId()+"");
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return R.error("晋升系统正忙");
+        }
+        return R.ok("暂无晋升信息");
+    }
+
+    /**
+     *  获取当前用户订单列表 自动晋升逻辑
+     */
+    @ResponseBody
+    @RequestMapping("/autoPromotion")
+    public R autoPromotion(){
         try {
 
             UserDO user = ShiroUtils.getUser();
