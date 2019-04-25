@@ -209,40 +209,31 @@ public class GmIndexController{
      */
     @ResponseBody
     @RequestMapping("/promotion")
-    public R promotion(String deptId,String newDeptId){
+    public R promotion(String userId ,String deptId,String newDeptId){
         if(StringUtils.isBlank(deptId)||StringUtils.isBlank(newDeptId)){
             return R.error("参数错误!");
         }
         Long oldUserDept = null;
         Long newUserDept = null;
-        Long userId = null;
+        Long thisUserId = null;
         try{
             oldUserDept = Long.parseLong(deptId);
             newUserDept = Long.parseLong(newDeptId);
+            thisUserId = Long.parseLong(userId);
         }catch (Exception e){
             return R.error("参数错误!");
         }
         try {
-            UserDO user = ShiroUtils.getUser();
-            userId = user.getUserId();
-            Map<String,Object> query = new HashMap<>();
-            query.put("userId",userId);
-            query.put("oldDept",oldUserDept);
-            query.put("newDept",newUserDept);
-            List<GmPromotionDO> promotionList = promotionService.list(query);
-            if(promotionList==null&&user.getDeptId()==oldUserDept){
-                user.setDeptId(newUserDept);
-                if(userService.update(user)>0){
-                    GmPromotionDO promotion = new GmPromotionDO();
-                    promotion.setUserId(userId);
-                    promotion.setOldDept(oldUserDept);
-                    promotion.setNewDept(newUserDept);
-                    promotion.setPromotionTime(DateUtil.getDateTime());
-                    promotion.setNoticeStatus(1);
-                    if(promotionService.save(promotion)>0){
-                        return R.ok(promotion.getId()+"");
+            UserDO user = userService.getOutRole(thisUserId);
+            if(user!=null&&user.getDeptId()==oldUserDept){
+                DeptDO deptDO = deptService.get(newUserDept);
+                if(deptDO!=null){
+                    user.setDeptId(newUserDept);
+                    if(userService.update(user)>0){
+                        return R.ok("晋升成功!");
                     }
                 }
+
             }
         }catch (Exception e){
             e.printStackTrace();
