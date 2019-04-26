@@ -179,6 +179,7 @@ public class GmOrderController {
 				Map<String,Object> tempList = new HashMap<>();
 				tempList.put("data",orderDetailList);
 				tempList.put("status",order.getOrderStatus());
+				tempList.put("type",order.getType());
 				if(isMine==null){
 					niceName = userService.getOutRole(order.getUserId()).getName();
 				}
@@ -242,6 +243,7 @@ public class GmOrderController {
 				res.put("orderCode",order.getOrderCode());
 				res.put("img",order.getOther());
 				res.put("data",detailList);
+				res.put("type",order.getType());
 				res.put("address",order.getRemark());
 				res.put("name",user.getName());
 				res.put("deptName",dept.getName());
