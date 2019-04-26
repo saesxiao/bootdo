@@ -267,6 +267,7 @@ public class GmRetailController {
             }
             res.put("order",num);
             res.put("name",user.getName());
+            res.put("userId",userId);
             res.put("invite",user.getInvite());
             DeptDO dept = deptService.get(user.getDeptId());
             res.put("level",dept.getName());
