@@ -79,6 +79,7 @@ public class GmOrderController {
 			String address= param.getString("address");
 			String imgUrl = param.getString("imgUrl");
 			Double amount = Double.parseDouble(param.getString("amount"));
+			String type = param.getString("type");
 			String time = DateUtil.getDateTime();
 			String orderCode = "XD"+OrderTool.getOrderNo(5);
 
@@ -88,6 +89,7 @@ public class GmOrderController {
 			orderDO.setOrderStatus(1);
 			orderDO.setOrderTime(time);
 			orderDO.setRemark(address);
+			orderDO.setType(type);
 			orderDO.setOther(imgUrl);
 			orderDO.setOrderCode(orderCode);
 			gmOrderService.save(orderDO);
