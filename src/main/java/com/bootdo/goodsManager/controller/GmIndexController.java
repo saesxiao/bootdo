@@ -51,6 +51,8 @@ public class GmIndexController{
     private GmOrderDetailService orderDetailService;
     @Autowired
     private GmPromotionService promotionService;
+    @Autowired
+    private GmUserStatusService userStatusService;
 
     // 首页
     @RequestMapping("/index")
@@ -193,7 +195,16 @@ public class GmIndexController{
                     profit.setParentId(parent.getUserId());
                     profit.setLevel(dept.getDeptId()+"");
                     profitService.save(profit);
-                    return R.ok();
+                    //建立用户状态
+                    GmUserStatusDO userStatus = new GmUserStatusDO();
+                    userStatus.setUserId(user.getUserId());
+                    userStatus.setPromotionStatus("0");
+                    userStatus.setPromotionNotice("0");
+                    userStatus.setProfitStatus("0");
+                    userStatus.setProfitNotice("0");
+                    if(userStatusService.save(userStatus)>0){
+                        return R.ok();
+                    }
                 }
 
             }
