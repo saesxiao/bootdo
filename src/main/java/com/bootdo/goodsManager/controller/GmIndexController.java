@@ -11,6 +11,9 @@ import com.bootdo.system.domain.DeptDO;
 import com.bootdo.system.domain.UserDO;
 import com.bootdo.system.service.DeptService;
 import com.bootdo.system.service.UserService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -241,6 +244,10 @@ public class GmIndexController{
                 if(deptDO!=null){
                     user.setDeptId(newUserDept);
                     if(userService.update(user)>0){
+                        ShiroUtils.logout();
+                        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
+                        Subject subject = SecurityUtils.getSubject();
+                        subject.login(token);
                         return R.ok("晋升成功!");
                     }
                 }
