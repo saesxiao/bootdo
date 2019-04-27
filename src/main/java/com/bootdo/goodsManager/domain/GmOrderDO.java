@@ -31,12 +31,14 @@ public class GmOrderDO implements Serializable {
 	private String orderTime;
 	//处理或失效日期
 	private String endTime;
-	//订单编号
+	//第一次下单0以后1
 	private String type;
 	//截图地址
 	private String other;
 	//收货地址
 	private String remark;
+	//物流编号
+	private String postCode;
 
 	/**
 	 * 设置：订单表id
@@ -169,5 +171,13 @@ public class GmOrderDO implements Serializable {
 	 */
 	public String getRemark() {
 		return remark;
+	}
+
+	public String getPostCode() {
+		return postCode;
+	}
+
+	public void setPostCode(String postCode) {
+		this.postCode = postCode;
 	}
 }

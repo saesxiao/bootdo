@@ -4,12 +4,12 @@
 <mapper namespace="com.bootdo.goodsManager.dao.GmOrderDao">
 
     <select id="get" resultType="com.bootdo.goodsManager.domain.GmOrderDO">
-		select `id`,`user_id`,`parent_id`,`amount`,`order_code`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark` from gm_order where id = #{value}
+		select `id`,`user_id`,`parent_id`,`amount`,`order_code`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark`,`post_code` from gm_order where id = #{value}
 	</select>
 
     <select id="list" resultType="com.bootdo.goodsManager.domain.GmOrderDO">
         select
-        `id`,`user_id`,`parent_id`,`amount`,`order_code`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark`
+        `id`,`user_id`,`parent_id`,`amount`,`order_code`,`order_status`,`order_time`,`end_time`,`type`,`other`,`remark`,`post_code`
         from gm_order
         <where>
             <if test="id != null and id != ''">and id = #{id}</if>
@@ -23,6 +23,7 @@
             <if test="type != null and type != ''">and type = #{type}</if>
             <if test="other != null and other != ''">and other = #{other}</if>
             <if test="remark != null and remark != ''">and remark = #{remark}</if>
+            <if test="postCode !=null and postCode != ''">AND post_code = #{postCode}</if>
             <if test="monthStart !=null and monthStart != '' and monthEnd!=null and monthEnd != ''">and end_time BETWEEN #{monthStart} AND #{monthEnd}</if>
         </where>
         <choose>
@@ -52,6 +53,7 @@
             <if test="type != null and type != ''">and type = #{type}</if>
             <if test="other != null and other != ''">and other = #{other}</if>
             <if test="remark != null and remark != ''">and remark = #{remark}</if>
+            <if test="postCode !=null and postCode != ''">AND post_code = #{postCode}</if>
         </where>
     </select>
 
@@ -67,7 +69,8 @@
 			`end_time`, 
 			`type`, 
 			`other`, 
-			`remark`
+			`remark`,
+			`post_code`
 		)
 		values
 		(
@@ -80,7 +83,8 @@
 			#{endTime}, 
 			#{type}, 
 			#{other}, 
-			#{remark}
+			#{remark},
+			#{postCode}
 		)
 	</insert>
 
@@ -97,6 +101,7 @@
             <if test="type != null">`type` = #{type},</if>
             <if test="other != null">`other` = #{other},</if>
             <if test="remark != null">`remark` = #{remark}</if>
+            <if test="postCode != null">`post_code` = #{postCode}</if>
         </set>
         where id = #{id}
     </update>

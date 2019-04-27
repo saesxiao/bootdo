@@ -371,7 +371,7 @@ public class GmOrderController {
 				order.setOrderStatus(2);
 				order.setEndTime(DateUtil.getDateTime());
 				if(postCode!=null){
-					order.setType(postCode);
+					order.setOther(postCode);
 				}
 				gmOrderService.update(order);
 			}
